@@ -1,0 +1,297 @@
+/* ============================================
+   ANA KAIDIEN - Creaciones Artesanales
+   ============================================ */
+
+:root {
+    --color-fondo: #f5efe6;
+    --color-fondo-claro: #fdf8f0;
+    --color-texto-principal: #3f3a34;
+    --color-texto-secundario: #6b6459;
+    --color-acento: #b5623a;      /* durazno/terracota oscurecido para contraste */
+    --color-acento-suave: #c97b52;
+    --color-borde: #e4dcce;
+
+    --fuente-titulo: 'Poppins', 'Segoe UI', sans-serif;
+    --fuente-texto: 'Inter', 'Segoe UI', sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--fuente-texto);
+    color: var(--color-texto-principal);
+    background-color: var(--color-fondo);
+    line-height: 1.5;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+ul {
+    list-style: none;
+}
+
+/* ============================================
+   NAVBAR
+   ============================================ */
+
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 4rem;
+    background-color: var(--color-fondo-claro);
+    border-bottom: 1px solid var(--color-borde);
+}
+
+.logo {
+    display: flex;
+    flex-direction: column;
+    font-family: var(--fuente-titulo);
+    font-weight: 700;
+    font-size: 1.6rem;
+    color: var(--color-acento);
+    line-height: 1.1;
+}
+
+.logo span {
+    font-family: var(--fuente-texto);
+    font-weight: 500;
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-texto-secundario);
+    margin-top: 0.25rem;
+}
+
+.menu {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.menu li a {
+    font-size: 0.95rem;
+    color: var(--color-texto-principal);
+    transition: color 0.2s ease;
+}
+
+.menu li a:hover {
+    color: var(--color-acento);
+}
+
+/* Iniciar sesión: lo distinguimos como acción, no como link de navegación */
+.menu li:last-child a {
+    padding: 0.5rem 1.25rem;
+    border: 1.5px solid var(--color-acento);
+    border-radius: 999px;
+    color: var(--color-acento);
+    font-weight: 600;
+}
+
+.menu li:last-child a:hover {
+    background-color: var(--color-acento);
+    color: #fff;
+}
+
+/* ============================================
+   HERO
+   ============================================ */
+
+.hero {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 3rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 5rem 2rem;
+    min-height: 70vh;
+}
+
+.hero-text {
+    flex: 1;
+    max-width: 600px;
+}
+
+.subtitulo {
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--color-acento);
+    margin-bottom: 1rem;
+}
+
+.hero h1 {
+    font-family: var(--fuente-titulo);
+    font-size: 2.75rem;
+    font-weight: 700;
+    line-height: 1.25;
+    color: var(--color-texto-principal);
+    margin-bottom: 1.5rem;
+}
+
+.descripcion {
+    font-size: 1.05rem;
+    color: var(--color-texto-secundario);
+    max-width: 460px;
+    margin-bottom: 2rem;
+}
+
+.boton {
+    display: inline-block;
+    background-color: var(--color-acento-suave);
+    color: #fff;
+    font-weight: 600;
+    padding: 0.9rem 2rem;
+    border-radius: 999px;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.boton:hover {
+    background-color: var(--color-acento);
+    transform: translateY(-2px);
+}
+
+.hero-logo {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 480px;
+}
+
+.hero-logo img {
+    width: 100%;
+    max-width: 420px;
+    height: auto;
+    /* Si el logo tiene fondo propio no transparente, esto lo integra mejor */
+    mix-blend-mode: multiply;
+}
+
+/* ============================================
+   NUESTRAS CREACIONES
+   ============================================ */
+
+.creaciones {
+    text-align: center;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 5rem 2rem;
+}
+
+.creaciones h2 {
+    font-family: var(--fuente-titulo);
+    font-size: 2.2rem;
+    color: var(--color-texto-principal);
+    margin-bottom: 1rem;
+}
+
+.texto-creaciones {
+    color: var(--color-texto-secundario);
+    max-width: 520px;
+    margin: 0 auto 3rem;
+}
+
+.categorias {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 2rem;
+}
+
+.categoria {
+    background-color: var(--color-fondo-claro);
+    border: 1px solid var(--color-borde);
+    border-radius: 16px;
+    padding: 2rem 1.25rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.categoria:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+}
+
+.icono {
+    font-size: 2rem;
+    margin-bottom: 0.75rem;
+}
+
+.categoria h3 {
+    font-family: var(--fuente-titulo);
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+    color: var(--color-texto-principal);
+}
+
+.categoria p {
+    font-size: 0.9rem;
+    color: var(--color-texto-secundario);
+}
+
+/* ============================================
+   FOOTER
+   ============================================ */
+
+footer {
+    text-align: center;
+    padding: 2rem;
+    color: var(--color-texto-secundario);
+    font-size: 0.85rem;
+    border-top: 1px solid var(--color-borde);
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 900px) {
+    .navbar {
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1.25rem 2rem;
+    }
+
+    .menu {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1rem;
+    }
+
+    .hero {
+        flex-direction: column;
+        text-align: center;
+        padding: 3rem 1.5rem;
+        min-height: auto;
+    }
+
+    .hero-text {
+        max-width: 100%;
+    }
+
+    .descripcion {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .hero h1 {
+        font-size: 2.1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .subtitulo {
+        letter-spacing: 0.08em;
+    }
+
+    .hero h1 {
+        font-size: 1.75rem;
+    }
+}
