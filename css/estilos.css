@@ -7,7 +7,7 @@
     --color-fondo-claro: #fdf8f0;
     --color-texto-principal: #3f3a34;
     --color-texto-secundario: #6b6459;
-    --color-acento: #b5623a;      /* durazno/terracota oscurecido para contraste */
+    --color-acento: #b5623a;      
     --color-acento-suave: #c97b52;
     --color-borde: #e4dcce;
 
@@ -86,7 +86,7 @@ ul {
     color: var(--color-acento);
 }
 
-/* Iniciar sesión: lo distinguimos como acción, no como link de navegación */
+
 .menu li:last-child a {
     padding: 0.5rem 1.25rem;
     border: 1.5px solid var(--color-acento);
@@ -121,7 +121,7 @@ ul {
 }
 
 .subtitulo {
-    font-size: 0.85rem;
+    font-size: 1.00rem;
     font-weight: 600;
     letter-spacing: 0.15em;
     text-transform: uppercase;
@@ -172,7 +172,6 @@ ul {
     width: 100%;
     max-width: 420px;
     height: auto;
-    /* Si el logo tiene fondo propio no transparente, esto lo integra mejor */
     mix-blend-mode: multiply;
 }
 
@@ -235,7 +234,79 @@ ul {
     font-size: 0.9rem;
     color: var(--color-texto-secundario);
 }
+/* ============================================
+   NOSOTROS
+   ============================================ */
 
+.nosotros-intro,
+.nosotros-mision,
+.nosotros-info {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+}
+
+.nosotros-intro {
+    text-align: center;
+    padding-top: 4rem;
+}
+
+.nosotros-intro h2,
+.nosotros-mision h2,
+.nosotros-info h2 {
+    font-family: var(--fuente-titulo);
+    font-size: 1.6rem;
+    color: var(--color-acento);
+    margin-bottom: 1rem;
+}
+
+.texto-nosotros {
+    color: var(--color-texto-secundario);
+    font-size: 1.05rem;
+    line-height: 1.7;
+}
+
+.nosotros-mision {
+    background-color: var(--color-fondo-claro);
+    border-radius: 16px;
+}
+
+.nosotros-info h2 {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 2rem;
+}
+
+.info-item {
+    text-align: center;
+    background-color: var(--color-fondo-claro);
+    border: 1px solid var(--color-borde);
+    border-radius: 16px;
+    padding: 2rem 1.5rem;
+}
+
+.info-item .icono {
+    font-size: 1.75rem;
+    margin-bottom: 0.75rem;
+}
+
+.info-item h3 {
+    font-family: var(--fuente-titulo);
+    font-size: 1.05rem;
+    margin-bottom: 0.5rem;
+    color: var(--color-texto-principal);
+}
+
+.info-item p {
+    color: var(--color-texto-secundario);
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
 /* ============================================
    FOOTER
    ============================================ */
