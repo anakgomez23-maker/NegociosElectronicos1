@@ -51,21 +51,17 @@
 
 
                 <!-- FORMULARIO -->
-                <form
-                    class="landing-form"
-                    action="mailto:contacto@anakaidien.com"
-                    method="post"
-                    enctype="text/plain">
+                <form class="landing-form" onsubmit="suscribirse(event)">
 
-                    <input
-                        type="email"
-                        name="correo"
-                        placeholder="Tu correo electrónico"
-                        required>
+                <input
+                type="email"
+                id="correo"
+                placeholder="Tu correo electrónico"
+                required>
 
-                    <button type="submit">
-                        Suscribirme
-                    </button>
+                 <button type="submit">
+                Suscribirme
+                </button>
 
                 </form>
 
@@ -119,6 +115,13 @@
         </p>
 
     </footer>
+<script>
+function suscribirse(event) {
+    event.preventDefault();
+
+    alert("¡Gracias por suscribirte a Ana Kaidien! ");
+}
+</script>
 
 </body>
 
