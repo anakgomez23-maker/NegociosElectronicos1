@@ -307,8 +307,121 @@ ul {
     font-size: 0.9rem;
     line-height: 1.6;
 }
+/* ============================================
+   CONTACTO
+   ============================================ */
 
+.contacto-intro {
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 4rem 2rem 2rem;
+}
 
+.contacto-intro h1 {
+    font-family: var(--fuente-titulo);
+    font-size: 2.5rem;
+    color: var(--color-texto-principal);
+    margin-bottom: 1rem;
+}
+
+.contacto-form-section {
+    max-width: 560px;
+    margin: 0 auto;
+    padding: 1rem 2rem 3rem;
+}
+
+.contacto-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    background-color: var(--color-fondo-claro);
+    border: 1px solid var(--color-borde);
+    border-radius: 16px;
+    padding: 2rem;
+}
+
+.contacto-form label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--color-texto-principal);
+    margin-top: 1rem;
+}
+
+.contacto-form label:first-child {
+    margin-top: 0;
+}
+
+.contacto-form input,
+.contacto-form textarea {
+    padding: 0.8rem 1rem;
+    border: 1.5px solid var(--color-borde);
+    border-radius: 10px;
+    font-family: var(--fuente-texto);
+    font-size: 0.95rem;
+    color: var(--color-texto-principal);
+    background-color: #fff;
+    resize: vertical;
+}
+
+.contacto-form input:focus,
+.contacto-form textarea:focus {
+    outline: none;
+    border-color: var(--color-acento);
+}
+
+.contacto-form .boton {
+    margin-top: 1.5rem;
+    border: none;
+    cursor: pointer;
+    align-self: center;
+    padding: 0.9rem 2.5rem;
+}
+
+.mensaje-confirmacion {
+    display: none;
+    text-align: center;
+    margin-top: 1rem;
+    padding: 0.75rem;
+    border-radius: 10px;
+    background-color: rgba(74, 125, 104, 0.12);
+    color: #3c6b58;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.mensaje-confirmacion.visible {
+    display: block;
+}
+
+.redes-section {
+    text-align: center;
+    padding: 1rem 2rem 4rem;
+}
+
+.redes-iconos {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+.red-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.7rem 1.5rem;
+    background-color: var(--color-fondo-claro);
+    border: 1px solid var(--color-borde);
+    border-radius: 999px;
+    color: var(--color-texto-principal);
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.red-item svg {
+    color: var(--color-acento);
+    flex-shrink: 0;
+}
 /* ============================================
    FOOTER
    ============================================ */

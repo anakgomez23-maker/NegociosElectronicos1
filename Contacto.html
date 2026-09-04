@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Contacto | Ana Kaidien</title>
+
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+
+<body>
+
+    <!-- MENÚ DE NAVEGACIÓN -->
+    <header>
+        <nav class="navbar">
+
+            <a href="index.html" class="logo">
+                Ana Kaidien
+                <span>Creaciones Artesanales</span>
+            </a>
+
+            <ul class="menu">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="catalogo.html">Catálogo</a></li>
+                <li><a href="nosotros.html">Nosotros</a></li>
+                <li><a href="contacto.html">Contacto</a></li>
+                <li><a href="login.html">Iniciar sesión</a></li>
+            </ul>
+
+        </nav>
+    </header>
+
+
+    <main>
+
+        <!-- ENCABEZADO DE LA SECCIÓN -->
+        <section class="contacto-intro">
+
+            <p class="subtitulo">
+                ESCRÍBENOS
+            </p>
+
+            <h1>
+                Contacto
+            </h1>
+
+            <p class="texto-nosotros">
+                ¿Tienes dudas o quieres una pieza personalizada?
+                Mándanos un mensaje y con gusto te respondemos.
+            </p>
+
+        </section>
+
+
+        <!-- FORMULARIO DE CONTACTO -->
+        <section class="contacto-form-section">
+
+            <form id="formContacto" class="contacto-form">
+
+                <label for="nombre">Nombre</label>
+                <input type="text" id="nombre" name="nombre" placeholder="Tu nombre" >
+
+                <label for="correo">Correo electrónico</label>
+                <input type="email" id="correo" name="correo" placeholder="tucorreo@ejemplo.com" >
+
+                <label for="mensaje">Mensaje</label>
+                <textarea id="mensaje" name="mensaje" rows="5" placeholder="Escribe tu mensaje aquí..." ></textarea>
+
+                <button type="submit" class="boton">
+                    Enviar
+                </button>
+
+                <p id="mensajeConfirmacion" class="mensaje-confirmacion">
+                    Mensaje enviado 
+                </p>
+
+            </form>
+
+        </section>
+
+
+        <!-- REDES SOCIALES -->
+        <section class="redes-section">
+
+            <p class="subtitulo">
+                SÍGUENOS
+            </p>
+
+            <div class="redes-iconos">
+
+                <span class="red-item">
+                    <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <rect x="2" y="2" width="20" height="20" rx="5"></rect>
+                        <circle cx="12" cy="12" r="4.2"></circle>
+                        <circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"></circle>
+                    </svg>
+                    <span>@anakaidien</span>
+                </span>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- PIE DE PÁGINA -->
+    <footer>
+
+        <p>
+            © 2026 Ana Kaidien - Creaciones Artesanales
+        </p>
+
+    </footer>
+
+
+    <script>
+        
+        const formContacto = document.getElementById('formContacto');
+        const mensajeConfirmacion = document.getElementById('mensajeConfirmacion');
+
+        formContacto.addEventListener('submit', function (evento) {
+            evento.preventDefault();
+
+            mensajeConfirmacion.classList.add('visible');
+
+            formContacto.reset();
+
+            setTimeout(function () {
+                mensajeConfirmacion.classList.remove('visible');
+            }, 4000);
+        });
+    </script>
+
+</body>
+
+</html>
