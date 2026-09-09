@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Detalle del producto | Ana Kaidien</title>
+
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+
+<body>
+
+    <!-- MENÚ DE NAVEGACIÓN -->
+    <header>
+        <nav class="navbar">
+
+            <a href="index.html" class="logo">
+                Ana Kaidien
+                <span>Creaciones Artesanales</span>
+            </a>
+
+            <ul class="menu">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="catalogo.html">Catálogo</a></li>
+                <li><a href="nosotros.html">Nosotros</a></li>
+                <li><a href="contacto.html">Contacto</a></li>
+                <li><a href="login.html">Iniciar sesión</a></li>
+            </ul>
+
+        </nav>
+    </header>
+
+
+    <main>
+
+        <section class="producto-detalle">
+
+            <div class="detalle-contenido">
+
+                <div class="detalle-imagen" id="detalleImagen"></div>
+
+                <div class="detalle-info">
+
+                    <h1 id="detalleNombre">Producto</h1>
+
+                    <p class="producto-precio" id="detallePrecio">$0 MXN</p>
+
+                    <p class="texto-nosotros" id="detalleDescripcion"></p>
+
+                    
+                    <div id="detallePersonalizacion" class="personalizacion"></div>
+
+                    <div class="detalle-botones">
+
+                        <a href="login.html" class="boton">
+                            Agregar al carrito
+                        </a>
+
+                        <a href="catalogo.html" class="boton boton-outline-oscuro">
+                            Regresar al catálogo
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- PIE DE PÁGINA -->
+    <footer>
+
+        <p>
+            © 2026 Ana Kaidien - Creaciones Artesanales
+        </p>
+
+    </footer>
+
+
+    <script>
+        
+        const productos = {
+            pulsera: {
+                nombre: "Pulsera Hilo Trenzado",
+                precio: "$50 MXN",
+                descripcion: "Pulsera artesanal elaborada con hilo trenzado a mano. Cada pieza es única y hecha con dedicación y cariño.",
+                personalizacion: [
+                    { label: "Color", tipo: "select", opciones: ["Rojo", "Azul", "Verde","Amarillo","Rosa", "Blanco", "Negro", "Beige","Gris","Multicolor"] },
+                    { label: "Modelo", tipo: "select", opciones: ["1", "2", "3","4","5", "6", "7", "8","9","10"] }  
+                ]
+            },
+            pinata: {
+                nombre: "Piñata Corazón",
+                precio: "$380 MXN",
+                descripcion: "Piñata artesanal peronalizada, ideal para cumpleaños y fiestas temáticas de 50 cm.",
+                personalizacion: [
+                    { label: "Temática", tipo: "texto", placeholder: "Ej. Frozen, fútbol, unicornios..." }
+                ]
+            },
+            pintura: {
+                nombre: "Pintura Árbol",
+                precio: "$600 MXN",
+                descripcion: "Pintura de arbol para huellas hecha a mano sobre lienzo, ideal como recuerdo de bodas,bautizo o baby shower.",
+                personalizacion: [
+                { label: "Evento", tipo: "select", opciones: ["Matrimonio", "Bautizo", "Baby shower","Cumpleaños","Familia"] }
+
+                ]
+            },
+            hilorama: {
+                nombre: "Hilorama Personalizado",
+                precio: "$350 MXN",
+                descripcion: "Diseño elaborado con hilo, personalizado según lo que elijas.",
+                personalizacion: [
+                    { label: "Temática o caricatura", tipo: "texto", placeholder: "Ej. tu personaje o caricatura favorita..." }
+                ]
+            },
+            playera: {
+                nombre: "Playera Bordada a Mano",
+                precio: "$500 MXN",
+                descripcion: "Playera pintada y bordada a mano con chaquira, con el diseño que elijas.",
+                personalizacion: [
+                    { label: "Temática", tipo: "texto", placeholder: "Ej. flores, animales, frase personalizada..." }
+                ]
+            },
+            llavero: {
+                nombre: "Llavero Personalizado",
+                precio: "$60 MXN",
+                descripcion: "Llavero artesanal hecho a mano, personalizado con la inicial que elijas.",
+                personalizacion: [
+                    { label: "Letra o nombre", tipo: "texto", placeholder: "Ej. A, o el nombre completo" }
+                ]
+            },
+            figura: {
+                nombre: "Figura de Arcilla Mini",
+                precio: "$80 MXN",
+                descripcion: "Figura moldeada a mano en arcilla.",
+                personalizacion: []
+            },
+            gelatina: {
+                nombre: "Gelatina Fiestera",
+                precio: "$150 MXN",
+                descripcion: "Gelatina artística decorada según la temática que elijas para tu evento.",
+                personalizacion: [
+                    { label: "Temática", tipo: "texto", placeholder: "Ej. safari, princesas, superhéroes..." },
+                    { label: "Texto o nombre que llevará", tipo: "texto", placeholder: "Ej. ¡Feliz cumpleaños Sofía!" }
+                ]
+            }
+        };
+
+       
+        const parametros = new URLSearchParams(window.location.search);
+        const idProducto = parametros.get("id");
+        const producto = productos[idProducto] || productos.pulsera;
+
+       
+        document.getElementById("detalleNombre").textContent = producto.nombre;
+        document.getElementById("detallePrecio").textContent = producto.precio;
+        document.getElementById("detalleDescripcion").textContent = producto.descripcion;
+
+        const contenedorPersonalizacion = document.getElementById("detallePersonalizacion");
+
+        producto.personalizacion.forEach(function (campo, indice) {
+            const grupo = document.createElement("div");
+            grupo.className = "campo-personalizacion";
+
+            const etiqueta = document.createElement("label");
+            etiqueta.textContent = campo.label;
+            etiqueta.setAttribute("for", "campo-" + indice);
+            grupo.appendChild(etiqueta);
+
+            if (campo.tipo === "select") {
+                const select = document.createElement("select");
+                select.id = "campo-" + indice;
+
+                campo.opciones.forEach(function (opcion) {
+                    const optionEl = document.createElement("option");
+                    optionEl.textContent = opcion;
+                    select.appendChild(optionEl);
+                });
+
+                grupo.appendChild(select);
+            } else {
+                const input = document.createElement("input");
+                input.type = "text";
+                input.id = "campo-" + indice;
+                input.placeholder = campo.placeholder || "";
+                grupo.appendChild(input);
+            }
+
+            contenedorPersonalizacion.appendChild(grupo);
+        });
+    </script>
+
+</body>
+
+</html>
