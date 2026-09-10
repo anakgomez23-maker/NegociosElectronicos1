@@ -2,8 +2,18 @@
    LANDING PAGE - ANA KAIDIEN
    ============================================ */
 
+:root {
+    --color-fondo: #FFFFFF;
+    --color-fondo-claro: #FFF7FA;
+    --color-rosa: #E83E83;
+    --color-naranja: #F59E0B;
+    --color-texto-principal: #344054;
+    --color-texto-secundario: #667085;
+    --color-borde: #F0D9E2;
+}
+
 .landing {
-    background: #f8f1e7;
+    background: var(--color-fondo);
     min-height: 78vh;
     display: flex;
     align-items: center;
@@ -17,7 +27,7 @@
     position: absolute;
     width: 350px;
     height: 350px;
-    background: #e8cfc1;
+    background: #FCE1EC;
     border-radius: 50%;
     top: -180px;
     left: -120px;
@@ -29,7 +39,7 @@
     position: absolute;
     width: 300px;
     height: 300px;
-    background: #dce3d7;
+    background: #DDF4F4;
     border-radius: 50%;
     bottom: -150px;
     right: -100px;
@@ -68,10 +78,10 @@
     width: 290px;
     height: 290px;
     object-fit: contain;
-    background: #fffdf9;
+    background: var(--color-fondo);
     padding: 18px;
     border-radius: 25px;
-    box-shadow: 0 15px 35px rgba(45, 67, 55, 0.15);
+    box-shadow: 0 15px 35px rgba(52, 64, 84, 0.12);
     transition: transform 0.3s ease;
 }
 
@@ -82,8 +92,8 @@
 .landing-logo .subtitulo {
     display: inline-block;
     margin-top: 1.2rem;
-    background: #2f4a3d;
-    color: #fff;
+    background: var(--color-rosa);
+    color: #FFFFFF;
     font-size: 0.75rem;
     font-weight: 600;
     padding: 0.6rem 1.2rem;
@@ -104,7 +114,7 @@
 
 .landing-contenido .etiqueta {
     display: inline-block;
-    color: #b45f3c;
+    color: var(--color-rosa);
     font-size: 0.8rem;
     font-weight: 700;
     letter-spacing: 0.15em;
@@ -116,16 +126,16 @@
     font-family: var(--fuente-titulo, Georgia, serif);
     font-size: 4rem;
     line-height: 1.05;
-    color: #2f4a3d;
+    color: var(--color-texto-principal);
     margin-bottom: 1.2rem;
 }
 
 .landing-contenido h1 span {
-    color: #b45f3c;
+    color: var(--color-rosa);
 }
 
 .landing-contenido .descripcion {
-    color: #5f625c;
+    color: var(--color-texto-secundario);
     font-size: 1.05rem;
     line-height: 1.8;
     max-width: 520px;
@@ -140,10 +150,10 @@
 .landing-form {
     display: flex;
     max-width: 500px;
-    background: #ffffff;
+    background: var(--color-fondo);
     padding: 0.35rem;
     border-radius: 50px;
-    box-shadow: 0 8px 25px rgba(45, 67, 55, 0.12);
+    box-shadow: 0 8px 25px rgba(52, 64, 84, 0.1);
     margin-bottom: 1.2rem;
 }
 
@@ -156,11 +166,11 @@
     font-family: var(--fuente-texto, Arial, sans-serif);
     font-size: 0.9rem;
     background: transparent;
-    color: #2f4a3d;
+    color: var(--color-texto-principal);
 }
 
 .landing-form input[type="email"]::placeholder {
-    color: #999;
+    color: var(--color-texto-secundario);
 }
 
 .landing-form input[type="email"]:focus {
@@ -173,14 +183,14 @@
     padding: 0.85rem 1.5rem;
     border-radius: 50px;
     font-family: var(--fuente-texto, Arial, sans-serif);
-    background: #b45f3c;
-    color: #fff;
+    background: var(--color-naranja);
+    color: #FFFFFF;
     font-weight: 600;
     transition: all 0.3s ease;
 }
 
 .landing-form button:hover {
-    background: #2f4a3d;
+    background: var(--color-rosa);
     transform: translateY(-2px);
 }
 
@@ -193,8 +203,8 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    background: #2f4a3d;
-    color: #fff;
+    background: var(--color-naranja);
+    color: #FFFFFF;
     border: none;
     font-weight: 600;
     padding: 0.9rem 1.8rem;
@@ -204,10 +214,10 @@
 }
 
 .boton-outline:hover {
-    background: #b45f3c;
-    color: #fff;
+    background: var(--color-rosa);
+    color: #FFFFFF;
     transform: translateY(-3px);
-    box-shadow: 0 8px 18px rgba(180, 95, 60, 0.25);
+    box-shadow: 0 8px 18px rgba(232, 62, 131, 0.2);
 }
 
 
@@ -216,9 +226,10 @@
    ============================================ */
 
 .landing-contacto {
-    background: #2f4a3d;
+    background: var(--color-fondo);
     padding: 3.5rem 2rem 1.5rem;
-    color: #fff;
+    color: var(--color-texto-principal);
+    border-top: 1px solid var(--color-borde);
 }
 
 .contacto-card {
@@ -228,7 +239,7 @@
 
 .contacto-card h2 {
     font-family: var(--fuente-titulo, Georgia, serif);
-    color: #fff;
+    color: var(--color-rosa);
     font-size: 1.8rem;
     text-align: center;
     margin-bottom: 2rem;
@@ -248,9 +259,10 @@
     display: flex;
     align-items: center;
     gap: 0.7rem;
-    color: #edf0eb;
+    color: var(--color-texto-secundario);
     font-size: 0.85rem;
-    background: rgba(255, 255, 255, 0.07);
+    background: var(--color-fondo-claro);
+    border: 1px solid var(--color-borde);
     padding: 0.9rem 1.2rem;
     border-radius: 12px;
 }
@@ -268,10 +280,10 @@
     max-width: 1100px;
     margin: 0 auto;
     text-align: center;
-    color: rgba(255, 255, 255, 0.6);
+    color: var(--color-texto-secundario);
     font-size: 0.75rem;
     padding-top: 1.2rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    border-top: 1px solid var(--color-borde);
 }
 
 
@@ -317,7 +329,7 @@
     }
 
     .landing-form input[type="email"] {
-        background: #fff;
+        background: var(--color-fondo);
         padding: 1rem 1.2rem;
     }
 
