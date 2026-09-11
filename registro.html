@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Registro | Ana Kaidien</title>
+
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+
+<body>
+
+    <header>
+        <nav class="navbar">
+
+            <a href="index.html" class="logo">
+                Ana Kaidien
+                <span>Creaciones Artesanales</span>
+            </a>
+
+            <ul class="menu">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="catalogo.html">Catálogo</a></li>
+                <li><a href="Nosotros.html">Nosotros</a></li>
+                <li><a href="Contacto.html">Contacto</a></li>
+                <li><a href="login.html">Iniciar sesión</a></li>
+            </ul>
+
+        </nav>
+    </header>
+
+    <main>
+        <section class="autenticacion">
+            <div class="autenticacion-contenido">
+                <div class="autenticacion-encabezado">
+                    <p class="subtitulo">ÚNETE A NOSOTROS</p>
+                    <h1>Crear una cuenta</h1>
+                </div>
+
+                <form id="formRegistro" class="autenticacion-form" novalidate>
+                    <label for="nombre">Nombre</label>
+                    <input type="text" id="nombre" name="nombre" placeholder="Tu nombre">
+
+                    <label for="correo">Correo electrónico</label>
+                    <input type="email" id="correo" name="correo" placeholder="tucorreo@ejemplo.com">
+
+                    <label for="contrasena">Contraseña</label>
+                    <input type="password" id="contrasena" name="contrasena" placeholder="Escribe una contraseña">
+
+                    <button type="submit" class="boton boton-registro">Registrarme</button>
+
+                    <p id="mensajeRegistro" class="mensaje-autenticacion" role="status" aria-live="polite"></p>
+                </form>
+
+                <a class="autenticacion-enlace" href="login.html">¿Ya tienes una cuenta? Iniciar sesión</a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2026 Ana Kaidien - Creaciones Artesanales</p>
+    </footer>
+
+    <script>
+        const formularioRegistro = document.getElementById('formRegistro');
+        const mensajeRegistro = document.getElementById('mensajeRegistro');
+
+        formularioRegistro.addEventListener('submit', (evento) => {
+            evento.preventDefault();
+
+            mensajeRegistro.className = 'mensaje-autenticacion visible exito';
+            mensajeRegistro.textContent = 'Registro exitoso (simulado)';
+
+            setTimeout(() => {
+                window.location.href = 'login.html';
+            }, 1200);
+        });
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Iniciar sesión | Ana Kaidien</title>
+
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+
+<body>
+
+    <header>
+        <nav class="navbar">
+
+            <a href="index.html" class="logo">
+                Ana Kaidien
+                <span>Creaciones Artesanales</span>
+            </a>
+
+            <ul class="menu">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="catalogo.html">Catálogo</a></li>
+                <li><a href="Nosotros.html">Nosotros</a></li>
+                <li><a href="Contacto.html">Contacto</a></li>
+                <li><a href="login.html">Iniciar sesión</a></li>
+            </ul>
+
+        </nav>
+    </header>
+
+    <main>
+        <section class="autenticacion">
+            <div class="autenticacion-contenido">
+                <div class="autenticacion-encabezado">
+                    <img class="autenticacion-logo" src="img/Logo.png" alt="Logo de Ana Kaidien">
+                    <p class="subtitulo">ANA KAIDIEN</p>
+                    <h1>Iniciar sesión</h1>
+                </div>
+
+                <form id="formLogin" class="autenticacion-form" novalidate>
+                    <label for="correo">Correo electrónico</label>
+                    <input type="email" id="correo" name="correo" placeholder="tucorreo@ejemplo.com">
+
+                    <label for="contrasena">Contraseña</label>
+                    <input type="password" id="contrasena" name="contrasena" placeholder="Tu contraseña">
+
+                    <button type="submit" class="boton boton-entrar">Entrar</button>
+                </form>
+
+                <a class="autenticacion-enlace" href="registro.html">¿No tienes una cuenta? Registrarme</a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2026 Ana Kaidien - Creaciones Artesanales</p>
+    </footer>
+
+    <script>
+        document.getElementById('formLogin').addEventListener('submit', (evento) => {
+            evento.preventDefault();
+            window.location.href = 'perfil.html';
+        });
+    </script>
+
+</body>
+
+</html>
