@@ -39,7 +39,7 @@
 
             <div class="detalle-contenido">
 
-                <div class="detalle-imagen" id="detalleImagen"></div>
+                <div class="detalle-imagen" id="detalleImagen"><img id="imagenProducto" src="" alt=""></div>
 
                 <div class="detalle-info">
 
@@ -87,6 +87,7 @@
         
         const productos = {
             pulsera: {
+                imagen: "img/pulsera.jpg",
                 nombre: "Pulsera Hilo Trenzado",
                 precio: "$50 MXN",
                 descripcion: "Pulsera artesanal elaborada con hilo trenzado a mano. Cada pieza es única y hecha con dedicación y cariño.",
@@ -96,6 +97,7 @@
                 ]
             },
             pinata: {
+                imagen: "img/piñata.jpg",
                 nombre: "Piñata Corazón",
                 precio: "$380 MXN",
                 descripcion: "Piñata artesanal peronalizada, ideal para cumpleaños y fiestas temáticas de 50 cm.",
@@ -104,6 +106,7 @@
                 ]
             },
             pintura: {
+                imagen: "img/arbol.jpg",
                 nombre: "Pintura Árbol",
                 precio: "$600 MXN",
                 descripcion: "Pintura de arbol para huellas hecha a mano sobre lienzo, ideal como recuerdo de bodas,bautizo o baby shower.",
@@ -113,6 +116,7 @@
                 ]
             },
             hilorama: {
+                imagen: "img/hilorama.jpg",
                 nombre: "Hilorama Personalizado",
                 precio: "$350 MXN",
                 descripcion: "Diseño elaborado con hilo, personalizado según lo que elijas.",
@@ -121,6 +125,7 @@
                 ]
             },
             playera: {
+                imagen: "img/playera.jpg",
                 nombre: "Playera Bordada a Mano",
                 precio: "$500 MXN",
                 descripcion: "Playera pintada y bordada a mano con chaquira, con el diseño que elijas.",
@@ -129,6 +134,7 @@
                 ]
             },
             llavero: {
+                imagen: "img/llavero.jpg",
                 nombre: "Llavero Personalizado",
                 precio: "$60 MXN",
                 descripcion: "Llavero artesanal hecho a mano, personalizado con la inicial que elijas.",
@@ -137,12 +143,14 @@
                 ]
             },
             figura: {
+                imagen: "img/arcilla.jpeg",
                 nombre: "Figura de Arcilla Mini",
                 precio: "$80 MXN",
                 descripcion: "Figura moldeada a mano en arcilla.",
                 personalizacion: []
             },
             gelatina: {
+                imagen: "img/gelatina.jpg",
                 nombre: "Gelatina Fiestera",
                 precio: "$150 MXN",
                 descripcion: "Gelatina artística decorada según la temática que elijas para tu evento.",
@@ -162,6 +170,8 @@
         document.getElementById("detalleNombre").textContent = producto.nombre;
         document.getElementById("detallePrecio").textContent = producto.precio;
         document.getElementById("detalleDescripcion").textContent = producto.descripcion;
+        document.getElementById("imagenProducto").src = producto.imagen;
+        document.getElementById("imagenProducto").alt = producto.nombre;
 
         const contenedorPersonalizacion = document.getElementById("detallePersonalizacion");
 
