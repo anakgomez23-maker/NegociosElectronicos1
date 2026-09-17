@@ -64,6 +64,8 @@
 
                 </form>
 
+                <p id="mensajeSuscripcion" class="mensaje-suscripcion" role="status" aria-live="polite"></p>
+
 
                 <!-- BOTÓN -->
                 <a href="index.html" class="boton boton-outline">
@@ -118,7 +120,9 @@
 function suscribirse(event) {
     event.preventDefault();
 
-    alert("¡Gracias por suscribirte a Ana Kaidien! ");
+    const mensaje = document.getElementById("mensajeSuscripcion");
+    mensaje.textContent = "¡Gracias por suscribirte a Ana Kaidien! Ya estás suscrito.";
+    mensaje.classList.add("visible");
 }
 </script>
 
