@@ -53,11 +53,16 @@
                     
                     <div id="detallePersonalizacion" class="personalizacion"></div>
 
+                    <div class="selector-cantidad">
+                        <label for="cantidadProducto">Cantidad</label>
+                        <input id="cantidadProducto" type="number" min="1" max="10" value="1">
+                    </div>
+
                     <div class="detalle-botones">
 
-                        <a href="login.html" class="boton">
+                        <button type="button" id="agregarCarrito" class="boton">
                             Agregar al carrito
-                        </a>
+                        </button>
 
                         <a href="catalogo.html" class="boton boton-outline-oscuro">
                             Regresar al catálogo
@@ -69,6 +74,11 @@
 
             </div>
 
+        </section>
+
+        <section class="productos-relacionados">
+            <h2>También te puede interesar</h2>
+            <div id="productosRelacionados" class="productos-grid"></div>
         </section>
 
     </main>
@@ -164,7 +174,7 @@
 
        
         const parametros = new URLSearchParams(window.location.search);
-        const idProducto = parametros.get("id");
+        const idProducto = parametros.get("id") || "pulsera";
         const producto = productos[idProducto] || productos.pulsera;
 
        
@@ -206,8 +216,65 @@
 
             contenedorPersonalizacion.appendChild(grupo);
         });
+
+        const contenedorRelacionados = document.getElementById("productosRelacionados");
+        Object.entries(productos)
+            .filter(function ([id]) {
+                return id !== idProducto;
+            })
+            .slice(0, 4)
+            .forEach(function ([id, productoRelacionado]) {
+                const tarjeta = document.createElement("div");
+                tarjeta.className = "producto-card";
+                tarjeta.innerHTML = `
+                    <div class="producto-imagen"><img src="${productoRelacionado.imagen}" alt="${productoRelacionado.nombre}"></div>
+                    <h3>${productoRelacionado.nombre}</h3>
+                    <p class="producto-precio">${productoRelacionado.precio}</p>
+                    <a href="Producto.html?id=${id}" class="boton boton-pequeno">Ver detalle</a>
+                `;
+                contenedorRelacionados.appendChild(tarjeta);
+            });
+
+        document.getElementById("agregarCarrito").addEventListener("click", function () {
+            const cantidad = Math.min(10, Math.max(1, Number(document.getElementById("cantidadProducto").value) || 1));
+            const opciones = {};
+
+            producto.personalizacion.forEach(function (campo, indice) {
+                opciones[campo.label] = document.getElementById("campo-" + indice).value.trim();
+            });
+
+            const carrito = JSON.parse(sessionStorage.getItem("carrito") || "[]");
+            const productoExistente = carrito.find(function (item) {
+                return item.id === idProducto && JSON.stringify(item.opciones || {}) === JSON.stringify(opciones);
+            });
+
+            if (productoExistente) {
+                productoExistente.cantidad += cantidad;
+            } else {
+                carrito.push({
+                    id: idProducto,
+                    nombre: producto.nombre,
+                    precio: producto.precio,
+                    cantidad: cantidad,
+                    opciones: opciones
+                });
+            }
+
+            sessionStorage.setItem("carrito", JSON.stringify(carrito));
+            if (typeof actualizarContadorCarrito === "function") {
+                actualizarContadorCarrito();
+            }
+
+            const mensaje = document.getElementById("mensajeCarrito");
+            mensaje.classList.add("visible");
+            window.setTimeout(function () {
+                mensaje.classList.remove("visible");
+            }, 3000);
+        });
     </script>
 
+    <p id="mensajeCarrito" class="mensaje-confirmacion" role="status" aria-live="polite">Agregado al carrito</p>
+    <script src="js/carrito.js"></script>
     <script src="js/sesion.js"></script>
 </body>
 

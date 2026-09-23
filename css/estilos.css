@@ -668,6 +668,34 @@ ul {
 .detalle-info .texto-nosotros {
     margin-bottom: 2rem;
 }
+
+.selector-cantidad {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+.selector-cantidad label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-texto-principal);
+}
+
+.selector-cantidad input {
+    width: 5rem;
+    padding: 0.7rem;
+    border: 1.5px solid var(--color-borde);
+    border-radius: 10px;
+    color: var(--color-texto-principal);
+    font: inherit;
+    text-align: center;
+}
+
+.selector-cantidad input:focus {
+    outline: none;
+    border-color: var(--color-acento);
+}
 .personalizacion {
     display: flex;
     flex-direction: column;
@@ -722,6 +750,22 @@ ul {
     background-color: var(--color-texto-principal);
     color: #FFFFFF;
     border-color: var(--color-texto-principal);
+}
+
+.productos-relacionados {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 2rem 5rem;
+}
+
+.productos-relacionados h2 {
+    font-family: var(--fuente-titulo);
+    color: var(--color-texto-principal);
+    text-align: center;
+}
+
+.productos-relacionados .productos-grid {
+    padding: 2rem 0 0;
 }
 
 @media (max-width: 700px) {
