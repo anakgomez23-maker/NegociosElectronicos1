@@ -27,7 +27,7 @@
                 <li><a href="nosotros.html">Nosotros</a></li>
                 <li><a href="contacto.html">Contacto</a></li>
                 <li id="menuLogin"><a href="login.html">Iniciar sesión</a></li>
-                <li><a href="#" class="carrito-icono" aria-label="Carrito de compras"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.9a2 2 0 0 0 1.9-1.4L21 8H6M10 20h.01M18 20h.01" /></svg><span class="carrito-contador">0</span></a></li>
+                    <li><a href="carrito.html" class="carrito-icono" aria-label="Carrito de compras"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.9a2 2 0 0 0 1.9-1.4L21 8H6M10 20h.01M18 20h.01" /></svg><span class="carrito-contador">0</span></a></li>
             </ul>
 
         </nav>
@@ -237,30 +237,9 @@
 
         document.getElementById("agregarCarrito").addEventListener("click", function () {
             const cantidad = Math.min(10, Math.max(1, Number(document.getElementById("cantidadProducto").value) || 1));
-            const opciones = {};
+            const contadorActual = Number(sessionStorage.getItem("carritoContador")) || 0;
+            sessionStorage.setItem("carritoContador", String(contadorActual + cantidad));
 
-            producto.personalizacion.forEach(function (campo, indice) {
-                opciones[campo.label] = document.getElementById("campo-" + indice).value.trim();
-            });
-
-            const carrito = JSON.parse(sessionStorage.getItem("carrito") || "[]");
-            const productoExistente = carrito.find(function (item) {
-                return item.id === idProducto && JSON.stringify(item.opciones || {}) === JSON.stringify(opciones);
-            });
-
-            if (productoExistente) {
-                productoExistente.cantidad += cantidad;
-            } else {
-                carrito.push({
-                    id: idProducto,
-                    nombre: producto.nombre,
-                    precio: producto.precio,
-                    cantidad: cantidad,
-                    opciones: opciones
-                });
-            }
-
-            sessionStorage.setItem("carrito", JSON.stringify(carrito));
             if (typeof actualizarContadorCarrito === "function") {
                 actualizarContadorCarrito();
             }

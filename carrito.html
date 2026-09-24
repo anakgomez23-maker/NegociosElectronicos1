@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Carrito | Ana Kaidien</title>
+	<link rel="stylesheet" href="css/estilos.css">
+</head>
+
+<body>
+	<header>
+		<nav class="navbar">
+			<a href="index.html" class="logo">
+				Ana Kaidien
+				<span>Creaciones Artesanales</span>
+			</a>
+
+			<ul class="menu">
+				<li><a href="index.html">Inicio</a></li>
+				<li><a href="catalogo.html">Catálogo</a></li>
+				<li><a href="nosotros.html">Nosotros</a></li>
+				<li><a href="contacto.html">Contacto</a></li>
+				<li id="menuLogin"><a href="login.html">Iniciar sesión</a></li>
+				<li><a href="carrito.html" class="carrito-icono" aria-label="Carrito de compras"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.9a2 2 0 0 0 1.9-1.4L21 8H6M10 20h.01M18 20h.01" /></svg><span class="carrito-contador">0</span></a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<main>
+		<section class="carrito-seccion">
+			<div class="carrito-intro">
+				<p class="subtitulo">TU SELECCIÓN</p>
+				<h1>Carrito de compras</h1>
+				<p class="texto-nosotros">Estos productos son una muestra simulada de tu carrito.</p>
+			</div>
+
+			<div class="lista-carrito">
+				<article class="carrito-producto">
+					<div class="carrito-producto-imagen producto-imagen">
+						<img src="img/pulsera.jpg" alt="Pulsera Hilo Trenzado">
+					</div>
+					<div class="carrito-producto-info">
+						<h2>Pulsera Hilo Trenzado</h2>
+						<p class="carrito-dato">Precio unitario: <strong>$50 MXN</strong></p>
+						<p class="carrito-dato">Cantidad: <strong>1</strong></p>
+					</div>
+					<div class="carrito-producto-subtotal">
+						<span>Subtotal</span>
+						<strong>$50 MXN</strong>
+					</div>
+				</article>
+
+				<article class="carrito-producto">
+					<div class="carrito-producto-imagen producto-imagen">
+						<img src="img/llavero.jpg" alt="Llavero Personalizado">
+					</div>
+					<div class="carrito-producto-info">
+						<h2>Llavero Personalizado</h2>
+						<p class="carrito-dato">Precio unitario: <strong>$60 MXN</strong></p>
+						<p class="carrito-dato">Cantidad: <strong>1</strong></p>
+						<p class="carrito-personalizacion">Personalización: Letra A</p>
+					</div>
+					<div class="carrito-producto-subtotal">
+						<span>Subtotal</span>
+						<strong>$60 MXN</strong>
+					</div>
+				</article>
+			</div>
+
+			<div class="carrito-resumen">
+				<p class="carrito-total-etiqueta">Total general <strong>$110 MXN</strong></p>
+				<button type="button" id="continuarCompra" class="boton">Continuar compra</button>
+				<p id="mensajeCompra" class="mensaje-confirmacion" role="status" aria-live="polite"></p>
+			</div>
+		</section>
+	</main>
+
+	<footer>
+		<p>© 2026 Ana Kaidien - Creaciones Artesanales</p>
+	</footer>
+
+	<script>
+		document.getElementById('continuarCompra').addEventListener('click', function () {
+			const mensaje = document.getElementById('mensajeCompra');
+
+			if (!sessionStorage.getItem('usuarioActivo')) {
+				window.location.href = 'login.html';
+				return;
+			}
+
+			mensaje.textContent = 'Compra simulada, próximamente.';
+			mensaje.classList.add('visible');
+		});
+	</script>
+	<script src="js/carrito.js"></script>
+	<script src="js/sesion.js"></script>
+</body>
+
+</html>
