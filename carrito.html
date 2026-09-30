@@ -32,44 +32,18 @@
 			<div class="carrito-intro">
 				<p class="subtitulo">TU SELECCIÓN</p>
 				<h1>Carrito de compras</h1>
-				<p class="texto-nosotros">Estos productos son una muestra simulada de tu carrito.</p>
+				<p class="texto-nosotros">Aquí encontrarás los productos que agregaste.</p>
 			</div>
 
-			<div class="lista-carrito">
-				<article class="carrito-producto">
-					<div class="carrito-producto-imagen producto-imagen">
-						<img src="img/pulsera.jpg" alt="Pulsera Hilo Trenzado">
-					</div>
-					<div class="carrito-producto-info">
-						<h2>Pulsera Hilo Trenzado</h2>
-						<p class="carrito-dato">Precio unitario: <strong>$50 MXN</strong></p>
-						<p class="carrito-dato">Cantidad: <strong>1</strong></p>
-					</div>
-					<div class="carrito-producto-subtotal">
-						<span>Subtotal</span>
-						<strong>$50 MXN</strong>
-					</div>
-				</article>
+			<div id="listaCarrito" class="lista-carrito" aria-live="polite"></div>
 
-				<article class="carrito-producto">
-					<div class="carrito-producto-imagen producto-imagen">
-						<img src="img/llavero.jpg" alt="Llavero Personalizado">
-					</div>
-					<div class="carrito-producto-info">
-						<h2>Llavero Personalizado</h2>
-						<p class="carrito-dato">Precio unitario: <strong>$60 MXN</strong></p>
-						<p class="carrito-dato">Cantidad: <strong>1</strong></p>
-						<p class="carrito-personalizacion">Personalización: Letra A</p>
-					</div>
-					<div class="carrito-producto-subtotal">
-						<span>Subtotal</span>
-						<strong>$60 MXN</strong>
-					</div>
-				</article>
+			<div id="carritoVacio" class="carrito-vacio" hidden>
+				<p>Tu carrito está vacío.</p>
+				<a href="catalogo.html" class="boton">Ir al catálogo</a>
 			</div>
 
-			<div class="carrito-resumen">
-				<p class="carrito-total-etiqueta">Total general <strong>$110 MXN</strong></p>
+			<div id="carritoResumen" class="carrito-resumen" hidden>
+				<p class="carrito-total-etiqueta">Total general <strong id="totalCarrito">$0 MXN</strong></p>
 				<button type="button" id="continuarCompra" class="boton">Continuar compra</button>
 				<p id="mensajeCompra" class="mensaje-confirmacion" role="status" aria-live="polite"></p>
 			</div>

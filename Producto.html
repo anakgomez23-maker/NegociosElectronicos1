@@ -237,12 +237,25 @@
 
         document.getElementById("agregarCarrito").addEventListener("click", function () {
             const cantidad = Math.min(10, Math.max(1, Number(document.getElementById("cantidadProducto").value) || 1));
-            const contadorActual = Number(sessionStorage.getItem("carritoContador")) || 0;
-            sessionStorage.setItem("carritoContador", String(contadorActual + cantidad));
+            const carrito = window.obtenerCarrito();
+            const productoExistente = carrito.find(function (elemento) {
+                return String(elemento.id) === idProducto;
+            });
+            const precio = Number(producto.precio.replace(/[^\d.]/g, "")) || 0;
 
-            if (typeof actualizarContadorCarrito === "function") {
-                actualizarContadorCarrito();
+            if (productoExistente) {
+                productoExistente.cantidad += cantidad;
+            } else {
+                carrito.push({
+                    id: idProducto,
+                    nombre: producto.nombre,
+                    precio: precio,
+                    cantidad: cantidad,
+                    imagen: producto.imagen
+                });
             }
+
+            window.guardarCarrito(carrito);
 
             const mensaje = document.getElementById("mensajeCarrito");
             mensaje.classList.add("visible");
