@@ -1576,3 +1576,219 @@ footer {
         min-height: auto;
     }
 }
+
+/* ============================================
+   ADMIN - GESTIÓN DE PRODUCTOS
+   ============================================ */
+
+.admin-productos-toolbar {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1rem;
+}
+
+.admin-productos-agregar {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    border: 0;
+    cursor: pointer;
+}
+
+.admin-productos-agregar svg {
+    width: 1.1rem;
+    height: 1.1rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-width: 2;
+}
+
+.admin-tabla-contenedor {
+    overflow-x: auto;
+    background-color: var(--color-fondo);
+    border: 1px solid var(--color-borde);
+    border-radius: 10px;
+}
+
+.admin-tabla-productos {
+    width: 100%;
+    min-width: 760px;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.admin-tabla-productos th,
+.admin-tabla-productos td {
+    padding: 0.9rem 1rem;
+    border-bottom: 1px solid var(--color-borde);
+}
+
+.admin-tabla-productos th {
+    background-color: var(--color-fondo-claro);
+    color: var(--color-texto-secundario);
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.admin-tabla-productos td {
+    color: var(--color-texto-principal);
+    font-size: 0.9rem;
+}
+
+.admin-tabla-productos tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.admin-producto-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 3.25rem;
+    height: 3.25rem;
+    border: 1px dashed var(--color-borde);
+    border-radius: 8px;
+    background-color: var(--color-fondo-claro);
+    color: var(--color-texto-secundario);
+    font-size: 0.65rem;
+    text-align: center;
+}
+
+.admin-producto-acciones {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.admin-producto-accion {
+    padding: 0.45rem 0.7rem;
+    border: 1px solid var(--color-borde);
+    border-radius: 6px;
+    background-color: var(--color-fondo);
+    color: var(--color-texto-principal);
+    font: inherit;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.admin-producto-accion:hover {
+    border-color: var(--color-acento);
+    color: var(--color-acento);
+}
+
+.admin-producto-accion-eliminar:hover {
+    border-color: #c94f3e;
+    color: #c94f3e;
+}
+
+.admin-productos-dialog {
+    width: min(560px, calc(100% - 2rem));
+    max-height: min(90vh, 720px);
+    margin: auto;
+    padding: 0;
+    overflow-y: auto;
+    border: 1px solid var(--color-borde);
+    border-radius: 10px;
+    background-color: var(--color-fondo);
+    color: var(--color-texto-principal);
+    box-shadow: 0 20px 60px rgba(52, 64, 84, 0.2);
+}
+
+.admin-productos-dialog::backdrop {
+    background-color: rgba(52, 64, 84, 0.48);
+}
+
+.admin-productos-formulario {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1.5rem;
+}
+
+.admin-productos-formulario h2 {
+    margin-bottom: 0.25rem;
+    font-family: var(--fuente-titulo);
+    font-size: 1.4rem;
+}
+
+.admin-productos-campo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.admin-productos-campo label {
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.admin-productos-campo input,
+.admin-productos-campo select,
+.admin-productos-campo textarea {
+    width: 100%;
+    padding: 0.75rem 0.9rem;
+    border: 1.5px solid var(--color-borde);
+    border-radius: 8px;
+    background-color: var(--color-fondo);
+    color: var(--color-texto-principal);
+    font: inherit;
+    font-size: 0.9rem;
+}
+
+.admin-productos-campo textarea {
+    min-height: 6rem;
+    resize: vertical;
+}
+
+.admin-productos-campo input:focus,
+.admin-productos-campo select:focus,
+.admin-productos-campo textarea:focus {
+    outline: none;
+    border-color: var(--color-acento);
+}
+
+.admin-productos-modal-acciones {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+}
+
+.admin-productos-cancelar {
+    border: 1px solid var(--color-borde);
+    background-color: var(--color-fondo);
+    color: var(--color-texto-principal);
+    cursor: pointer;
+}
+
+.admin-productos-guardar {
+    border: 0;
+    cursor: pointer;
+}
+
+@media (max-width: 640px) {
+    .admin-productos-toolbar {
+        justify-content: stretch;
+    }
+
+    .admin-productos-agregar {
+        justify-content: center;
+        width: 100%;
+    }
+
+    .admin-productos-formulario {
+        padding: 1.25rem;
+    }
+}
+
+.admin-productos-eliminar-confirmar {
+    border: 0;
+    background-color: var(--color-acento);
+    color: #FFFFFF;
+    cursor: pointer;
+}
+
+.admin-productos-eliminar-confirmar:hover {
+    background-color: var(--color-texto-principal);
+}

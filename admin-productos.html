@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productos | Panel de administrador | Ana Kaidien</title>
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+
+<body class="admin-body">
+    <header class="admin-encabezado">
+        <a href="index.html" class="logo">Ana Kaidien<span>Creaciones Artesanales</span></a>
+        <div class="admin-encabezado-info">
+            <span>Panel de administrador</span>
+            <a href="login.html" class="admin-cerrar">Cerrar sesión</a>
+        </div>
+    </header>
+
+    <aside class="admin-sidebar" aria-label="Navegación administrativa">
+        <p class="admin-sidebar-titulo">Gestión</p>
+        <nav>
+            <a class="admin-nav-enlace admin-nav-activo" href="admin-productos.html" aria-current="page">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5h16v13H4zM8 3v5M16 3v5M4 10h16" /></svg>
+                <span>Productos</span>
+            </a>
+            <a class="admin-nav-enlace" href="admin-pedidos.html">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h14v16H5zM8 8h8M8 12h8M8 16h5" /></svg>
+                <span>Pedidos</span>
+            </a>
+            <a class="admin-nav-enlace" href="admin-promociones.html">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-2.9-5.6 2.9 1.1-6.2L3 9.6l6.2-.9z" /></svg>
+                <span>Promociones</span>
+            </a>
+        </nav>
+    </aside>
+
+    <main class="admin-contenido">
+        <div class="admin-titulo">
+            <p class="subtitulo">Catálogo</p>
+            <h1>Productos</h1>
+            <p>Administra los productos de la tienda.</p>
+        </div>
+
+        <div class="admin-productos-toolbar">
+            <button type="button" id="agregarProducto" class="boton admin-productos-agregar">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>
+                Agregar producto
+            </button>
+        </div>
+
+        <p id="mensajeProducto" class="mensaje-confirmacion" role="status" aria-live="polite"></p>
+
+        <div class="admin-tabla-contenedor">
+            <table class="admin-tabla-productos">
+                <thead>
+                    <tr>
+                        <th scope="col">Imagen</th>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Categoría</th>
+                        <th scope="col">Precio</th>
+                        <th scope="col">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaProductos"></tbody>
+            </table>
+        </div>
+    </main>
+
+    <dialog class="admin-productos-dialog" id="modalProducto" aria-labelledby="tituloModalProducto">
+        <form class="admin-productos-formulario" id="formularioProducto" novalidate>
+            <h2 id="tituloModalProducto">Agregar producto</h2>
+
+            <div class="admin-productos-campo">
+                <label for="nombreProducto">Nombre</label>
+                <input id="nombreProducto" name="nombre" type="text">
+            </div>
+
+            <div class="admin-productos-campo">
+                <label for="categoriaProducto">Categoría</label>
+                <input id="categoriaProducto" name="categoria" type="text" list="listaCategorias">
+                <datalist id="listaCategorias"></datalist>
+            </div>
+
+            <div class="admin-productos-campo">
+                <label for="precioProducto">Precio (MXN)</label>
+                <input id="precioProducto" name="precio" type="number" min="0" step="0.01">
+            </div>
+
+            <div class="admin-productos-campo">
+                <label for="descripcionProducto">Descripción</label>
+                <textarea id="descripcionProducto" name="descripcion" rows="3"></textarea>
+            </div>
+
+            <div class="admin-productos-modal-acciones">
+                <button type="button" id="cancelarProducto" class="boton admin-productos-cancelar">Cancelar</button>
+                <button type="submit" class="boton admin-productos-guardar">Guardar</button>
+            </div>
+        </form>
+    </dialog>
+
+    <dialog class="admin-productos-dialog" id="modalConfirmarEliminacion" aria-labelledby="tituloConfirmarEliminacion">
+        <div class="admin-productos-formulario">
+            <h2 id="tituloConfirmarEliminacion">Confirmar eliminación</h2>
+            <p>¿Seguro que quieres eliminar este producto?</p>
+            <div class="admin-productos-modal-acciones">
+                <button type="button" id="cancelarEliminacion" class="boton admin-productos-cancelar">Cancelar</button>
+                <button type="button" id="confirmarEliminacion" class="boton admin-productos-eliminar-confirmar">Sí, eliminar</button>
+            </div>
+        </div>
+    </dialog>
+
+    <script>
+        const productos = [
+            { id: 1, nombre: 'Pulsera Hilo Trenzado', categoria: 'Pulseras', precio: 50, descripcion: 'Pulsera artesanal elaborada con hilo trenzado a mano.' },
+            { id: 2, nombre: 'Piñata Corazón', categoria: 'Piñatas', precio: 380, descripcion: 'Piñata artesanal personalizada para fiestas.' },
+            { id: 3, nombre: 'Pintura Árbol', categoria: 'Pinturas', precio: 600, descripcion: 'Pintura para huellas hecha a mano sobre lienzo.' },
+            { id: 4, nombre: 'Hilorama Personalizado', categoria: 'Hiloramas', precio: 350, descripcion: 'Diseño elaborado con hilo y personalizado.' },
+            { id: 5, nombre: 'Playera Bordada a Mano', categoria: 'Ropa artesanal', precio: 500, descripcion: 'Playera pintada y bordada a mano.' },
+            { id: 6, nombre: 'Llavero Personalizado', categoria: 'Llaveros', precio: 60, descripcion: 'Llavero artesanal personalizado.' },
+            { id: 7, nombre: 'Figura de Arcilla Mini', categoria: 'Figuras de arcilla', precio: 80, descripcion: 'Figura moldeada a mano en arcilla.' },
+            { id: 8, nombre: 'Gelatina Fiestera', categoria: 'Gelatinas', precio: 150, descripcion: 'Gelatina artística decorada para eventos.' }
+        ];
+
+        const tablaProductos = document.getElementById('tablaProductos');
+        const modalProducto = document.getElementById('modalProducto');
+        const formularioProducto = document.getElementById('formularioProducto');
+        const tituloModalProducto = document.getElementById('tituloModalProducto');
+        const listaCategorias = document.getElementById('listaCategorias');
+        const mensajeProducto = document.getElementById('mensajeProducto');
+        const modalConfirmarEliminacion = document.getElementById('modalConfirmarEliminacion');
+        let idProductoEnEdicion = null;
+        let siguienteId = productos.length + 1;
+        let temporizadorMensaje = null;
+        let idProductoPendienteEliminar = null;
+
+        function pintarProductos() {
+            tablaProductos.replaceChildren();
+
+            if (productos.length === 0) {
+                const filaVacia = document.createElement('tr');
+                const celdaVacia = document.createElement('td');
+                celdaVacia.colSpan = 5;
+                celdaVacia.textContent = 'No hay productos para mostrar.';
+                filaVacia.appendChild(celdaVacia);
+                tablaProductos.appendChild(filaVacia);
+                return;
+            }
+
+            productos.forEach(function (producto) {
+                const fila = document.createElement('tr');
+                fila.dataset.productoId = producto.id;
+
+                const celdaImagen = document.createElement('td');
+                const placeholder = document.createElement('span');
+                placeholder.className = 'admin-producto-placeholder';
+                placeholder.textContent = 'Sin imagen';
+                celdaImagen.appendChild(placeholder);
+
+                const celdaNombre = document.createElement('td');
+                celdaNombre.textContent = producto.nombre;
+
+                const celdaCategoria = document.createElement('td');
+                celdaCategoria.textContent = producto.categoria;
+
+                const celdaPrecio = document.createElement('td');
+                const precioNumerico = Number(producto.precio);
+                celdaPrecio.textContent = Number.isFinite(precioNumerico)
+                    ? new Intl.NumberFormat('es-MX', {
+                        style: 'currency',
+                        currency: 'MXN',
+                        maximumFractionDigits: 2
+                    }).format(precioNumerico)
+                    : producto.precio;
+
+                const celdaAcciones = document.createElement('td');
+                const acciones = document.createElement('div');
+                acciones.className = 'admin-producto-acciones';
+
+                const botonEditar = document.createElement('button');
+                botonEditar.type = 'button';
+                botonEditar.className = 'admin-producto-accion';
+                botonEditar.dataset.action = 'editar';
+                botonEditar.textContent = 'Editar';
+                botonEditar.setAttribute('aria-label', 'Editar ' + producto.nombre);
+
+                const botonEliminar = document.createElement('button');
+                botonEliminar.type = 'button';
+                botonEliminar.className = 'admin-producto-accion admin-producto-accion-eliminar';
+                botonEliminar.dataset.action = 'eliminar';
+                botonEliminar.textContent = 'Eliminar';
+                botonEliminar.setAttribute('aria-label', 'Eliminar ' + producto.nombre);
+
+                acciones.append(botonEditar, botonEliminar);
+                celdaAcciones.appendChild(acciones);
+                fila.append(celdaImagen, celdaNombre, celdaCategoria, celdaPrecio, celdaAcciones);
+                tablaProductos.appendChild(fila);
+            });
+        }
+
+        function actualizarListaCategorias() {
+            const categorias = [...new Set(productos.map(function (producto) {
+                return producto.categoria.trim();
+            }).filter(Boolean))].sort(function (a, b) {
+                return a.localeCompare(b, 'es');
+            });
+
+            listaCategorias.replaceChildren();
+            categorias.forEach(function (categoria) {
+                const opcion = document.createElement('option');
+                opcion.value = categoria;
+                listaCategorias.appendChild(opcion);
+            });
+        }
+
+        function abrirModal(producto) {
+            actualizarListaCategorias();
+            formularioProducto.reset();
+            idProductoEnEdicion = producto ? producto.id : null;
+            tituloModalProducto.textContent = producto ? 'Editar producto' : 'Agregar producto';
+
+            if (producto) {
+                formularioProducto.elements.nombre.value = producto.nombre;
+                formularioProducto.elements.categoria.value = producto.categoria;
+                formularioProducto.elements.precio.value = producto.precio;
+                formularioProducto.elements.descripcion.value = producto.descripcion;
+            }
+
+            modalProducto.showModal();
+            formularioProducto.elements.nombre.focus();
+        }
+
+        document.getElementById('agregarProducto').addEventListener('click', function () {
+            abrirModal(null);
+        });
+
+        document.getElementById('cancelarProducto').addEventListener('click', function () {
+            modalProducto.close();
+        });
+
+        tablaProductos.addEventListener('click', function (evento) {
+            const boton = evento.target.closest('button[data-action]');
+            if (!boton) {
+                return;
+            }
+
+            const id = Number(boton.closest('tr').dataset.productoId);
+            const indice = productos.findIndex(function (producto) {
+                return producto.id === id;
+            });
+
+            if (boton.dataset.action === 'editar') {
+                abrirModal(productos[indice]);
+            } else if (boton.dataset.action === 'eliminar') {
+                idProductoPendienteEliminar = id;
+                modalConfirmarEliminacion.showModal();
+            }
+        });
+
+        document.getElementById('cancelarEliminacion').addEventListener('click', function () {
+            idProductoPendienteEliminar = null;
+            modalConfirmarEliminacion.close();
+        });
+
+        document.getElementById('confirmarEliminacion').addEventListener('click', function () {
+            const indice = productos.findIndex(function (producto) {
+                return producto.id === idProductoPendienteEliminar;
+            });
+
+            if (indice !== -1) {
+                productos.splice(indice, 1);
+                pintarProductos();
+            }
+
+            idProductoPendienteEliminar = null;
+            modalConfirmarEliminacion.close();
+        });
+
+        formularioProducto.addEventListener('submit', function (evento) {
+            evento.preventDefault();
+
+            const datos = new FormData(formularioProducto);
+            const precioCapturado = datos.get('precio').trim();
+            const productoActualizado = {
+                nombre: datos.get('nombre').trim() || 'Producto sin nombre',
+                categoria: datos.get('categoria').trim() || 'Sin categoría',
+                precio: precioCapturado ? Number(precioCapturado) : '$0 MXN',
+                descripcion: datos.get('descripcion').trim() || '—'
+            };
+
+            const esEdicion = idProductoEnEdicion !== null;
+            if (!esEdicion) {
+                productos.push({ id: siguienteId++, ...productoActualizado });
+            } else {
+                const indice = productos.findIndex(function (producto) {
+                    return producto.id === idProductoEnEdicion;
+                });
+                productos[indice] = { id: idProductoEnEdicion, ...productoActualizado };
+            }
+
+            pintarProductos();
+            modalProducto.close();
+            mensajeProducto.textContent = esEdicion
+                ? 'Producto actualizado (simulado)'
+                : 'Producto agregado (simulado)';
+            mensajeProducto.classList.add('visible');
+            window.clearTimeout(temporizadorMensaje);
+            temporizadorMensaje = window.setTimeout(function () {
+                mensajeProducto.classList.remove('visible');
+            }, 3000);
+        });
+
+        pintarProductos();
+    </script>
+</body>
+
+</html>
