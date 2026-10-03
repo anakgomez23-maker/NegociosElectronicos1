@@ -99,11 +99,23 @@
         const productos = {
             pulsera: {
                 imagen: "img/pulsera.jpg",
+                imagenesPorColor: {
+                    "Rojo": "img/PulseraRojo.jpg",
+                    "Azul": "img/PulseraAzul.jpg",
+                    "Verde": "img/PulseraVerde.jpg",
+                    "Amarillo": "img/PulseraAmarillo.jpg",
+                    "Rosa": "img/PulseraRosa.jpg",
+                    "Fiusha": "img/PulseraFiusha.jpg",
+                    "Blanco": "img/PulseraBlanco.jpg",
+                    "Negro": "img/PulseraNegro.jpg",
+                    "Beige": "img/PulserBeige.jpg",
+                    "Multicolor": "img/PulseraMulticolor.jpg"
+                },
                 nombre: "Pulsera Hilo Trenzado",
                 precio: "$50 MXN",
                 descripcion: "Pulsera artesanal elaborada con hilo trenzado a mano. Cada pieza es única y hecha con dedicación y cariño.",
                 personalizacion: [
-                    { label: "Color", tipo: "select", opciones: ["Rojo", "Azul", "Verde","Amarillo","Rosa", "Blanco", "Negro", "Beige","Gris","Multicolor"] },
+                    { label: "Color", tipo: "select", opciones: ["Rojo", "Azul", "Verde", "Amarillo", "Rosa", "Fiusha", "Blanco", "Negro", "Beige", "Multicolor"] },
                     { label: "Modelo", tipo: "select", opciones: ["1", "2", "3","4","5", "6", "7", "8","9","10"] }  
                 ]
             },
@@ -204,6 +216,19 @@
                     optionEl.textContent = opcion;
                     select.appendChild(optionEl);
                 });
+
+                if (producto.imagenesPorColor && campo.label === "Color") {
+                    const actualizarImagenPorColor = function () {
+                        const imagenColor = document.createElement("img");
+                        imagenColor.id = "imagenProducto";
+                        imagenColor.src = producto.imagenesPorColor[select.value] || producto.imagen;
+                        imagenColor.alt = producto.nombre + " color " + select.value;
+                        document.getElementById("detalleImagen").replaceChildren(imagenColor);
+                    };
+
+                    select.addEventListener("change", actualizarImagenPorColor);
+                    actualizarImagenPorColor();
+                }
 
                 grupo.appendChild(select);
             } else {
