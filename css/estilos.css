@@ -1618,6 +1618,10 @@ footer {
     text-align: left;
 }
 
+.admin-tabla-pedidos {
+    min-width: 1000px;
+}
+
 .admin-tabla-productos th,
 .admin-tabla-productos td {
     padding: 0.9rem 1rem;
@@ -1791,4 +1795,100 @@ footer {
 
 .admin-productos-eliminar-confirmar:hover {
     background-color: var(--color-texto-principal);
+}
+
+/* ============================================
+   ADMIN - GESTIÓN DE PEDIDOS
+   ============================================ */
+
+.admin-pedido-estado {
+    display: inline-block;
+    padding: 0.3rem 0.65rem;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.admin-pedido-estado-pendiente {
+    background-color: rgba(245, 158, 11, 0.15);
+    color: #9a5b00;
+}
+
+.admin-pedido-estado-en-proceso {
+    background-color: rgba(59, 130, 182, 0.14);
+    color: #25618d;
+}
+
+.admin-pedido-estado-enviado {
+    background-color: rgba(101, 168, 75, 0.15);
+    color: #467b32;
+}
+
+.admin-pedido-estado-cancelado {
+    background-color: rgba(201, 79, 62, 0.13);
+    color: #a3372a;
+}
+
+.admin-pedido-acciones {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.admin-pedido-selector {
+    max-width: 9.5rem;
+    padding: 0.45rem 0.55rem;
+    border: 1px solid var(--color-borde);
+    border-radius: 6px;
+    background-color: var(--color-fondo);
+    color: var(--color-texto-principal);
+    font: inherit;
+    font-size: 0.8rem;
+}
+
+.admin-pedido-selector:focus {
+    outline: 2px solid var(--color-acento);
+    outline-offset: 1px;
+}
+
+.admin-pedido-detalle {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    color: var(--color-texto-principal);
+    font-size: 0.9rem;
+}
+
+.admin-pedido-detalle h3 {
+    margin-top: 0.35rem;
+    font-family: var(--fuente-titulo);
+    font-size: 1rem;
+}
+
+.admin-pedido-productos {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    padding-left: 1.25rem;
+    list-style: disc;
+}
+
+.admin-pedido-detalle > p:last-child {
+    padding-top: 0.65rem;
+    border-top: 1px solid var(--color-borde);
+    font-size: 1rem;
+}
+
+@media (max-width: 640px) {
+    .admin-pedido-acciones {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .admin-pedido-acciones .admin-producto-accion,
+    .admin-pedido-selector {
+        max-width: none;
+        width: 100%;
+    }
 }

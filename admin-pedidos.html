@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pedidos | Panel de administrador | Ana Kaidien</title>
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+
+<body class="admin-body">
+    <header class="admin-encabezado">
+        <a href="index.html" class="logo">Ana Kaidien<span>Creaciones Artesanales</span></a>
+        <div class="admin-encabezado-info">
+            <span>Panel de administrador</span>
+            <a href="login.html" class="admin-cerrar">Cerrar sesión</a>
+        </div>
+    </header>
+
+    <aside class="admin-sidebar" aria-label="Navegación administrativa">
+        <p class="admin-sidebar-titulo">Gestión</p>
+        <nav>
+            <a class="admin-nav-enlace" href="admin-productos.html">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5h16v13H4zM8 3v5M16 3v5M4 10h16" /></svg>
+                <span>Productos</span>
+            </a>
+            <a class="admin-nav-enlace admin-nav-activo" href="admin-pedidos.html" aria-current="page">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h14v16H5zM8 8h8M8 12h8M8 16h5" /></svg>
+                <span>Pedidos</span>
+            </a>
+            <a class="admin-nav-enlace" href="admin-promociones.html">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-2.9-5.6 2.9 1.1-6.2L3 9.6l6.2-.9z" /></svg>
+                <span>Promociones</span>
+            </a>
+        </nav>
+    </aside>
+
+    <main class="admin-contenido">
+        <div class="admin-titulo">
+            <p class="subtitulo">Gestión</p>
+            <h1>Pedidos</h1>
+            <p>Administra los pedidos de la tienda.</p>
+        </div>
+
+        <p id="mensajePedido" class="mensaje-confirmacion" role="status" aria-live="polite"></p>
+
+        <div class="admin-tabla-contenedor">
+            <table class="admin-tabla-productos admin-tabla-pedidos">
+                <thead>
+                    <tr>
+                        <th scope="col">ID de pedido</th>
+                        <th scope="col">Cliente</th>
+                        <th scope="col">Fecha</th>
+                        <th scope="col">Total</th>
+                        <th scope="col">Estado</th>
+                        <th scope="col">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaPedidos"></tbody>
+            </table>
+        </div>
+    </main>
+
+    <dialog class="admin-productos-dialog" id="modalPedido" aria-labelledby="tituloModalPedido">
+        <div class="admin-productos-formulario">
+            <h2 id="tituloModalPedido">Detalle del pedido</h2>
+            <div id="detallePedidoContenido" class="admin-pedido-detalle"></div>
+            <div class="admin-productos-modal-acciones">
+                <button type="button" id="cerrarDetallePedido" class="boton admin-productos-cancelar">Cerrar</button>
+            </div>
+        </div>
+    </dialog>
+
+    <script>
+        const pedidos = [
+            {
+                id: 'PED-2026-1042',
+                cliente: 'Mariana Solís',
+                fecha: '2026-10-05',
+                estado: 'Pendiente',
+                direccion: 'Calle Naranjo 148, Col. Del Valle, CDMX, C.P. 03100',
+                productos: [
+                    { nombre: 'Pulsera Hilo Trenzado', cantidad: 2, precio: 50 },
+                    { nombre: 'Llavero Personalizado', cantidad: 1, precio: 60 }
+                ],
+                total: 160
+            },
+            {
+                id: 'PED-2026-1041',
+                cliente: 'Diego Valdés',
+                fecha: '2026-10-04',
+                estado: 'En proceso',
+                direccion: 'Av. Las Flores 27, Col. Americana, Guadalajara, Jalisco, C.P. 44160',
+                productos: [
+                    { nombre: 'Piñata Corazón', cantidad: 1, precio: 380 },
+                    { nombre: 'Gelatina Fiestera', cantidad: 2, precio: 150 }
+                ],
+                total: 680
+            },
+            {
+                id: 'PED-2026-1040',
+                cliente: 'Camila Navarro',
+                fecha: '2026-10-03',
+                estado: 'Enviado',
+                direccion: 'Privada del Lago 56, Col. Chapalita, Zapopan, Jalisco, C.P. 45040',
+                productos: [
+                    { nombre: 'Pintura Árbol', cantidad: 1, precio: 600 },
+                    { nombre: 'Llavero Personalizado', cantidad: 2, precio: 60 }
+                ],
+                total: 720
+            },
+            {
+                id: 'PED-2026-1039',
+                cliente: 'Iván Ríos',
+                fecha: '2026-10-02',
+                estado: 'Cancelado',
+                direccion: 'Calle Roble 311, Col. San Pedro, Monterrey, Nuevo León, C.P. 66220',
+                productos: [
+                    { nombre: 'Hilorama Personalizado', cantidad: 1, precio: 350 },
+                    { nombre: 'Pulsera Hilo Trenzado', cantidad: 2, precio: 50 }
+                ],
+                total: 450
+            },
+            {
+                id: 'PED-2026-1038',
+                cliente: 'Renata Castillo',
+                fecha: '2026-09-30',
+                estado: 'Pendiente',
+                direccion: 'Circuito del Sol 89, Col. Centro, Querétaro, Querétaro, C.P. 76000',
+                productos: [
+                    { nombre: 'Playera Bordada a Mano', cantidad: 1, precio: 500 },
+                    { nombre: 'Figura de Arcilla Mini', cantidad: 2, precio: 80 }
+                ],
+                total: 660
+            },
+            {
+                id: 'PED-2026-1037',
+                cliente: 'Santiago Paredes',
+                fecha: '2026-09-28',
+                estado: 'En proceso',
+                direccion: 'Andador Bugambilias 12, Col. Centro, Puebla, Puebla, C.P. 72000',
+                productos: [
+                    { nombre: 'Gelatina Fiestera', cantidad: 1, precio: 150 },
+                    { nombre: 'Pulsera Hilo Trenzado', cantidad: 3, precio: 50 },
+                    { nombre: 'Llavero Personalizado', cantidad: 1, precio: 60 }
+                ],
+                total: 360
+            },
+            {
+                id: 'PED-2026-1036',
+                cliente: 'Lucía Zamora',
+                fecha: '2026-09-26',
+                estado: 'Enviado',
+                direccion: 'Paseo de la Reforma 203, Col. Juárez, CDMX, C.P. 06600',
+                productos: [
+                    { nombre: 'Piñata Corazón', cantidad: 1, precio: 380 },
+                    { nombre: 'Hilorama Personalizado', cantidad: 1, precio: 350 }
+                ],
+                total: 730
+            }
+        ];
+
+        const estados = ['Pendiente', 'En proceso', 'Enviado', 'Cancelado'];
+        const tablaPedidos = document.getElementById('tablaPedidos');
+        const modalPedido = document.getElementById('modalPedido');
+        const detallePedidoContenido = document.getElementById('detallePedidoContenido');
+        const mensajePedido = document.getElementById('mensajePedido');
+        let temporizadorMensaje = null;
+
+        const formatoMoneda = new Intl.NumberFormat('es-MX', {
+            style: 'currency',
+            currency: 'MXN',
+            maximumFractionDigits: 2
+        });
+
+        function crearCelda(texto) {
+            const celda = document.createElement('td');
+            celda.textContent = texto;
+            return celda;
+        }
+
+        function pintarPedidos() {
+            tablaPedidos.replaceChildren();
+
+            pedidos.forEach(function (pedido) {
+                const fila = document.createElement('tr');
+                fila.dataset.pedidoId = pedido.id;
+
+                const celdaEstado = document.createElement('td');
+                const badgeEstado = document.createElement('span');
+                badgeEstado.className = 'admin-pedido-estado admin-pedido-estado-' + pedido.estado.toLowerCase().replace(' ', '-');
+                badgeEstado.textContent = pedido.estado;
+                celdaEstado.appendChild(badgeEstado);
+
+                const celdaAcciones = document.createElement('td');
+                const acciones = document.createElement('div');
+                acciones.className = 'admin-pedido-acciones';
+
+                const botonDetalle = document.createElement('button');
+                botonDetalle.type = 'button';
+                botonDetalle.className = 'admin-producto-accion';
+                botonDetalle.dataset.action = 'detalle';
+                botonDetalle.textContent = 'Ver detalle';
+                botonDetalle.setAttribute('aria-label', 'Ver detalle del pedido ' + pedido.id);
+
+                const selectorEstado = document.createElement('select');
+                selectorEstado.className = 'admin-pedido-selector';
+                selectorEstado.dataset.action = 'estado';
+                selectorEstado.setAttribute('aria-label', 'Cambiar estado del pedido ' + pedido.id);
+                estados.forEach(function (estado) {
+                    const opcion = document.createElement('option');
+                    opcion.value = estado;
+                    opcion.textContent = estado;
+                    opcion.selected = estado === pedido.estado;
+                    selectorEstado.appendChild(opcion);
+                });
+
+                acciones.append(botonDetalle, selectorEstado);
+                celdaAcciones.appendChild(acciones);
+                fila.append(
+                    crearCelda(pedido.id),
+                    crearCelda(pedido.cliente),
+                    crearCelda(new Intl.DateTimeFormat('es-MX', {
+                        day: '2-digit',
+                        month: 'short',
+                        year: 'numeric',
+                        timeZone: 'UTC'
+                    }).format(new Date(pedido.fecha + 'T00:00:00Z'))),
+                    crearCelda(formatoMoneda.format(pedido.total)),
+                    celdaEstado,
+                    celdaAcciones
+                );
+                tablaPedidos.appendChild(fila);
+            });
+        }
+
+        function agregarDatoDetalle(etiqueta, valor) {
+            const parrafo = document.createElement('p');
+            const etiquetaDato = document.createElement('strong');
+            etiquetaDato.textContent = etiqueta + ': ';
+            parrafo.append(etiquetaDato, document.createTextNode(valor));
+            detallePedidoContenido.appendChild(parrafo);
+        }
+
+        function abrirDetallePedido(pedido) {
+            detallePedidoContenido.replaceChildren();
+            agregarDatoDetalle('Pedido', pedido.id);
+            agregarDatoDetalle('Cliente', pedido.cliente);
+            agregarDatoDetalle('Dirección de envío', pedido.direccion);
+
+            const tituloProductos = document.createElement('h3');
+            tituloProductos.textContent = 'Productos';
+            detallePedidoContenido.appendChild(tituloProductos);
+
+            const listaProductos = document.createElement('ul');
+            listaProductos.className = 'admin-pedido-productos';
+            pedido.productos.forEach(function (producto) {
+                const elemento = document.createElement('li');
+                elemento.textContent = producto.nombre + ' · ' + producto.cantidad + ' × ' + formatoMoneda.format(producto.precio);
+                listaProductos.appendChild(elemento);
+            });
+            detallePedidoContenido.appendChild(listaProductos);
+            agregarDatoDetalle('Total', formatoMoneda.format(pedido.total));
+            modalPedido.showModal();
+        }
+
+        function mostrarConfirmacionEstado() {
+            mensajePedido.textContent = 'Estado actualizado (simulado)';
+            mensajePedido.classList.add('visible');
+            window.clearTimeout(temporizadorMensaje);
+            temporizadorMensaje = window.setTimeout(function () {
+                mensajePedido.classList.remove('visible');
+            }, 3000);
+        }
+
+        tablaPedidos.addEventListener('click', function (evento) {
+            const boton = evento.target.closest('button[data-action="detalle"]');
+            if (!boton) {
+                return;
+            }
+
+            const id = boton.closest('tr').dataset.pedidoId;
+            const pedido = pedidos.find(function (elemento) {
+                return elemento.id === id;
+            });
+            if (pedido) {
+                abrirDetallePedido(pedido);
+            }
+        });
+
+        tablaPedidos.addEventListener('change', function (evento) {
+            const selector = evento.target.closest('select[data-action="estado"]');
+            if (!selector) {
+                return;
+            }
+
+            const fila = selector.closest('tr');
+            const pedido = pedidos.find(function (elemento) {
+                return elemento.id === fila.dataset.pedidoId;
+            });
+            if (!pedido || !estados.includes(selector.value)) {
+                return;
+            }
+
+            pedido.estado = selector.value;
+            const badgeEstado = fila.querySelector('.admin-pedido-estado');
+            badgeEstado.className = 'admin-pedido-estado admin-pedido-estado-' + pedido.estado.toLowerCase().replace(' ', '-');
+            badgeEstado.textContent = pedido.estado;
+            mostrarConfirmacionEstado();
+        });
+
+        document.getElementById('cerrarDetallePedido').addEventListener('click', function () {
+            modalPedido.close();
+        });
+
+        pintarPedidos();
+    </script>
+</body>
+
+</html>
