@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acceso de administrador | Ana Kaidien</title>
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+
+<body class="admin-login-body">
+    <header class="admin-login-encabezado">
+        <a href="index.html" class="logo">
+            Ana Kaidien
+            <span>Creaciones Artesanales</span>
+        </a>
+    </header>
+
+    <main class="autenticacion admin-login-autenticacion">
+        <section class="autenticacion-contenido admin-login-contenido">
+            <div class="autenticacion-encabezado">
+                <p class="subtitulo">Panel de administración</p>
+                <h1>Acceso de administrador</h1>
+            </div>
+
+            <form id="formAdminLogin" class="autenticacion-form" novalidate>
+                <label for="usuarioAdmin">Usuario</label>
+                <input type="text" id="usuarioAdmin" name="usuario">
+
+                <label for="contrasenaAdmin">Contraseña</label>
+                <input type="password" id="contrasenaAdmin" name="contrasena">
+
+                <button type="submit" class="boton boton-entrar">Entrar</button>
+            </form>
+
+            <a class="autenticacion-enlace admin-login-volver" href="index.html">← Volver a la tienda</a>
+        </section>
+    </main>
+
+    <script>
+        document.getElementById('formAdminLogin').addEventListener('submit', function (evento) {
+            evento.preventDefault();
+            const usuario = document.getElementById('usuarioAdmin').value.trim();
+            sessionStorage.setItem('adminActivo', usuario || 'Administrador');
+            window.location.href = 'admin.html';
+        });
+    </script>
+</body>
+
+</html>

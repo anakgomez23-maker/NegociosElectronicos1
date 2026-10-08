@@ -1142,6 +1142,39 @@ footer {
     color: var(--color-turquesa);
 }
 
+/* ADMIN - LOGIN */
+.admin-login-body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.admin-login-encabezado {
+    padding: 1.25rem 4rem;
+    background-color: var(--color-fondo);
+    border-bottom: 1px solid var(--color-borde);
+}
+
+.admin-login-autenticacion {
+    flex: 1;
+    align-items: center;
+    padding: 2rem;
+}
+
+.admin-login-contenido {
+    max-width: 460px;
+}
+
+.admin-login-volver {
+    font-size: 0.85rem;
+}
+
+@media (max-width: 640px) {
+    .admin-login-encabezado {
+        padding: 1rem;
+    }
+}
+
 /* ============================================
    PERFIL SIMULADO
    ============================================ */
