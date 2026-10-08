@@ -940,6 +940,101 @@ ul {
     }
 }
 
+/* CARRITO - POLÍTICAS DE PAGO */
+.carrito-politicas-overlay {
+    position: fixed;
+    z-index: 1000;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    padding: 1rem;
+    background-color: rgba(52, 64, 84, 0.55);
+}
+
+.carrito-politicas-overlay[hidden] {
+    display: none;
+}
+
+.carrito-politicas-tarjeta {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    width: min(560px, 100%);
+    max-height: min(90vh, 720px);
+    padding: 1.5rem;
+    overflow: hidden;
+    border: 1px solid var(--color-borde);
+    border-radius: 12px;
+    background-color: var(--color-fondo-claro);
+    color: var(--color-texto-principal);
+    box-shadow: 0 20px 60px rgba(52, 64, 84, 0.2);
+}
+
+.carrito-politicas-tarjeta h2 {
+    font-family: var(--fuente-titulo);
+    font-size: 1.4rem;
+}
+
+.carrito-politicas-contenido {
+    min-height: 0;
+    overflow-y: auto;
+}
+
+.carrito-politicas-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    padding-left: 1.25rem;
+    list-style: disc;
+}
+
+.carrito-politicas-lista li {
+    padding-left: 0.2rem;
+}
+
+.carrito-politicas-checkbox {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    cursor: pointer;
+}
+
+.carrito-politicas-checkbox input {
+    flex: 0 0 auto;
+    width: 1rem;
+    height: 1rem;
+    margin-top: 0.25rem;
+    accent-color: var(--color-acento);
+}
+
+.carrito-politicas-acciones {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.75rem;
+}
+
+.carrito-politicas-acciones .boton {
+    border: 0;
+    cursor: pointer;
+    text-align: center;
+}
+
+.carrito-politicas-acciones .boton-outline-oscuro {
+    border: 1.5px solid var(--color-borde);
+}
+
+@media (max-width: 480px) {
+    .carrito-politicas-tarjeta {
+        gap: 1rem;
+        padding: 1.25rem;
+    }
+
+    .carrito-politicas-acciones {
+        flex-direction: column;
+    }
+}
+
 /* ============================================
    FOOTER
    ============================================ */

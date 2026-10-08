@@ -45,7 +45,6 @@
 			<div id="carritoResumen" class="carrito-resumen" hidden>
 				<p class="carrito-total-etiqueta">Total general <strong id="totalCarrito">$0 MXN</strong></p>
 				<button type="button" id="continuarCompra" class="boton">Continuar compra</button>
-				<p id="mensajeCompra" class="mensaje-confirmacion" role="status" aria-live="polite"></p>
 			</div>
 		</section>
 	</main>
@@ -54,17 +53,61 @@
 		<p>© 2026 Ana Kaidien - Creaciones Artesanales</p>
 	</footer>
 
+	<div id="modalPoliticasPago" class="carrito-politicas-overlay" role="dialog" aria-modal="true" aria-labelledby="tituloPoliticasPago" hidden>
+		<section class="carrito-politicas-tarjeta">
+			<h2 id="tituloPoliticasPago">Políticas de pago</h2>
+			<div class="carrito-politicas-contenido">
+				<ul class="carrito-politicas-lista">
+					<li><strong>Métodos de pago:</strong> aceptamos tarjetas de crédito y débito, transferencia bancaria y efectivo en establecimientos participantes.</li>
+					<li><strong>Confirmación:</strong> los pagos con tarjeta suelen confirmarse al instante; las transferencias pueden tardar hasta 24 horas hábiles.</li>
+					<li><strong>Cancelaciones y reembolsos:</strong> puedes solicitar la cancelación antes de que tu pedido entre en preparación. Los reembolsos aprobados se procesan al método de pago original.</li>
+					<li><strong>Envíos:</strong> el pedido se prepara después de confirmar el pago y el envío puede tardar de 3 a 7 días hábiles, según el destino.</li>
+				</ul>
+			</div>
+			<label class="carrito-politicas-checkbox" for="aceptarPoliticasPago">
+				<input id="aceptarPoliticasPago" type="checkbox">
+				<span>He leído y acepto las políticas de pago</span>
+			</label>
+			<div class="carrito-politicas-acciones">
+				<button type="button" id="aceptarYContinuar" class="boton">Aceptar y continuar</button>
+				<button type="button" id="cancelarPoliticasPago" class="boton boton-outline-oscuro">Cancelar</button>
+			</div>
+		</section>
+	</div>
+
 	<script>
-		document.getElementById('continuarCompra').addEventListener('click', function () {
-			const mensaje = document.getElementById('mensajeCompra');
+		const modalPoliticasPago = document.getElementById('modalPoliticasPago');
+		const botonContinuarCompra = document.getElementById('continuarCompra');
+		const botonAceptarYContinuar = document.getElementById('aceptarYContinuar');
+		const botonCancelarPoliticasPago = document.getElementById('cancelarPoliticasPago');
 
-			if (!sessionStorage.getItem('usuarioActivo')) {
-				window.location.href = 'login.html';
-				return;
+		function cerrarModalPoliticasPago() {
+			modalPoliticasPago.hidden = true;
+			botonContinuarCompra.focus();
+		}
+
+		botonContinuarCompra.addEventListener('click', function () {
+			modalPoliticasPago.hidden = false;
+			botonAceptarYContinuar.focus();
+		});
+
+		botonAceptarYContinuar.addEventListener('click', function () {
+			modalPoliticasPago.hidden = true;
+			window.location.href = 'login.html';
+		});
+
+		botonCancelarPoliticasPago.addEventListener('click', cerrarModalPoliticasPago);
+
+		modalPoliticasPago.addEventListener('click', function (event) {
+			if (event.target === modalPoliticasPago) {
+				cerrarModalPoliticasPago();
 			}
+		});
 
-			mensaje.textContent = 'Compra simulada, próximamente.';
-			mensaje.classList.add('visible');
+		document.addEventListener('keydown', function (event) {
+			if (event.key === 'Escape' && !modalPoliticasPago.hidden) {
+				cerrarModalPoliticasPago();
+			}
 		});
 	</script>
 	<script src="js/carrito.js"></script>
