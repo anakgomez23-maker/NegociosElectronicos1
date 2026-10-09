@@ -1,4 +1,8 @@
 (() => {
+    const normalizarCantidad = (cantidad) => {
+        return Math.min(10, Math.max(1, Math.trunc(Number(cantidad) || 1)));
+    };
+
     const obtenerCarrito = () => {
         try {
             const carrito = JSON.parse(sessionStorage.getItem('carrito') || '[]');
@@ -10,7 +14,7 @@
 
     const actualizarContadorCarrito = () => {
         const cantidadTotal = obtenerCarrito().reduce((total, producto) => {
-            return total + Math.max(0, Number(producto.cantidad) || 0);
+            return total + normalizarCantidad(producto.cantidad);
         }, 0);
 
         document.querySelectorAll('.carrito-contador').forEach((contador) => {
@@ -41,7 +45,7 @@
         resumen.hidden = carrito.length === 0;
 
         carrito.forEach((producto) => {
-            const cantidad = Math.max(0, Number(producto.cantidad) || 0);
+            const cantidad = normalizarCantidad(producto.cantidad);
             const precio = Math.max(0, Number(producto.precio) || 0);
             const subtotal = precio * cantidad;
             totalGeneral += subtotal;
@@ -73,14 +77,38 @@
             precioTexto.textContent = formatoPrecio.format(precio);
             precioUnitario.appendChild(precioTexto);
 
-            const cantidadTexto = document.createElement('p');
-            cantidadTexto.className = 'carrito-dato';
-            cantidadTexto.append('Cantidad: ');
+            const cantidadSelector = document.createElement('div');
+            cantidadSelector.className = 'selector-cantidad carrito-selector-cantidad';
+            const cantidadEtiqueta = document.createElement('span');
+            cantidadEtiqueta.className = 'carrito-cantidad-etiqueta';
+            cantidadEtiqueta.textContent = 'Cantidad:';
+
+            const controlesCantidad = document.createElement('div');
+            controlesCantidad.className = 'carrito-control-cantidad';
+
+            const botonDisminuir = document.createElement('button');
+            botonDisminuir.type = 'button';
+            botonDisminuir.dataset.productoId = producto.id;
+            botonDisminuir.dataset.accionCantidad = 'disminuir';
+            botonDisminuir.setAttribute('aria-label', 'Disminuir cantidad de ' + producto.nombre);
+            botonDisminuir.textContent = '−';
+            botonDisminuir.disabled = cantidad <= 1;
+
             const cantidadValor = document.createElement('strong');
             cantidadValor.textContent = String(cantidad);
-            cantidadTexto.appendChild(cantidadValor);
+            cantidadValor.className = 'carrito-cantidad-valor';
 
-            informacion.append(nombre, precioUnitario, cantidadTexto);
+            const botonAumentar = document.createElement('button');
+            botonAumentar.type = 'button';
+            botonAumentar.dataset.productoId = producto.id;
+            botonAumentar.dataset.accionCantidad = 'aumentar';
+            botonAumentar.setAttribute('aria-label', 'Aumentar cantidad de ' + producto.nombre);
+            botonAumentar.textContent = '+';
+            botonAumentar.disabled = cantidad >= 10;
+
+            controlesCantidad.append(botonDisminuir, cantidadValor, botonAumentar);
+            cantidadSelector.append(cantidadEtiqueta, controlesCantidad);
+            informacion.append(nombre, precioUnitario, cantidadSelector);
 
             const subtotalContenedor = document.createElement('div');
             subtotalContenedor.className = 'carrito-producto-subtotal';
@@ -137,6 +165,25 @@
         lista.addEventListener('click', (evento) => {
             const boton = evento.target.closest('[data-producto-id]');
             if (!boton) {
+                return;
+            }
+
+            if (boton.dataset.accionCantidad) {
+                const carrito = obtenerCarrito();
+                const producto = carrito.find((elemento) => {
+                    return String(elemento.id) === boton.dataset.productoId;
+                });
+                if (!producto) {
+                    return;
+                }
+
+                const cambio = boton.dataset.accionCantidad === 'aumentar' ? 1 : -1;
+                producto.cantidad = normalizarCantidad(normalizarCantidad(producto.cantidad) + cambio);
+                guardarCarrito(carrito);
+                return;
+            }
+
+            if (!boton.classList.contains('boton-eliminar-carrito')) {
                 return;
             }
 
