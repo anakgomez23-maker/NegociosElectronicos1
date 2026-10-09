@@ -595,6 +595,7 @@ ul {
     height: 100%;
     object-fit: cover;
     display: block;
+    border-radius: inherit;
 }
 
 .producto-card h3 {
@@ -1033,6 +1034,13 @@ ul {
     .carrito-politicas-acciones {
         flex-direction: column;
     }
+}
+
+/* CARRITO - CONFIRMAR ELIMINACIÓN */
+
+.carrito-confirmar-dialog p {
+    margin: 0;
+    color: var(--color-texto-principal);
 }
 
 /* ============================================

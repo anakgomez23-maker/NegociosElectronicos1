@@ -111,17 +111,63 @@
     };
 
     const lista = document.getElementById('listaCarrito');
-    if (lista) {
+    const modalConfirmarEliminacion = document.getElementById('modalConfirmarEliminacionCarrito');
+    const botonCancelarEliminacion = document.getElementById('cancelarEliminacionCarrito');
+    const botonConfirmarEliminacion = document.getElementById('confirmarEliminacionCarrito');
+    const mensajeCarrito = document.getElementById('mensajeCarrito');
+    let idProductoPendienteEliminar = null;
+    let temporizadorMensaje = null;
+
+    const cerrarModalConfirmacion = () => {
+        idProductoPendienteEliminar = null;
+        modalConfirmarEliminacion.close();
+    };
+
+    const mostrarMensajeEliminacion = () => {
+        mensajeCarrito.textContent = 'Producto eliminado del carrito (simulado)';
+        mensajeCarrito.classList.add('visible');
+        window.clearTimeout(temporizadorMensaje);
+        temporizadorMensaje = window.setTimeout(() => {
+            mensajeCarrito.classList.remove('visible');
+        }, 3000);
+    };
+
+    if (lista && modalConfirmarEliminacion && botonCancelarEliminacion
+        && botonConfirmarEliminacion && mensajeCarrito) {
         lista.addEventListener('click', (evento) => {
             const boton = evento.target.closest('[data-producto-id]');
             if (!boton) {
                 return;
             }
 
-            const idProducto = boton.dataset.productoId;
+            idProductoPendienteEliminar = boton.dataset.productoId;
+            modalConfirmarEliminacion.showModal();
+            botonConfirmarEliminacion.focus();
+        });
+
+        botonCancelarEliminacion.addEventListener('click', cerrarModalConfirmacion);
+
+        modalConfirmarEliminacion.addEventListener('click', (evento) => {
+            if (evento.target === modalConfirmarEliminacion) {
+                cerrarModalConfirmacion();
+            }
+        });
+
+        modalConfirmarEliminacion.addEventListener('cancel', () => {
+            idProductoPendienteEliminar = null;
+        });
+
+        botonConfirmarEliminacion.addEventListener('click', () => {
+            if (idProductoPendienteEliminar === null) {
+                return;
+            }
+
+            const idProducto = idProductoPendienteEliminar;
             guardarCarrito(obtenerCarrito().filter((producto) => {
                 return String(producto.id) !== idProducto;
             }));
+            cerrarModalConfirmacion();
+            mostrarMensajeEliminacion();
         });
     }
 

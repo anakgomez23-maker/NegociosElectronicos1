@@ -271,6 +271,12 @@
             if (indice !== -1) {
                 productos.splice(indice, 1);
                 pintarProductos();
+                mensajeProducto.textContent = 'Producto eliminado (simulado)';
+                mensajeProducto.classList.add('visible');
+                window.clearTimeout(temporizadorMensaje);
+                temporizadorMensaje = window.setTimeout(function () {
+                    mensajeProducto.classList.remove('visible');
+                }, 3000);
             }
 
             idProductoPendienteEliminar = null;

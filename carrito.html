@@ -46,6 +46,7 @@
 				<p class="carrito-total-etiqueta">Total general <strong id="totalCarrito">$0 MXN</strong></p>
 				<button type="button" id="continuarCompra" class="boton">Continuar compra</button>
 			</div>
+			<p id="mensajeCarrito" class="mensaje-confirmacion" role="status" aria-live="polite"></p>
 		</section>
 	</main>
 
@@ -74,6 +75,17 @@
 			</div>
 		</section>
 	</div>
+
+	<dialog class="admin-productos-dialog carrito-confirmar-dialog" id="modalConfirmarEliminacionCarrito" aria-labelledby="tituloConfirmarEliminacionCarrito">
+		<div class="admin-productos-formulario">
+			<h2 id="tituloConfirmarEliminacionCarrito">Confirmar eliminación</h2>
+			<p>¿Seguro que quieres eliminar este producto del carrito?</p>
+			<div class="admin-productos-modal-acciones">
+				<button type="button" id="cancelarEliminacionCarrito" class="boton admin-productos-cancelar">Cancelar</button>
+				<button type="button" id="confirmarEliminacionCarrito" class="boton admin-productos-eliminar-confirmar">Sí, eliminar</button>
+			</div>
+		</div>
+	</dialog>
 
 	<script>
 		const modalPoliticasPago = document.getElementById('modalPoliticasPago');
