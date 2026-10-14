@@ -2085,3 +2085,202 @@ footer {
         width: 100%;
     }
 }
+
+/* PROMOCIONES */
+
+.menu .promociones-activo {
+    color: var(--color-acento);
+    font-weight: 700;
+}
+
+.promociones-intro {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 4rem 2rem 1rem;
+    text-align: center;
+}
+
+.promociones-intro h1 {
+    margin-bottom: 1rem;
+    font-family: var(--fuente-titulo);
+    font-size: 2.5rem;
+    color: var(--color-texto-principal);
+}
+
+.promociones-lista {
+    max-width: 1200px;
+    margin: 1rem auto 0;
+    padding: 0 2rem;
+}
+
+.promociones-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.25rem;
+}
+
+.promocion-tarjeta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    min-width: 0;
+    padding: 1.5rem;
+    border: 1px solid var(--color-borde);
+    border-left: 4px solid var(--color-acento);
+    border-radius: 12px;
+    background-color: var(--color-fondo-claro);
+}
+
+.promocion-tarjeta:nth-child(3n + 2) {
+    border-left-color: var(--color-acento-suave);
+}
+
+.promocion-tarjeta:nth-child(3n) {
+    border-left-color: var(--color-turquesa);
+}
+
+.promocion-encabezado {
+    display: grid;
+    grid-template-columns: 2rem minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.75rem;
+    width: 100%;
+}
+
+.promocion-encabezado svg {
+    width: 1.8rem;
+    height: 1.8rem;
+    fill: none;
+    stroke: var(--color-acento);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.8;
+}
+
+.promocion-encabezado h2 {
+    font-family: var(--fuente-titulo);
+    font-size: 1.05rem;
+    line-height: 1.3;
+}
+
+.promocion-valor {
+    color: var(--color-acento);
+    font-family: var(--fuente-titulo);
+    font-size: 1.2rem;
+    white-space: nowrap;
+}
+
+.promocion-descripcion {
+    color: var(--color-texto-secundario);
+    font-size: 0.92rem;
+}
+
+.promocion-codigo-chip {
+    padding: 0.45rem 0.8rem;
+    border: 1px dashed var(--color-acento);
+    border-radius: 999px;
+    background-color: var(--color-fondo);
+    color: var(--color-acento);
+    font: inherit;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+}
+
+.promocion-codigo-chip:hover,
+.promocion-codigo-chip:focus-visible {
+    outline: none;
+    background-color: var(--color-acento);
+    color: #FFFFFF;
+}
+
+.promociones-codigo {
+    max-width: 680px;
+    margin: 3.5rem auto 4rem;
+    padding: 0 2rem;
+    text-align: center;
+}
+
+.promociones-codigo h2 {
+    margin-bottom: 1.25rem;
+    font-family: var(--fuente-titulo);
+    font-size: 1.5rem;
+}
+
+.promociones-formulario {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+}
+
+.promociones-formulario input {
+    flex: 1;
+    min-width: 0;
+    padding: 0.85rem 1rem;
+    border: 1.5px solid var(--color-borde);
+    border-radius: 999px;
+    background-color: var(--color-fondo);
+    color: var(--color-texto-principal);
+    font: inherit;
+}
+
+.promociones-formulario input:focus {
+    outline: none;
+    border-color: var(--color-acento);
+}
+
+.promociones-formulario .boton {
+    flex: 0 0 auto;
+    border: 0;
+    cursor: pointer;
+}
+
+.promociones-codigo .mensaje-confirmacion {
+    margin-top: 1rem;
+}
+
+.carrito-descuentos {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.35rem;
+    color: var(--color-texto-secundario);
+    text-align: right;
+}
+
+.carrito-descuento-linea {
+    color: var(--color-acento);
+    font-weight: 600;
+}
+
+@media (max-width: 800px) {
+    .promociones-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .promociones-intro {
+        padding: 3rem 1.25rem 1rem;
+    }
+
+    .promociones-lista {
+        padding: 0 1.25rem;
+    }
+
+    .promociones-codigo {
+        margin: 2.5rem auto 3rem;
+        padding: 0 1.25rem;
+    }
+
+    .promociones-codigo h2 {
+        font-size: 1.25rem;
+    }
+
+    .promociones-formulario {
+        align-items: stretch;
+        flex-direction: column;
+    }
+}

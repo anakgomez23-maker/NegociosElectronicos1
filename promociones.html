@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Promociones | Ana Kaidien</title>
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+
+<body>
+    <header>
+        <nav class="navbar">
+            <a href="index.html" class="logo">
+                Ana Kaidien
+                <span>Creaciones Artesanales</span>
+            </a>
+
+            <ul class="menu">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="catalogo.html">Catálogo</a></li>
+                <li><a href="nosotros.html">Nosotros</a></li>
+                <li><a href="contacto.html">Contacto</a></li>
+                <li><a href="promociones.html" class="promociones-activo" aria-current="page">Promociones</a></li>
+                <li id="menuLogin"><a href="login.html">Iniciar sesión</a></li>
+                <li><a href="carrito.html" class="carrito-icono" aria-label="Carrito de compras"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.9a2 2 0 0 0 1.9-1.4L21 8H6M10 20h.01M18 20h.01" /></svg><span class="carrito-contador">0</span></a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="promociones-intro">
+            <p class="subtitulo">OFERTAS PARA TI</p>
+            <h1>Promociones</h1>
+            <p class="texto-nosotros">Aprovecha nuestras promociones especiales en creaciones artesanales.</p>
+        </section>
+
+        <section class="promociones-lista" aria-label="Promociones activas">
+            <div id="tarjetasPromociones" class="promociones-grid"></div>
+        </section>
+
+        <section class="promociones-codigo" aria-labelledby="tituloCodigoDescuento">
+            <h2 id="tituloCodigoDescuento">¿Tienes un código de descuento?</h2>
+            <form id="formularioDescuento" class="promociones-formulario" novalidate>
+                <label class="visualmente-oculto" for="codigoDescuento">Código de descuento</label>
+                <input id="codigoDescuento" name="codigoDescuento" type="text" placeholder="Ingresa tu código" autocomplete="off">
+                <button type="submit" class="boton">Aplicar</button>
+            </form>
+            <p id="mensajeDescuento" class="mensaje-confirmacion" role="status" aria-live="polite"></p>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2026 Ana Kaidien - Creaciones Artesanales</p>
+    </footer>
+
+    <script>
+        const promociones = [
+            {
+                titulo: '2x1 en Pulseras',
+                descripcion: 'Llévate dos pulseras al precio de una.',
+                codigo: 'PULSERA2X1',
+                valor: '50%',
+                tipo: 'porcentaje',
+                icono: '<circle cx="7.5" cy="7.5" r="3.5"></circle><circle cx="16.5" cy="16.5" r="3.5"></circle><path d="M18 4 6 20"></path>'
+            },
+            {
+                titulo: '10% en Llaveros',
+                descripcion: 'Descuento en todos los llaveros personalizados.',
+                codigo: 'LLAVERO10',
+                valor: '10%',
+                tipo: 'porcentaje',
+                icono: '<circle cx="8" cy="8" r="4"></circle><path d="M11 11 20 20m-3-3 2-2m-5-1 2-2"></path>'
+            },
+            {
+                titulo: 'Envío gratis',
+                descripcion: 'En compras mayores a $500.',
+                codigo: 'ENVIOGRATIS',
+                valor: 'Envío',
+                tipo: 'envio-gratis',
+                icono: '<path d="M3 7h11v10H3zM14 10h4l3 3v4h-7z"></path><circle cx="7.5" cy="18" r="1.5"></circle><circle cx="17.5" cy="18" r="1.5"></circle>'
+            }
+        ];
+
+        const tarjetasPromociones = document.getElementById('tarjetasPromociones');
+        const campoCodigo = document.getElementById('codigoDescuento');
+        const formularioDescuento = document.getElementById('formularioDescuento');
+        const mensajeDescuento = document.getElementById('mensajeDescuento');
+        let temporizadorMensajeDescuento;
+
+        promociones.forEach((promocion) => {
+            const tarjeta = document.createElement('article');
+            tarjeta.className = 'promocion-tarjeta';
+
+            const encabezado = document.createElement('div');
+            encabezado.className = 'promocion-encabezado';
+
+            const icono = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            icono.setAttribute('viewBox', '0 0 24 24');
+            icono.setAttribute('aria-hidden', 'true');
+            icono.innerHTML = promocion.icono;
+
+            const titulo = document.createElement('h2');
+            titulo.textContent = promocion.titulo;
+
+            const valor = document.createElement('strong');
+            valor.className = 'promocion-valor';
+            valor.textContent = promocion.valor;
+            valor.setAttribute('aria-label', 'Descuento: ' + promocion.valor);
+
+            encabezado.append(icono, titulo, valor);
+
+            const descripcion = document.createElement('p');
+            descripcion.className = 'promocion-descripcion';
+            descripcion.textContent = promocion.descripcion;
+
+            const codigo = document.createElement('button');
+            codigo.type = 'button';
+            codigo.className = 'promocion-codigo-chip';
+            codigo.textContent = promocion.codigo;
+            codigo.setAttribute('aria-label', 'Usar código ' + promocion.codigo);
+            codigo.addEventListener('click', () => {
+                campoCodigo.value = promocion.codigo;
+                campoCodigo.focus();
+            });
+
+            tarjeta.append(encabezado, descripcion, codigo);
+            tarjetasPromociones.appendChild(tarjeta);
+        });
+
+        formularioDescuento.addEventListener('submit', (evento) => {
+            evento.preventDefault();
+
+            const codigoIngresado = campoCodigo.value.trim().toUpperCase();
+            const promocion = promociones.find((elemento) => elemento.codigo === codigoIngresado);
+            if (promocion) {
+                sessionStorage.setItem('descuentoActivo', JSON.stringify({
+                    codigo: promocion.codigo,
+                    tipo: promocion.tipo
+                }));
+            }
+
+            mensajeDescuento.textContent = 'Descuento aplicado (simulado)';
+            mensajeDescuento.classList.add('visible');
+            window.clearTimeout(temporizadorMensajeDescuento);
+            temporizadorMensajeDescuento = window.setTimeout(() => {
+                mensajeDescuento.classList.remove('visible');
+            }, 3000);
+        });
+    </script>
+    <script src="js/carrito.js"></script>
+    <script src="js/sesion.js"></script>
+</body>
+
+</html>

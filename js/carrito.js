@@ -28,6 +28,23 @@
         maximumFractionDigits: 2
     });
 
+    const obtenerDescuentoActivo = () => {
+        const descuentoGuardado = sessionStorage.getItem('descuentoActivo');
+        if (!descuentoGuardado) {
+            return null;
+        }
+
+        try {
+            const descuento = JSON.parse(descuentoGuardado);
+            if (!descuento || typeof descuento.codigo !== 'string' || typeof descuento.tipo !== 'string') {
+                return null;
+            }
+            return descuento;
+        } catch {
+            return null;
+        }
+    };
+
     const pintarCarrito = () => {
         const lista = document.getElementById('listaCarrito');
         if (!lista) {
@@ -38,6 +55,7 @@
         const estadoVacio = document.getElementById('carritoVacio');
         const resumen = document.getElementById('carritoResumen');
         const totalElemento = document.getElementById('totalCarrito');
+        const descuentosElemento = document.getElementById('descuentosCarrito');
         let totalGeneral = 0;
 
         lista.replaceChildren();
@@ -129,7 +147,37 @@
             lista.appendChild(articulo);
         });
 
-        totalElemento.textContent = formatoPrecio.format(totalGeneral);
+        const descuentoActivo = obtenerDescuentoActivo();
+        const codigoDescuento = descuentoActivo ? descuentoActivo.codigo.toUpperCase() : '';
+        const porcentajesDescuento = {
+            PULSERA2X1: 50,
+            LLAVERO10: 10
+        };
+
+        if (descuentosElemento) {
+            descuentosElemento.replaceChildren();
+        }
+
+        let totalConDescuento = totalGeneral;
+        if (descuentoActivo && codigoDescuento === 'ENVIOGRATIS'
+            && descuentoActivo.tipo === 'envio-gratis') {
+            const lineaEnvio = document.createElement('p');
+            lineaEnvio.className = 'carrito-descuento-linea';
+            lineaEnvio.textContent = 'Envío gratis';
+            descuentosElemento?.appendChild(lineaEnvio);
+        } else if (descuentoActivo && descuentoActivo.tipo === 'porcentaje'
+            && Object.hasOwn(porcentajesDescuento, codigoDescuento)) {
+            const porcentaje = porcentajesDescuento[codigoDescuento];
+            const montoDescuento = Math.min(totalGeneral, totalGeneral * porcentaje / 100);
+            totalConDescuento = Math.max(0, totalGeneral - montoDescuento);
+
+            const lineaDescuento = document.createElement('p');
+            lineaDescuento.className = 'carrito-descuento-linea';
+            lineaDescuento.textContent = 'Descuento (' + codigoDescuento + '): −' + formatoPrecio.format(montoDescuento);
+            descuentosElemento?.appendChild(lineaDescuento);
+        }
+
+        totalElemento.textContent = formatoPrecio.format(totalConDescuento);
     };
 
     const guardarCarrito = (carrito) => {
