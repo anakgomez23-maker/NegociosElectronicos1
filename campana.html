@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campaña | Ana Kaidien</title>
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+
+<body>
+    <header>
+        <nav class="navbar">
+            <a href="index.html" class="logo">
+                Ana Kaidien
+                <span>Creaciones Artesanales</span>
+            </a>
+
+            <ul class="menu">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="catalogo.html">Catálogo</a></li>
+                <li><a href="campana.html" class="campana-activo" aria-current="page">Campaña</a></li>
+                <li><a href="Nosotros.html">Nosotros</a></li>
+                <li><a href="Contacto.html">Contacto</a></li>
+                <li><a href="promociones.html">Promociones</a></li>
+                <li id="menuLogin"><a href="login.html">Iniciar sesión</a></li>
+                <li><a href="carrito.html" class="carrito-icono" aria-label="Carrito de compras"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.9a2 2 0 0 0 1.9-1.4L21 8H6M10 20h.01M18 20h.01" /></svg><span class="carrito-contador">0</span></a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="campana">
+        <section class="campana-hero">
+            <div class="campana-hero-contenido">
+                <span class="etiqueta campana-etiqueta">NUEVA COLECCIÓN</span>
+                <h1>Detalles hechos a mano para momentos que importan</h1>
+                <p>Piezas personalizadas, creadas con cariño para celebrar tus historias y acompañar tus espacios.</p>
+                <a href="Producto.html?id=hilorama" class="boton">Comprar ahora</a>
+            </div>
+        </section>
+
+        <section class="campana-producto-seccion" aria-labelledby="campana-producto-titulo">
+            <div class="campana-producto producto-card">
+                <div class="producto-imagen campana-producto-imagen">
+                    <img src="img/hilorama.jpg" alt="Hilorama Personalizado hecho a mano">
+                    <span class="etiqueta etiqueta-nuevo">Nuevo</span>
+                </div>
+                <div class="campana-producto-info">
+                    <p class="subtitulo">UNA PIEZA ÚNICA</p>
+                    <h2 id="campana-producto-titulo">Hilorama Personalizado</h2>
+                    <p class="producto-precio">$350 MXN</p>
+                    <p>Un diseño elaborado con hilo y personalizado según lo que elijas, para regalar o darle un toque especial a tu espacio.</p>
+                    <ul class="campana-beneficios">
+                        <li>Hecho a mano</li>
+                        <li>Personalizado a tu gusto</li>
+                        <li>Envíos a todo México</li>
+                    </ul>
+                    <a href="Producto.html?id=hilorama" class="boton">Comprar ahora</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="campana-testimonios" aria-labelledby="campana-testimonios-titulo">
+            <p class="subtitulo">HECHO CON CARIÑO</p>
+            <h2 id="campana-testimonios-titulo">Lo que dicen nuestros clientes</h2>
+            <div class="campana-resenas" id="campanaResenas"></div>
+            <p class="campana-nota">Reseñas de ejemplo (simuladas)</p>
+        </section>
+
+        <section class="campana-cta">
+            <div>
+                <h2>Un detalle especial puede contar tu historia.</h2>
+                <p>Encuentra una creación hecha para ti.</p>
+            </div>
+            <div class="campana-cta-acciones">
+                <a href="Producto.html?id=hilorama" class="boton">Comprar ahora</a>
+                <a href="catalogo.html" class="campana-catalogo-link">Ver todo el catálogo</a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2026 Ana Kaidien - Creaciones Artesanales</p>
+    </footer>
+
+    <script>
+        const resenas = [
+            {
+                comentario: "El hilorama quedó precioso y se nota el cariño en cada detalle.",
+                nombre: "María García",
+                estrellas: 5
+            },
+            {
+                comentario: "Me encantó poder elegir el diseño. Fue un regalo muy especial.",
+                nombre: "Carlos López",
+                estrellas: 5
+            },
+            {
+                comentario: "Muy bonito, llegó perfecto y quedó increíble en mi espacio.",
+                nombre: "Ana Martínez",
+                estrellas: 4
+            }
+        ];
+
+        const contenedorResenas = document.getElementById("campanaResenas");
+
+        resenas.forEach((resena) => {
+            const tarjeta = document.createElement("article");
+            tarjeta.className = "producto-card campana-resena";
+
+            const estrellas = document.createElement("div");
+            estrellas.className = "campana-estrellas";
+            estrellas.setAttribute("role", "img");
+            estrellas.setAttribute("aria-label", `${resena.estrellas} de 5 estrellas`);
+
+            for (let indice = 0; indice < 5; indice += 1) {
+                const estrella = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+                estrella.setAttribute("viewBox", "0 0 24 24");
+                estrella.setAttribute("aria-hidden", "true");
+                estrella.classList.add(indice < resena.estrellas ? "campana-estrella-activa" : "campana-estrella-inactiva");
+
+                const forma = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+                forma.setAttribute("points", "12 2 15.1 8.3 22 9.3 17 14.2 18.2 21.1 12 17.8 5.8 21.1 7 14.2 2 9.3 8.9 8.3");
+                estrella.appendChild(forma);
+                estrellas.appendChild(estrella);
+            }
+
+            const comentario = document.createElement("p");
+            comentario.className = "campana-comentario";
+            comentario.textContent = `“${resena.comentario}”`;
+
+            const nombre = document.createElement("p");
+            nombre.className = "campana-resena-nombre";
+            nombre.textContent = resena.nombre;
+
+            tarjeta.append(estrellas, comentario, nombre);
+            contenedorResenas.appendChild(tarjeta);
+        });
+    </script>
+</body>
+
+</html>
