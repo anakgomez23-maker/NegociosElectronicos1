@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Promociones | Panel de administrador | Ana Kaidien</title>
+    <link rel="stylesheet" href="css/estilos.css">
+    <script src="js/admin-sesion.js"></script>
+</head>
+
+<body class="admin-body">
+    <header class="admin-encabezado">
+        <a href="index.html" class="logo">Ana Kaidien<span>Creaciones Artesanales</span></a>
+        <div class="admin-encabezado-info">
+            <span id="adminSaludo">Panel de administrador</span>
+            <a href="admin-login.html" id="adminCerrar" class="admin-cerrar">Cerrar sesión</a>
+        </div>
+    </header>
+
+    <aside class="admin-sidebar" aria-label="Navegación administrativa">
+        <p class="admin-sidebar-titulo">Gestión</p>
+        <nav>
+            <a class="admin-nav-enlace" href="admin-productos.html">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5h16v13H4zM8 3v5M16 3v5M4 10h16" /></svg>
+                <span>Productos</span>
+            </a>
+            <a class="admin-nav-enlace" href="admin-pedidos.html">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h14v16H5zM8 8h8M8 12h8M8 16h5" /></svg>
+                <span>Pedidos</span>
+            </a>
+            <a class="admin-nav-enlace admin-nav-activo" href="admin-promociones.html" aria-current="page">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-2.9-5.6 2.9 1.1-6.2L3 9.6l6.2-.9z" /></svg>
+                <span>Promociones</span>
+            </a>
+        </nav>
+    </aside>
+
+    <main class="admin-contenido">
+        <div class="admin-titulo">
+            <p class="subtitulo">Gestión</p>
+            <h1>Promociones</h1>
+            <p>Administra las promociones y códigos de descuento de la tienda.</p>
+        </div>
+
+        <div class="admin-productos-toolbar">
+            <button type="button" id="agregarPromocion" class="boton admin-productos-agregar">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>
+                Agregar promoción
+            </button>
+        </div>
+
+        <p id="mensajePromocion" class="mensaje-confirmacion" role="status" aria-live="polite"></p>
+
+        <div class="admin-tabla-contenedor">
+            <table class="admin-tabla-productos admin-tabla-promociones">
+                <thead>
+                    <tr>
+                        <th scope="col">Promoción</th>
+                        <th scope="col">Código</th>
+                        <th scope="col">Descuento</th>
+                        <th scope="col">Vigencia</th>
+                        <th scope="col">Estado</th>
+                        <th scope="col">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaPromociones"></tbody>
+            </table>
+        </div>
+    </main>
+
+    <dialog class="admin-productos-dialog" id="modalPromocion" aria-labelledby="tituloModalPromocion">
+        <form class="admin-productos-formulario" id="formularioPromocion" novalidate>
+            <h2 id="tituloModalPromocion">Agregar promoción</h2>
+
+            <div class="admin-productos-campo">
+                <label for="nombrePromocion">Nombre</label>
+                <input id="nombrePromocion" name="nombre" type="text">
+            </div>
+
+            <div class="admin-productos-campo">
+                <label for="descripcionPromocion">Descripción</label>
+                <textarea id="descripcionPromocion" name="descripcion" rows="3"></textarea>
+            </div>
+
+            <div class="admin-productos-campo">
+                <label for="codigoPromocion">Código</label>
+                <input id="codigoPromocion" name="codigo" type="text">
+            </div>
+
+            <div class="admin-productos-campo">
+                <label for="tipoDescuento">Tipo de descuento</label>
+                <select id="tipoDescuento" name="tipo">
+                    <option value="porcentaje">Porcentaje</option>
+                    <option value="envio">Envío gratis</option>
+                    <option value="2x1">2x1</option>
+                </select>
+            </div>
+
+            <div class="admin-productos-campo">
+                <label for="valorPromocion">Valor</label>
+                <input id="valorPromocion" name="valor" type="text">
+            </div>
+
+            <div class="admin-productos-campo">
+                <label for="vigenciaPromocion">Vigencia</label>
+                <input id="vigenciaPromocion" name="vigencia" type="text">
+            </div>
+
+            <div class="admin-productos-modal-acciones">
+                <button type="button" id="cancelarPromocion" class="boton admin-productos-cancelar">Cancelar</button>
+                <button type="submit" class="boton admin-productos-guardar">Guardar</button>
+            </div>
+        </form>
+    </dialog>
+
+    <dialog class="admin-productos-dialog" id="modalConfirmarEliminacion" aria-labelledby="tituloConfirmarEliminacion">
+        <div class="admin-productos-formulario">
+            <h2 id="tituloConfirmarEliminacion">Confirmar eliminación</h2>
+            <p>¿Seguro que quieres eliminar esta promoción?</p>
+            <div class="admin-productos-modal-acciones">
+                <button type="button" id="cancelarEliminacion" class="boton admin-productos-cancelar">Cancelar</button>
+                <button type="button" id="confirmarEliminacion" class="boton admin-productos-eliminar-confirmar">Sí, eliminar</button>
+            </div>
+        </div>
+    </dialog>
+
+    <script>
+        const promociones = [
+            {
+                id: 1,
+                nombre: '2x1 en Pulseras',
+                descripcion: 'Lleva dos pulseras por el precio de una.',
+                codigo: 'PULSERA2X1',
+                tipo: 'porcentaje',
+                valor: '50',
+                vigencia: '01/10/2026 - 31/10/2026',
+                activa: true
+            },
+            {
+                id: 2,
+                nombre: '10% en Llaveros',
+                descripcion: 'Descuento en llaveros artesanales.',
+                codigo: 'LLAVERO10',
+                tipo: 'porcentaje',
+                valor: '10',
+                vigencia: '01/10/2026 - 31/10/2026',
+                activa: true
+            },
+            {
+                id: 3,
+                nombre: 'Envío gratis',
+                descripcion: 'Envío gratis en compras mayores a $500.',
+                codigo: 'ENVIOGRATIS',
+                tipo: 'envio',
+                valor: 'compras mayores a $500',
+                vigencia: '01/10/2026 - 31/10/2026',
+                activa: true
+            },
+            {
+                id: 4,
+                nombre: 'Descuento de verano',
+                descripcion: 'Promoción de temporada ya vencida.',
+                codigo: 'VERANO15',
+                tipo: 'porcentaje',
+                valor: '15',
+                vigencia: '01/08/2026 - 31/08/2026',
+                activa: false
+            }
+        ];
+
+        const tablaPromociones = document.getElementById('tablaPromociones');
+        const modalPromocion = document.getElementById('modalPromocion');
+        const formularioPromocion = document.getElementById('formularioPromocion');
+        const tituloModalPromocion = document.getElementById('tituloModalPromocion');
+        const mensajePromocion = document.getElementById('mensajePromocion');
+        const modalConfirmarEliminacion = document.getElementById('modalConfirmarEliminacion');
+        let idPromocionEnEdicion = null;
+        let siguienteId = promociones.length + 1;
+        let temporizadorMensaje = null;
+        let idPromocionPendienteEliminar = null;
+
+        function crearCelda(texto) {
+            const celda = document.createElement('td');
+            celda.textContent = texto;
+            return celda;
+        }
+
+        function obtenerDescuento(promocion) {
+            if (promocion.tipo === 'envio') {
+                return promocion.valor
+                    ? 'Envío gratis (' + promocion.valor + ')'
+                    : 'Envío gratis';
+            }
+            if (promocion.tipo === '2x1') {
+                return promocion.valor || '2x1';
+            }
+            return promocion.valor ? promocion.valor + '%' : '—';
+        }
+
+        function pintarPromociones() {
+            tablaPromociones.replaceChildren();
+
+            if (promociones.length === 0) {
+                const filaVacia = document.createElement('tr');
+                const celdaVacia = crearCelda('No hay promociones para mostrar.');
+                celdaVacia.colSpan = 6;
+                filaVacia.appendChild(celdaVacia);
+                tablaPromociones.appendChild(filaVacia);
+                return;
+            }
+
+            promociones.forEach(function (promocion) {
+                const fila = document.createElement('tr');
+                fila.dataset.promocionId = promocion.id;
+
+                const celdaCodigo = document.createElement('td');
+                const codigo = document.createElement('span');
+                codigo.className = 'admin-promocion-codigo';
+                codigo.textContent = promocion.codigo;
+                celdaCodigo.appendChild(codigo);
+
+                const celdaEstado = document.createElement('td');
+                const badgeEstado = document.createElement('span');
+                badgeEstado.className = 'admin-promocion-estado ' + (promocion.activa
+                    ? 'admin-promocion-estado-activa'
+                    : 'admin-promocion-estado-inactiva');
+                badgeEstado.textContent = promocion.activa ? 'Activa' : 'Inactiva';
+                celdaEstado.appendChild(badgeEstado);
+
+                const celdaAcciones = document.createElement('td');
+                const acciones = document.createElement('div');
+                acciones.className = 'admin-producto-acciones';
+
+                const botonEditar = document.createElement('button');
+                botonEditar.type = 'button';
+                botonEditar.className = 'admin-producto-accion';
+                botonEditar.dataset.action = 'editar';
+                botonEditar.textContent = 'Editar';
+                botonEditar.setAttribute('aria-label', 'Editar ' + promocion.nombre);
+
+                const botonEstado = document.createElement('button');
+                botonEstado.type = 'button';
+                botonEstado.className = 'admin-producto-accion admin-promocion-accion-estado';
+                botonEstado.dataset.action = 'estado';
+                botonEstado.textContent = promocion.activa ? 'Desactivar' : 'Activar';
+                botonEstado.setAttribute('aria-label', (promocion.activa ? 'Desactivar ' : 'Activar ') + promocion.nombre);
+
+                const botonEliminar = document.createElement('button');
+                botonEliminar.type = 'button';
+                botonEliminar.className = 'admin-producto-accion admin-producto-accion-eliminar';
+                botonEliminar.dataset.action = 'eliminar';
+                botonEliminar.textContent = 'Eliminar';
+                botonEliminar.setAttribute('aria-label', 'Eliminar ' + promocion.nombre);
+
+                acciones.append(botonEditar, botonEstado, botonEliminar);
+                celdaAcciones.appendChild(acciones);
+                fila.append(
+                    crearCelda(promocion.nombre),
+                    celdaCodigo,
+                    crearCelda(obtenerDescuento(promocion)),
+                    crearCelda(promocion.vigencia),
+                    celdaEstado,
+                    celdaAcciones
+                );
+                tablaPromociones.appendChild(fila);
+            });
+        }
+
+        function abrirModal(promocion) {
+            formularioPromocion.reset();
+            idPromocionEnEdicion = promocion ? promocion.id : null;
+            tituloModalPromocion.textContent = promocion ? 'Editar promoción' : 'Agregar promoción';
+
+            if (promocion) {
+                formularioPromocion.elements.nombre.value = promocion.nombre;
+                formularioPromocion.elements.descripcion.value = promocion.descripcion;
+                formularioPromocion.elements.codigo.value = promocion.codigo;
+                formularioPromocion.elements.tipo.value = promocion.tipo;
+                formularioPromocion.elements.valor.value = promocion.valor;
+                formularioPromocion.elements.vigencia.value = promocion.vigencia;
+            }
+
+            modalPromocion.showModal();
+            formularioPromocion.elements.nombre.focus();
+        }
+
+        function mostrarMensaje(texto) {
+            mensajePromocion.textContent = texto;
+            mensajePromocion.classList.add('visible');
+            window.clearTimeout(temporizadorMensaje);
+            temporizadorMensaje = window.setTimeout(function () {
+                mensajePromocion.classList.remove('visible');
+            }, 3000);
+        }
+
+        document.getElementById('agregarPromocion').addEventListener('click', function () {
+            abrirModal(null);
+        });
+
+        document.getElementById('cancelarPromocion').addEventListener('click', function () {
+            modalPromocion.close();
+        });
+
+        tablaPromociones.addEventListener('click', function (evento) {
+            const boton = evento.target.closest('button[data-action]');
+            if (!boton) {
+                return;
+            }
+
+            const id = Number(boton.closest('tr').dataset.promocionId);
+            const promocion = promociones.find(function (elemento) {
+                return elemento.id === id;
+            });
+            if (!promocion) {
+                return;
+            }
+
+            if (boton.dataset.action === 'editar') {
+                abrirModal(promocion);
+            } else if (boton.dataset.action === 'estado') {
+                promocion.activa = !promocion.activa;
+                pintarPromociones();
+                mostrarMensaje('Estado actualizado (simulado)');
+            } else if (boton.dataset.action === 'eliminar') {
+                idPromocionPendienteEliminar = id;
+                modalConfirmarEliminacion.showModal();
+            }
+        });
+
+        formularioPromocion.addEventListener('submit', function (evento) {
+            evento.preventDefault();
+
+            const datos = new FormData(formularioPromocion);
+            const promocionActualizada = {
+                nombre: datos.get('nombre').trim() || 'Promoción sin nombre',
+                descripcion: datos.get('descripcion').trim() || '—',
+                codigo: datos.get('codigo').trim() || 'SIN CÓDIGO',
+                tipo: datos.get('tipo'),
+                valor: datos.get('valor').trim() || '—',
+                vigencia: datos.get('vigencia').trim() || '—'
+            };
+
+            const esEdicion = idPromocionEnEdicion !== null;
+            if (esEdicion) {
+                const indice = promociones.findIndex(function (promocion) {
+                    return promocion.id === idPromocionEnEdicion;
+                });
+                if (indice === -1) {
+                    return;
+                }
+                promociones[indice] = {
+                    id: idPromocionEnEdicion,
+                    ...promocionActualizada,
+                    activa: promociones[indice].activa
+                };
+            } else {
+                promociones.push({ id: siguienteId++, ...promocionActualizada, activa: true });
+            }
+
+            pintarPromociones();
+            modalPromocion.close();
+            mostrarMensaje(esEdicion
+                ? 'Promoción actualizada (simulado)'
+                : 'Promoción agregada (simulado)');
+        });
+
+        document.getElementById('cancelarEliminacion').addEventListener('click', function () {
+            modalConfirmarEliminacion.close();
+        });
+
+        document.getElementById('confirmarEliminacion').addEventListener('click', function () {
+            const indice = promociones.findIndex(function (promocion) {
+                return promocion.id === idPromocionPendienteEliminar;
+            });
+
+            if (indice !== -1) {
+                promociones.splice(indice, 1);
+                pintarPromociones();
+                mostrarMensaje('Promoción eliminada (simulado)');
+            }
+            modalConfirmarEliminacion.close();
+        });
+
+        modalConfirmarEliminacion.addEventListener('click', function (evento) {
+            if (evento.target === modalConfirmarEliminacion) {
+                modalConfirmarEliminacion.close();
+            }
+        });
+
+        modalConfirmarEliminacion.addEventListener('close', function () {
+            idPromocionPendienteEliminar = null;
+        });
+
+        pintarPromociones();
+    </script>
+</body>
+
+</html>

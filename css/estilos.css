@@ -2086,6 +2086,49 @@ footer {
     }
 }
 
+/* ADMIN - PROMOCIONES */
+
+.admin-tabla-promociones {
+    min-width: 1080px;
+}
+
+.admin-promocion-codigo {
+    display: inline-block;
+    padding: 0.3rem 0.6rem;
+    border: 1px solid var(--color-borde);
+    border-radius: 999px;
+    background-color: var(--color-fondo-claro);
+    color: var(--color-acento);
+    font-size: 0.78rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.admin-promocion-estado {
+    display: inline-block;
+    padding: 0.3rem 0.65rem;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.admin-promocion-estado-activa {
+    background-color: rgba(101, 168, 75, 0.15);
+    color: var(--color-verde);
+}
+
+.admin-promocion-estado-inactiva {
+    background-color: var(--color-fondo-claro);
+    color: var(--color-texto-secundario);
+}
+
+.admin-promocion-accion-estado:hover {
+    border-color: var(--color-acento);
+    background-color: var(--color-fondo-claro);
+    color: var(--color-acento);
+}
+
 /* PROMOCIONES */
 
 .menu .promociones-activo {
