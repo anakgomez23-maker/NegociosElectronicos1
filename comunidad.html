@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comunidad | Ana Kaidien</title>
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+
+<body>
+    <header>
+        <nav class="navbar">
+            <a href="index.html" class="logo">
+                Ana Kaidien
+                <span>Creaciones Artesanales</span>
+            </a>
+
+            <ul class="menu">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="catalogo.html">Catálogo</a></li>
+                <li><a href="campana.html">Campaña</a></li>
+                <li><a href="nosotros.html">Nosotros</a></li>
+                <li><a href="contacto.html">Contacto</a></li>
+                <li><a href="promociones.html">Promociones</a></li>
+                <li><a href="comunidad.html" class="comunidad-activo" aria-current="page">Comunidad</a></li>
+                <li id="menuLogin"><a href="login.html">Iniciar sesión</a></li>
+                <li><a href="carrito.html" class="carrito-icono" aria-label="Carrito de compras"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.9a2 2 0 0 0 1.9-1.4L21 8H6M10 20h.01M18 20h.01" /></svg><span class="carrito-contador">0</span></a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="comunidad-intro">
+            <p class="subtitulo">Comparte y conecta</p>
+            <h1>Comunidad</h1>
+            <p class="comunidad-descripcion">Comparte tu experiencia con la comunidad de Ana Kaidien.</p>
+        </section>
+
+        <section class="comunidad-contenido" aria-label="Comentarios de la comunidad">
+            <form id="formComunidad" class="comunidad-form" novalidate>
+                <textarea id="textoComentario" name="comentario" aria-label="Tu comentario" placeholder="Escribe tu comentario..."></textarea>
+                <button type="submit" class="boton">Publicar</button>
+                <p id="mensajeComunidad" class="mensaje-confirmacion" role="status" aria-live="polite">Comentario publicado (simulado)</p>
+            </form>
+
+            <div id="listaComentarios" class="comunidad-comentarios" aria-live="polite"></div>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2026 Ana Kaidien - Creaciones Artesanales</p>
+    </footer>
+
+    <script>
+        const comentarios = [
+            { nombre: 'Laura R.', fecha: '16 de octubre de 2026', texto: '¡Me encanta esta tienda! Los productos son auténticos.' },
+            { nombre: 'Pedro M.', fecha: '15 de octubre de 2026', texto: 'Excelente calidad en las pulseras, volveré a comprar.' },
+            { nombre: 'Sofía G.', fecha: '14 de octubre de 2026', texto: 'La atención fue muy amable y mi pedido quedó precioso.' },
+            { nombre: 'Mariana T.', fecha: '13 de octubre de 2026', texto: 'Se nota el cariño y el detalle en cada creación.' },
+            { nombre: 'Daniela C.', fecha: '12 de octubre de 2026', texto: 'Encontré justo el regalo artesanal que estaba buscando.' }
+        ];
+
+        const formComunidad = document.getElementById('formComunidad');
+        const campoComentario = document.getElementById('textoComentario');
+        const listaComentarios = document.getElementById('listaComentarios');
+        const mensajeComunidad = document.getElementById('mensajeComunidad');
+        let temporizadorMensaje;
+
+        function mostrarComentarios() {
+            listaComentarios.replaceChildren();
+
+            comentarios.forEach(function (comentario) {
+                const tarjeta = document.createElement('article');
+                tarjeta.className = 'comunidad-comentario';
+
+                const encabezado = document.createElement('div');
+                encabezado.className = 'comunidad-comentario-encabezado';
+
+                const nombre = document.createElement('strong');
+                nombre.className = 'comunidad-comentario-nombre';
+                nombre.textContent = comentario.nombre;
+
+                const fecha = document.createElement('small');
+                fecha.className = 'comunidad-comentario-fecha';
+                fecha.textContent = comentario.fecha;
+
+                const texto = document.createElement('p');
+                texto.className = 'comunidad-comentario-texto';
+                texto.textContent = comentario.texto;
+
+                encabezado.append(nombre, fecha);
+                tarjeta.append(encabezado, texto);
+                listaComentarios.append(tarjeta);
+            });
+        }
+
+        formComunidad.addEventListener('submit', function (evento) {
+            evento.preventDefault();
+
+            const nombreUsuario = sessionStorage.getItem('usuarioActivo') || 'Visitante';
+            comentarios.unshift({
+                nombre: nombreUsuario,
+                fecha: new Date().toLocaleDateString('es-MX', {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric'
+                }),
+                texto: campoComentario.value.trim() || 'Comentario de ejemplo'
+            });
+
+            mostrarComentarios();
+            campoComentario.value = '';
+            mensajeComunidad.classList.add('visible');
+            clearTimeout(temporizadorMensaje);
+            temporizadorMensaje = setTimeout(function () {
+                mensajeComunidad.classList.remove('visible');
+            }, 3000);
+        });
+
+        mostrarComentarios();
+    </script>
+    <script src="js/carrito.js"></script>
+    <script src="js/sesion.js"></script>
+</body>
+
+</html>

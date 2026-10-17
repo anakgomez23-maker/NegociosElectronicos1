@@ -2579,3 +2579,133 @@ footer {
         flex-direction: column;
     }
 }
+
+/* COMUNIDAD */
+.comunidad-intro {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 4rem 2rem 2rem;
+    text-align: center;
+}
+
+.comunidad-intro h1 {
+    margin-bottom: 1rem;
+    color: var(--color-texto-principal);
+    font-family: var(--fuente-titulo);
+    font-size: 2.5rem;
+}
+
+.comunidad-descripcion {
+    color: var(--color-texto-secundario);
+}
+
+.comunidad-contenido {
+    width: min(100% - 2rem, 680px);
+    margin: 0 auto;
+    padding-bottom: 4rem;
+}
+
+.comunidad-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1.5rem;
+    border: 1px solid var(--color-borde);
+    border-radius: 16px;
+    background-color: var(--color-fondo-claro);
+}
+
+.comunidad-form textarea {
+    width: 100%;
+    min-height: 130px;
+    padding: 0.8rem 1rem;
+    border: 1.5px solid var(--color-borde);
+    border-radius: 10px;
+    background-color: var(--color-fondo);
+    color: var(--color-texto-principal);
+    font-family: var(--fuente-texto);
+    font-size: 0.95rem;
+    resize: vertical;
+}
+
+.comunidad-form textarea:focus {
+    outline: none;
+    border-color: var(--color-acento);
+}
+
+.comunidad-form .boton {
+    align-self: flex-start;
+    border: none;
+    cursor: pointer;
+}
+
+.comunidad-form .mensaje-confirmacion {
+    margin-top: 0;
+}
+
+.comunidad-comentarios {
+    display: grid;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.comunidad-comentario {
+    padding: 1.25rem 1.5rem;
+    border: 1px solid var(--color-borde);
+    border-radius: 16px;
+    background-color: var(--color-fondo);
+}
+
+.comunidad-comentario-encabezado {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+}
+
+.comunidad-comentario-nombre {
+    color: var(--color-texto-principal);
+    font-family: var(--fuente-titulo);
+}
+
+.comunidad-comentario-fecha {
+    color: var(--color-texto-secundario);
+    font-size: 0.8rem;
+    white-space: nowrap;
+}
+
+.comunidad-comentario-texto {
+    color: var(--color-texto-principal);
+    overflow-wrap: anywhere;
+}
+
+.menu a.comunidad-activo {
+    color: var(--color-acento);
+    font-weight: 600;
+}
+
+@media (max-width: 480px) {
+    .comunidad-intro {
+        padding: 3rem 1.25rem 1.5rem;
+    }
+
+    .comunidad-intro h1 {
+        font-size: 2rem;
+    }
+
+    .comunidad-contenido {
+        width: min(100% - 1.5rem, 680px);
+    }
+
+    .comunidad-form,
+    .comunidad-comentario {
+        padding: 1.1rem;
+    }
+
+    .comunidad-comentario-encabezado {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 0.2rem;
+    }
+}
