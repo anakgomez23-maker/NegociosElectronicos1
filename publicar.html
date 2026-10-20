@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Publica tu producto | Ana Kaidien</title>
+
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+
+<body>
+
+    <!-- MENÚ DE NAVEGACIÓN -->
+    <header>
+        <nav class="navbar">
+
+            <a href="index.html" class="logo">
+                Ana Kaidien
+                <span>Creaciones Artesanales</span>
+            </a>
+
+            <ul class="menu">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="catalogo.html">Catálogo</a></li>
+                <li><a href="campana.html">Campaña</a></li>
+                <li><a href="nosotros.html">Nosotros</a></li>
+                <li><a href="contacto.html">Contacto</a></li>
+                <li><a href="promociones.html">Promociones</a></li>
+                <li><a href="comunidad.html">Comunidad</a></li>
+                <li id="menuLogin"><a href="login.html">Iniciar sesión</a></li>
+                <li><a href="carrito.html" class="carrito-icono" aria-label="Carrito de compras"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.9a2 2 0 0 0 1.9-1.4L21 8H6M10 20h.01M18 20h.01" /></svg><span class="carrito-contador">0</span></a></li>
+            </ul>
+
+        </nav>
+    </header>
+
+    <main>
+        <section class="c2c-intro">
+            <p class="subtitulo">COMUNIDAD</p>
+            <h1>Publica tu producto</h1>
+            <p class="texto-nosotros">Vende tus creaciones en nuestra plataforma.</p>
+            <a class="c2c-enlace" href="mis-publicaciones.html">Ver mis publicaciones</a>
+        </section>
+
+        <section class="contacto-form-section c2c-form-section">
+            <form id="formPublicacion" class="contacto-form c2c-form" novalidate>
+                <label for="nombreProducto">Nombre del producto</label>
+                <input type="text" id="nombreProducto" name="nombreProducto" placeholder="Nombre de tu producto">
+
+                <label for="precioProducto">Precio</label>
+                <input type="number" id="precioProducto" name="precioProducto" min="0" step="0.01" placeholder="0">
+
+                <label for="descripcionProducto">Descripción</label>
+                <textarea id="descripcionProducto" name="descripcionProducto" rows="5" placeholder="Describe tu producto..."></textarea>
+
+                <label for="fotoProducto">Foto</label>
+                <input type="file" id="fotoProducto" name="fotoProducto" accept="image/*">
+                <div id="vistaPrevia" class="producto-imagen c2c-vista-previa" aria-label="Vista previa de la foto">
+                    <span class="c2c-placeholder-text">Sin foto</span>
+                </div>
+
+                <button type="submit" class="boton">Publicar</button>
+
+                <p id="mensajePublicacion" class="mensaje-confirmacion" role="status" aria-live="polite">Publicado (simulado)</p>
+                <p id="estadoPublicacion" class="c2c-estado" role="status" aria-live="polite"></p>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2026 Ana Kaidien - Creaciones Artesanales</p>
+    </footer>
+
+    <script>
+        const formularioPublicacion = document.getElementById('formPublicacion');
+        const campoNombre = document.getElementById('nombreProducto');
+        const campoPrecio = document.getElementById('precioProducto');
+        const campoDescripcion = document.getElementById('descripcionProducto');
+        const campoFoto = document.getElementById('fotoProducto');
+        const vistaPrevia = document.getElementById('vistaPrevia');
+        const mensajePublicacion = document.getElementById('mensajePublicacion');
+        const estadoPublicacion = document.getElementById('estadoPublicacion');
+
+        function mostrarFoto(dataUrl) {
+            vistaPrevia.replaceChildren();
+
+            if (!dataUrl) {
+                const placeholder = document.createElement('span');
+                placeholder.className = 'c2c-placeholder-text';
+                placeholder.textContent = 'Sin foto';
+                vistaPrevia.appendChild(placeholder);
+                return;
+            }
+
+            const imagen = document.createElement('img');
+            imagen.src = dataUrl;
+            imagen.alt = 'Vista previa del producto';
+            vistaPrevia.appendChild(imagen);
+        }
+
+        function leerFotoReducida(archivo) {
+            return new Promise((resolve, reject) => {
+                const lector = new FileReader();
+
+                lector.onerror = () => reject(new Error('No se pudo leer la foto seleccionada.'));
+                lector.onload = () => {
+                    const imagen = new Image();
+                    imagen.onerror = () => reject(new Error('No se pudo procesar la foto seleccionada.'));
+                    imagen.onload = () => {
+                        try {
+                            if (!imagen.naturalWidth || !imagen.naturalHeight) {
+                                throw new Error('La foto seleccionada no tiene dimensiones válidas.');
+                            }
+
+                            const ancho = Math.min(400, imagen.naturalWidth);
+                            const alto = Math.round(imagen.naturalHeight * (ancho / imagen.naturalWidth));
+                            const lienzo = document.createElement('canvas');
+                            lienzo.width = ancho;
+                            lienzo.height = alto;
+
+                            const contexto = lienzo.getContext('2d');
+                            if (!contexto) {
+                                throw new Error('No se pudo preparar la foto seleccionada.');
+                            }
+
+                            contexto.drawImage(imagen, 0, 0, ancho, alto);
+                            resolve(lienzo.toDataURL('image/jpeg', 0.7));
+                        } catch (error) {
+                            reject(error);
+                        }
+                    };
+                    imagen.src = lector.result;
+                };
+
+                lector.readAsDataURL(archivo);
+            });
+        }
+
+        campoFoto.addEventListener('change', async () => {
+            const archivo = campoFoto.files[0];
+            estadoPublicacion.textContent = '';
+
+            if (!archivo) {
+                mostrarFoto('');
+                return;
+            }
+
+            try {
+                mostrarFoto(await leerFotoReducida(archivo));
+            } catch (error) {
+                console.error(error);
+                mostrarFoto('');
+                estadoPublicacion.textContent = 'No se pudo procesar la foto; se publicará sin imagen.';
+            }
+        });
+
+        formularioPublicacion.addEventListener('submit', async (evento) => {
+            evento.preventDefault();
+            estadoPublicacion.textContent = '';
+
+            let foto = '';
+            const archivo = campoFoto.files[0];
+            if (archivo) {
+                try {
+                    foto = await leerFotoReducida(archivo);
+                } catch (error) {
+                    console.error(error);
+                    estadoPublicacion.textContent = 'No se pudo procesar la foto; se publicará sin imagen.';
+                }
+            }
+            mostrarFoto(foto);
+
+            let vendedor = 'Visitante';
+            try {
+                vendedor = sessionStorage.getItem('usuarioActivo') || 'Visitante';
+            } catch (error) {
+                console.error('No se pudo leer el usuario activo de la sesión.', error);
+                estadoPublicacion.textContent = 'No se pudo leer el usuario; la publicación aparecerá como Visitante.';
+            }
+
+            const publicacion = {
+                id: Date.now(),
+                nombre: campoNombre.value.trim() || 'Producto sin nombre',
+                precio: campoPrecio.value.trim() ? '$' + campoPrecio.value.trim() + ' MXN' : '$0 MXN',
+                descripcion: campoDescripcion.value.trim() || 'Sin descripción',
+                foto: foto,
+                fecha: new Date().toISOString(),
+                vendedor: vendedor
+            };
+
+            try {
+                const guardadas = sessionStorage.getItem('misPublicaciones');
+                const publicaciones = guardadas ? JSON.parse(guardadas) : [];
+                if (!Array.isArray(publicaciones)) {
+                    throw new Error('El contenido guardado de publicaciones no tiene el formato esperado.');
+                }
+                publicaciones.push(publicacion);
+                sessionStorage.setItem('misPublicaciones', JSON.stringify(publicaciones));
+            } catch (error) {
+                console.error('No se pudo guardar la publicación en esta sesión.', error);
+                estadoPublicacion.textContent = 'No se pudo guardar la publicación en esta sesión.';
+            }
+
+            mensajePublicacion.classList.add('visible');
+
+            setTimeout(() => {
+                window.location.href = 'mis-publicaciones.html';
+            }, 1500);
+        });
+    </script>
+
+    <script src="js/carrito.js"></script>
+    <script src="js/sesion.js"></script>
+</body>
+
+</html>

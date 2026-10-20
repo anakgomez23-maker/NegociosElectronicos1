@@ -2709,3 +2709,127 @@ footer {
         gap: 0.2rem;
     }
 }
+
+/* C2C */
+.c2c-intro {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 4rem 2rem 2rem;
+    text-align: center;
+}
+
+.c2c-intro h1 {
+    margin-bottom: 1rem;
+    color: var(--color-texto-principal);
+    font-family: var(--fuente-titulo);
+    font-size: 2.5rem;
+}
+
+.c2c-intro .texto-nosotros {
+    margin: 0 auto 1rem;
+}
+
+.c2c-enlace {
+    color: var(--color-acento);
+    font-weight: 600;
+}
+
+.c2c-form-section {
+    max-width: 600px;
+}
+
+.c2c-form .boton {
+    width: 100%;
+    align-self: stretch;
+}
+
+.c2c-vista-previa {
+    width: min(100%, 180px);
+    aspect-ratio: 1 / 1;
+    align-self: center;
+    margin: 0.5rem 0 0;
+}
+
+.c2c-placeholder-text {
+    color: var(--color-texto-principal);
+    font-family: var(--fuente-texto);
+    font-size: 0.9rem;
+}
+
+.c2c-estado {
+    color: var(--color-texto-principal);
+    font-size: 0.85rem;
+    text-align: center;
+}
+
+.c2c-listado-intro .boton {
+    display: inline-block;
+    margin-top: 0.5rem;
+}
+
+.c2c-producto-descripcion {
+    width: 100%;
+    margin-bottom: 0.8rem;
+    color: var(--color-texto-principal);
+    overflow-wrap: anywhere;
+}
+
+.c2c-publicado-por {
+    width: 100%;
+    margin-top: auto;
+    color: var(--color-texto-secundario);
+    font-size: 0.8rem;
+    overflow-wrap: anywhere;
+}
+
+.c2c-empty {
+    max-width: 600px;
+    margin: 1rem auto 3rem;
+    padding: 2rem;
+    border: 1px solid var(--color-borde);
+    border-radius: 16px;
+    background-color: var(--color-fondo-claro);
+    text-align: center;
+}
+
+.c2c-empty h2 {
+    margin-bottom: 1.25rem;
+    color: var(--color-texto-principal);
+    font-family: var(--fuente-titulo);
+}
+
+.perfil-publicaciones {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+@media (max-width: 640px) {
+    .c2c-intro {
+        padding: 3rem 1.25rem 1.5rem;
+    }
+
+    .c2c-intro h1 {
+        font-size: 2rem;
+    }
+
+    .c2c-form {
+        padding: 1.25rem;
+    }
+
+    .c2c-empty {
+        margin: 1rem 1.25rem 2rem;
+        padding: 1.5rem 1rem;
+    }
+
+    .perfil-publicaciones {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .perfil-publicaciones .boton {
+        text-align: center;
+    }
+}

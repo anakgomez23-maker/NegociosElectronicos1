@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Mis publicaciones | Ana Kaidien</title>
+
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+
+<body>
+
+    <!-- MENÚ DE NAVEGACIÓN -->
+    <header>
+        <nav class="navbar">
+
+            <a href="index.html" class="logo">
+                Ana Kaidien
+                <span>Creaciones Artesanales</span>
+            </a>
+
+            <ul class="menu">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="catalogo.html">Catálogo</a></li>
+                <li><a href="campana.html">Campaña</a></li>
+                <li><a href="nosotros.html">Nosotros</a></li>
+                <li><a href="contacto.html">Contacto</a></li>
+                <li><a href="promociones.html">Promociones</a></li>
+                <li><a href="comunidad.html">Comunidad</a></li>
+                <li id="menuLogin"><a href="login.html">Iniciar sesión</a></li>
+                <li><a href="carrito.html" class="carrito-icono" aria-label="Carrito de compras"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.9a2 2 0 0 0 1.9-1.4L21 8H6M10 20h.01M18 20h.01" /></svg><span class="carrito-contador">0</span></a></li>
+            </ul>
+
+        </nav>
+    </header>
+
+    <main>
+        <section class="c2c-intro c2c-listado-intro">
+            <p class="subtitulo">COMUNIDAD</p>
+            <h1>Mis publicaciones</h1>
+            <a href="publicar.html" class="boton">Publicar otro producto</a>
+        </section>
+
+        <section id="estadoVacio" class="c2c-empty" hidden>
+            <h2>Aún no tienes publicaciones</h2>
+            <a href="publicar.html" class="boton">Publicar mi primer producto</a>
+        </section>
+
+        <section id="listaPublicaciones" class="productos-grid" aria-label="Mis publicaciones"></section>
+    </main>
+
+    <footer>
+        <p>© 2026 Ana Kaidien - Creaciones Artesanales</p>
+    </footer>
+
+    <script>
+        const listaPublicaciones = document.getElementById('listaPublicaciones');
+        const estadoVacio = document.getElementById('estadoVacio');
+        let publicaciones = [];
+
+        try {
+            const guardadas = sessionStorage.getItem('misPublicaciones');
+            const datosGuardados = guardadas ? JSON.parse(guardadas) : [];
+            if (Array.isArray(datosGuardados)) {
+                publicaciones = datosGuardados.filter((publicacion) => publicacion && typeof publicacion === 'object');
+            } else {
+                console.error('El contenido guardado de publicaciones no tiene el formato esperado.');
+            }
+        } catch (error) {
+            console.error('No se pudieron leer las publicaciones de esta sesión.', error);
+        }
+
+        publicaciones.sort((primera, segunda) => {
+            const fechaPrimera = Date.parse(primera.fecha) || Number(primera.id) || 0;
+            const fechaSegunda = Date.parse(segunda.fecha) || Number(segunda.id) || 0;
+            return fechaSegunda - fechaPrimera;
+        });
+
+        function agregarTexto(elemento, contenido) {
+            elemento.textContent = contenido == null ? '' : String(contenido);
+            return elemento;
+        }
+
+        function crearTarjeta(publicacion) {
+            const tarjeta = document.createElement('article');
+            tarjeta.className = 'producto-card c2c-producto-card';
+
+            const contenedorImagen = document.createElement('div');
+            contenedorImagen.className = 'producto-imagen';
+
+            if (typeof publicacion.foto === 'string' && publicacion.foto.startsWith('data:image/jpeg;base64,')) {
+                const imagen = document.createElement('img');
+                imagen.src = publicacion.foto;
+                imagen.alt = 'Foto del producto publicado';
+                contenedorImagen.appendChild(imagen);
+            } else {
+                const placeholder = document.createElement('span');
+                placeholder.className = 'c2c-placeholder-text';
+                placeholder.textContent = 'Sin foto';
+                contenedorImagen.appendChild(placeholder);
+            }
+
+            const etiqueta = document.createElement('span');
+            etiqueta.className = 'etiqueta etiqueta-nuevo';
+            etiqueta.textContent = 'Publicado';
+            contenedorImagen.appendChild(etiqueta);
+            tarjeta.appendChild(contenedorImagen);
+
+            const nombre = document.createElement('h3');
+            agregarTexto(nombre, publicacion.nombre || 'Producto sin nombre');
+            tarjeta.appendChild(nombre);
+
+            const precio = document.createElement('p');
+            precio.className = 'producto-precio';
+            agregarTexto(precio, publicacion.precio || '$0 MXN');
+            tarjeta.appendChild(precio);
+
+            const descripcion = document.createElement('p');
+            descripcion.className = 'c2c-producto-descripcion';
+            agregarTexto(descripcion, publicacion.descripcion || 'Sin descripción');
+            tarjeta.appendChild(descripcion);
+
+            const publicadoPor = document.createElement('p');
+            publicadoPor.className = 'c2c-publicado-por';
+            const vendedor = document.createElement('span');
+            agregarTexto(vendedor, publicacion.vendedor || 'Visitante');
+            const fecha = document.createElement('span');
+            const fechaPublicacion = new Date(publicacion.fecha);
+            agregarTexto(fecha, Number.isNaN(fechaPublicacion.getTime())
+                ? 'Fecha no disponible'
+                : fechaPublicacion.toLocaleDateString('es-MX'));
+            publicadoPor.append('Publicado por ', vendedor, ' · ', fecha);
+            tarjeta.appendChild(publicadoPor);
+
+            return tarjeta;
+        }
+
+        if (publicaciones.length) {
+            publicaciones.forEach((publicacion) => listaPublicaciones.appendChild(crearTarjeta(publicacion)));
+        } else {
+            estadoVacio.hidden = false;
+            listaPublicaciones.hidden = true;
+        }
+    </script>
+
+    <script src="js/carrito.js"></script>
+    <script src="js/sesion.js"></script>
+</body>
+
+</html>
