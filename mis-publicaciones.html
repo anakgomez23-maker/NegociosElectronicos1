@@ -48,28 +48,119 @@
             <a href="publicar.html" class="boton">Publicar mi primer producto</a>
         </section>
 
+        <p id="mensajePublicaciones" class="mensaje-confirmacion" role="status" aria-live="polite"></p>
         <section id="listaPublicaciones" class="productos-grid" aria-label="Mis publicaciones"></section>
     </main>
+
+    <dialog class="c2c-publicacion-dialog" id="modalEditarPublicacion" aria-labelledby="tituloEditarPublicacion">
+        <form class="c2c-modal-formulario" id="formEditarPublicacion" novalidate>
+            <h2 id="tituloEditarPublicacion">Editar publicación</h2>
+
+            <div class="c2c-modal-campo">
+                <label for="editarNombreProducto">Nombre del producto</label>
+                <input id="editarNombreProducto" name="nombre" type="text">
+            </div>
+
+            <div class="c2c-modal-campo">
+                <label for="editarPrecioProducto">Precio</label>
+                <input id="editarPrecioProducto" name="precio" type="number" min="0" step="0.01">
+            </div>
+
+            <div class="c2c-modal-campo">
+                <label for="editarDescripcionProducto">Descripción</label>
+                <textarea id="editarDescripcionProducto" name="descripcion" rows="3"></textarea>
+            </div>
+
+            <div class="c2c-modal-campo">
+                <label for="editarFotoProducto">Foto</label>
+                <input id="editarFotoProducto" name="foto" type="file" accept="image/*">
+                <div id="vistaPreviaEdicion" class="producto-imagen c2c-modal-vista-previa" aria-label="Vista previa de la foto actual">
+                    <span class="c2c-placeholder-text">Sin foto</span>
+                </div>
+            </div>
+
+            <div class="c2c-modal-acciones">
+                <button type="button" id="cancelarEdicionPublicacion" class="boton boton-outline-oscuro">Cancelar</button>
+                <button type="submit" class="boton">Guardar cambios</button>
+            </div>
+        </form>
+    </dialog>
+
+    <dialog class="c2c-publicacion-dialog" id="modalEliminarPublicacion" aria-labelledby="tituloEliminarPublicacion">
+        <div class="c2c-modal-formulario">
+            <h2 id="tituloEliminarPublicacion">Confirmar eliminación</h2>
+            <p>¿Seguro que quieres eliminar esta publicación?</p>
+            <div class="c2c-modal-acciones">
+                <button type="button" id="cancelarEliminacionPublicacion" class="boton boton-outline-oscuro">Cancelar</button>
+                <button type="button" id="confirmarEliminacionPublicacion" class="boton">Sí, eliminar</button>
+            </div>
+        </div>
+    </dialog>
 
     <footer>
         <p>© 2026 Ana Kaidien - Creaciones Artesanales</p>
     </footer>
 
+    <script src="js/publicaciones.js"></script>
     <script>
         const listaPublicaciones = document.getElementById('listaPublicaciones');
         const estadoVacio = document.getElementById('estadoVacio');
+        const mensajePublicaciones = document.getElementById('mensajePublicaciones');
+        const modalEditarPublicacion = document.getElementById('modalEditarPublicacion');
+        const formEditarPublicacion = document.getElementById('formEditarPublicacion');
+        const campoEditarNombre = document.getElementById('editarNombreProducto');
+        const campoEditarPrecio = document.getElementById('editarPrecioProducto');
+        const campoEditarDescripcion = document.getElementById('editarDescripcionProducto');
+        const campoEditarFoto = document.getElementById('editarFotoProducto');
+        const vistaPreviaEdicion = document.getElementById('vistaPreviaEdicion');
+        const modalEliminarPublicacion = document.getElementById('modalEliminarPublicacion');
         let publicaciones = [];
+        let indiceEnEdicion = null;
+        let indicePendienteEliminar = null;
+        let temporizadorMensaje = null;
+        let errorInicializacion = '';
 
         try {
             const guardadas = sessionStorage.getItem('misPublicaciones');
-            const datosGuardados = guardadas ? JSON.parse(guardadas) : [];
-            if (Array.isArray(datosGuardados)) {
-                publicaciones = datosGuardados.filter((publicacion) => publicacion && typeof publicacion === 'object');
+            if (guardadas === null) {
+                const fechaHoy = new Date().toISOString();
+                publicaciones = [
+                    {
+                        id: Date.now(),
+                        nombre: 'Pulsera artesanal',
+                        precio: '$180 MXN',
+                        descripcion: 'Pulsera hecha a mano con materiales seleccionados.',
+                        foto: '',
+                        fecha: fechaHoy,
+                        vendedor: 'Visitante'
+                    },
+                    {
+                        id: Date.now() + 1,
+                        nombre: 'Jarrón decorativo',
+                        precio: '$320 MXN',
+                        descripcion: 'Pieza decorativa elaborada artesanalmente.',
+                        foto: '',
+                        fecha: fechaHoy,
+                        vendedor: 'Visitante'
+                    }
+                ];
+                try {
+                    sessionStorage.setItem('misPublicaciones', JSON.stringify(publicaciones));
+                } catch (error) {
+                    console.error('No se pudieron guardar las publicaciones de ejemplo.', error);
+                    errorInicializacion = 'No se pudieron guardar las publicaciones de ejemplo en esta sesión.';
+                }
             } else {
-                console.error('El contenido guardado de publicaciones no tiene el formato esperado.');
+                const datosGuardados = JSON.parse(guardadas);
+                if (Array.isArray(datosGuardados)) {
+                    publicaciones = datosGuardados.filter((publicacion) => publicacion && typeof publicacion === 'object');
+                } else {
+                    throw new Error('El contenido guardado de publicaciones no tiene el formato esperado.');
+                }
             }
         } catch (error) {
-            console.error('No se pudieron leer las publicaciones de esta sesión.', error);
+            console.error('No se pudieron cargar las publicaciones de esta sesión.', error);
+            errorInicializacion = 'No se pudieron cargar las publicaciones de esta sesión.';
         }
 
         publicaciones.sort((primera, segunda) => {
@@ -81,6 +172,43 @@
         function agregarTexto(elemento, contenido) {
             elemento.textContent = contenido == null ? '' : String(contenido);
             return elemento;
+        }
+
+        function mostrarMensaje(texto) {
+            mensajePublicaciones.textContent = texto;
+            mensajePublicaciones.classList.add('visible');
+            window.clearTimeout(temporizadorMensaje);
+            temporizadorMensaje = window.setTimeout(() => {
+                mensajePublicaciones.classList.remove('visible');
+            }, 3000);
+        }
+
+        function actualizarVistaPrevia(dataUrl) {
+            vistaPreviaEdicion.replaceChildren();
+
+            if (typeof dataUrl === 'string' && dataUrl.startsWith('data:image/jpeg;base64,')) {
+                const imagen = document.createElement('img');
+                imagen.src = dataUrl;
+                imagen.alt = 'Vista previa del producto';
+                vistaPreviaEdicion.appendChild(imagen);
+                return;
+            }
+
+            const placeholder = document.createElement('span');
+            placeholder.className = 'c2c-placeholder-text';
+            placeholder.textContent = 'Sin foto';
+            vistaPreviaEdicion.appendChild(placeholder);
+        }
+
+        function guardarPublicaciones(actualizadas) {
+            try {
+                sessionStorage.setItem('misPublicaciones', JSON.stringify(actualizadas));
+                return true;
+            } catch (error) {
+                console.error('No se pudieron guardar las publicaciones de esta sesión.', error);
+                mostrarMensaje('No se pudieron guardar los cambios en esta sesión.');
+                return false;
+            }
         }
 
         function crearTarjeta(publicacion) {
@@ -134,14 +262,193 @@
             publicadoPor.append('Publicado por ', vendedor, ' · ', fecha);
             tarjeta.appendChild(publicadoPor);
 
+            const acciones = document.createElement('div');
+            acciones.className = 'c2c-acciones-publicacion';
+
+            const botonEditar = document.createElement('button');
+            botonEditar.type = 'button';
+            botonEditar.className = 'boton-pequeno boton-outline-oscuro';
+            botonEditar.dataset.action = 'editar';
+            botonEditar.textContent = 'Editar';
+            botonEditar.setAttribute('aria-label', 'Editar ' + (publicacion.nombre || 'Producto sin nombre'));
+
+            const botonEliminar = document.createElement('button');
+            botonEliminar.type = 'button';
+            botonEliminar.className = 'boton-pequeno boton-outline-oscuro';
+            botonEliminar.dataset.action = 'eliminar';
+            botonEliminar.textContent = 'Eliminar';
+            botonEliminar.setAttribute('aria-label', 'Eliminar ' + (publicacion.nombre || 'Producto sin nombre'));
+
+            acciones.append(botonEditar, botonEliminar);
+            tarjeta.appendChild(acciones);
             return tarjeta;
         }
 
-        if (publicaciones.length) {
-            publicaciones.forEach((publicacion) => listaPublicaciones.appendChild(crearTarjeta(publicacion)));
-        } else {
-            estadoVacio.hidden = false;
-            listaPublicaciones.hidden = true;
+        function pintarPublicaciones() {
+            listaPublicaciones.replaceChildren();
+
+            if (publicaciones.length) {
+                publicaciones.forEach((publicacion, indice) => {
+                    const tarjeta = crearTarjeta(publicacion);
+                    tarjeta.dataset.publicacionIndice = String(indice);
+                    listaPublicaciones.appendChild(tarjeta);
+                });
+                estadoVacio.hidden = true;
+                listaPublicaciones.hidden = false;
+            } else {
+                estadoVacio.hidden = false;
+                listaPublicaciones.hidden = true;
+            }
+        }
+
+        function abrirEdicion(indice) {
+            const publicacion = publicaciones[indice];
+            if (!publicacion) {
+                return;
+            }
+
+            formEditarPublicacion.reset();
+            indiceEnEdicion = indice;
+            campoEditarNombre.value = publicacion.nombre || '';
+            const precioCapturado = String(publicacion.precio || '').replace(/[^\d.-]/g, '');
+            campoEditarPrecio.value = Number.isFinite(Number(precioCapturado)) && precioCapturado
+                ? precioCapturado
+                : '';
+            campoEditarDescripcion.value = publicacion.descripcion || '';
+            actualizarVistaPrevia(publicacion.foto);
+            modalEditarPublicacion.showModal();
+            campoEditarNombre.focus();
+        }
+
+        listaPublicaciones.addEventListener('click', (evento) => {
+            const boton = evento.target.closest('button[data-action]');
+            if (!boton) {
+                return;
+            }
+
+            const tarjeta = boton.closest('[data-publicacion-indice]');
+            const indice = tarjeta ? Number(tarjeta.dataset.publicacionIndice) : -1;
+            if (!Number.isInteger(indice) || indice < 0 || !publicaciones[indice]) {
+                return;
+            }
+
+            if (boton.dataset.action === 'editar') {
+                abrirEdicion(indice);
+            } else if (boton.dataset.action === 'eliminar') {
+                indicePendienteEliminar = indice;
+                modalEliminarPublicacion.showModal();
+            }
+        });
+
+        campoEditarFoto.addEventListener('change', async () => {
+            const archivo = campoEditarFoto.files[0];
+            if (!archivo) {
+                if (indiceEnEdicion !== null) {
+                    actualizarVistaPrevia(publicaciones[indiceEnEdicion]?.foto);
+                }
+                return;
+            }
+
+            try {
+                actualizarVistaPrevia(await window.leerFotoReducida(archivo));
+            } catch (error) {
+                console.error('No se pudo procesar la foto seleccionada.', error);
+                mostrarMensaje('No se pudo procesar la foto; se conservará la actual.');
+                actualizarVistaPrevia(publicaciones[indiceEnEdicion]?.foto);
+            }
+        });
+
+        formEditarPublicacion.addEventListener('submit', async (evento) => {
+            evento.preventDefault();
+            if (indiceEnEdicion === null || !publicaciones[indiceEnEdicion]) {
+                return;
+            }
+
+            let foto = publicaciones[indiceEnEdicion].foto || '';
+            const archivo = campoEditarFoto.files[0];
+            if (archivo) {
+                try {
+                    foto = await window.leerFotoReducida(archivo);
+                } catch (error) {
+                    console.error('No se pudo procesar la foto seleccionada.', error);
+                    mostrarMensaje('No se pudo procesar la foto; revisa el archivo seleccionado.');
+                    return;
+                }
+            }
+
+            const actualizadas = publicaciones.slice();
+            actualizadas[indiceEnEdicion] = {
+                ...publicaciones[indiceEnEdicion],
+                nombre: campoEditarNombre.value.trim() || 'Producto sin nombre',
+                precio: campoEditarPrecio.value.trim() ? '$' + campoEditarPrecio.value.trim() + ' MXN' : '$0 MXN',
+                descripcion: campoEditarDescripcion.value.trim() || 'Sin descripción',
+                foto: foto
+            };
+
+            if (!guardarPublicaciones(actualizadas)) {
+                return;
+            }
+
+            publicaciones = actualizadas;
+            pintarPublicaciones();
+            modalEditarPublicacion.close();
+            indiceEnEdicion = null;
+            mostrarMensaje('Publicación actualizada (simulado)');
+        });
+
+        document.getElementById('cancelarEdicionPublicacion').addEventListener('click', () => {
+            modalEditarPublicacion.close();
+            indiceEnEdicion = null;
+        });
+
+        modalEditarPublicacion.addEventListener('click', (evento) => {
+            if (evento.target === modalEditarPublicacion) {
+                modalEditarPublicacion.close();
+                indiceEnEdicion = null;
+            }
+        });
+
+        modalEditarPublicacion.addEventListener('cancel', () => {
+            indiceEnEdicion = null;
+        });
+
+        document.getElementById('cancelarEliminacionPublicacion').addEventListener('click', () => {
+            modalEliminarPublicacion.close();
+            indicePendienteEliminar = null;
+        });
+
+        document.getElementById('confirmarEliminacionPublicacion').addEventListener('click', () => {
+            if (indicePendienteEliminar === null || !publicaciones[indicePendienteEliminar]) {
+                return;
+            }
+
+            const actualizadas = publicaciones.slice();
+            actualizadas.splice(indicePendienteEliminar, 1);
+            if (!guardarPublicaciones(actualizadas)) {
+                return;
+            }
+
+            publicaciones = actualizadas;
+            pintarPublicaciones();
+            modalEliminarPublicacion.close();
+            indicePendienteEliminar = null;
+            mostrarMensaje('Publicación eliminada (simulado)');
+        });
+
+        modalEliminarPublicacion.addEventListener('click', (evento) => {
+            if (evento.target === modalEliminarPublicacion) {
+                modalEliminarPublicacion.close();
+                indicePendienteEliminar = null;
+            }
+        });
+
+        modalEliminarPublicacion.addEventListener('cancel', () => {
+            indicePendienteEliminar = null;
+        });
+
+        pintarPublicaciones();
+        if (errorInicializacion) {
+            mostrarMensaje(errorInicializacion);
         }
     </script>
 
