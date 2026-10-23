@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subasta | Ana Kaidien</title>
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+
+<body>
+    <header>
+        <nav class="navbar">
+            <a href="index.html" class="logo">
+                Ana Kaidien
+                <span>Creaciones Artesanales</span>
+            </a>
+
+            <ul class="menu">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="catalogo.html">Catálogo</a></li>
+                <li><a href="campana.html">Campaña</a></li>
+                <li><a href="nosotros.html">Nosotros</a></li>
+                <li><a href="contacto.html">Contacto</a></li>
+                <li><a href="promociones.html">Promociones</a></li>
+                <li><a href="comunidad.html">Comunidad</a></li>
+                <li id="menuLogin"><a href="login.html">Iniciar sesión</a></li>
+                <li><a href="carrito.html" class="carrito-icono" aria-label="Carrito de compras"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.9a2 2 0 0 0 1.9-1.4L21 8H6M10 20h.01M18 20h.01" /></svg><span class="carrito-contador">0</span></a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="catalogo-intro">
+            <p class="subtitulo">Hecho a mano</p>
+            <h1>Subasta</h1>
+        </section>
+
+        <section class="subasta-contenido" aria-label="Subasta de Pintura Árbol">
+            <div class="producto-imagen subasta-imagen">
+                <img src="img/arbol.jpg" alt="Pintura Árbol">
+            </div>
+
+            <div class="subasta-informacion">
+                <h2>Pintura Árbol</h2>
+                <p class="subasta-descripcion">Una pintura original hecha a mano, creada con dedicación y cuidado en cada detalle.</p>
+
+                <p class="subasta-temporizador">
+                    <span id="temporizadorSubasta" role="timer">01:00:00</span>
+                    <span>restante</span>
+                    <span id="estadoSubasta" class="subasta-estado"></span>
+                </p>
+
+                <section class="subasta-oferta-alta" aria-label="Oferta más alta">
+                    <h3>Oferta más alta</h3>
+                    <p id="ofertaMasAlta">$800 MXN</p>
+                </section>
+
+                <form id="formularioOferta" class="subasta-formulario" novalidate>
+                    <label class="subasta-etiqueta-oculta" for="montoOferta">Monto de la oferta</label>
+                    <input id="montoOferta" name="oferta" type="number" step="1" placeholder="Mínimo $850">
+                    <button type="submit" class="boton">Ofertar</button>
+                    <p id="mensajeOferta" class="mensaje-confirmacion" role="status" aria-live="polite"></p>
+                </form>
+            </div>
+        </section>
+
+        <section class="subasta-historial" aria-labelledby="tituloHistorialOfertas">
+            <h2 id="tituloHistorialOfertas">Historial de ofertas</h2>
+            <div class="subasta-tabla-contenedor">
+                <table class="subasta-tabla">
+                    <thead>
+                        <tr>
+                            <th scope="col">Usuario</th>
+                            <th scope="col">Oferta</th>
+                            <th scope="col">Hora</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historialOfertas"></tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p class="subasta-footer-link"><a href="subasta.html">Subasta</a></p>
+        <p>© 2026 Ana Kaidien - Creaciones Artesanales</p>
+    </footer>
+
+    <script>
+        const historialOfertas = [
+            { usuario: 'Diego V.', monto: 800, hora: '10:45 a. m.' },
+            { usuario: 'Camila N.', monto: 700, hora: '10:30 a. m.' },
+            { usuario: 'Mariana S.', monto: 650, hora: '10:10 a. m.' }
+        ];
+
+        const formularioOferta = document.getElementById('formularioOferta');
+        const campoOferta = document.getElementById('montoOferta');
+        const ofertaMasAlta = document.getElementById('ofertaMasAlta');
+        const cuerpoHistorial = document.getElementById('historialOfertas');
+        const mensajeOferta = document.getElementById('mensajeOferta');
+        const temporizadorSubasta = document.getElementById('temporizadorSubasta');
+        const estadoSubasta = document.getElementById('estadoSubasta');
+        let montoMasAlto = 800;
+        let temporizadorMensaje;
+        let segundosRestantes = 60 * 60;
+
+        function formatearNumero(monto) {
+            return new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(monto);
+        }
+
+        function formatearMonto(monto) {
+            return '$' + formatearNumero(monto) + ' MXN';
+        }
+
+        function actualizarOfertaMasAlta() {
+            ofertaMasAlta.textContent = formatearMonto(montoMasAlto);
+            campoOferta.placeholder = 'Mínimo $' + formatearNumero(montoMasAlto + 50);
+        }
+
+        function mostrarHistorial() {
+            cuerpoHistorial.replaceChildren();
+
+            historialOfertas.forEach(function (oferta) {
+                const fila = document.createElement('tr');
+                const celdaUsuario = document.createElement('td');
+                const celdaMonto = document.createElement('td');
+                const celdaHora = document.createElement('td');
+
+                celdaUsuario.textContent = oferta.usuario;
+                celdaMonto.textContent = formatearMonto(oferta.monto);
+                celdaHora.textContent = oferta.hora;
+                fila.append(celdaUsuario, celdaMonto, celdaHora);
+                cuerpoHistorial.appendChild(fila);
+            });
+        }
+
+        function formatearHora(fecha) {
+            const hora = fecha.getHours();
+            const horaFormato12 = hora % 12 || 12;
+            const periodo = hora < 12 ? 'a. m.' : 'p. m.';
+            return String(horaFormato12).padStart(2, '0') + ':'
+                + String(fecha.getMinutes()).padStart(2, '0') + ' ' + periodo;
+        }
+
+        function mostrarMensaje(texto, esError) {
+            clearTimeout(temporizadorMensaje);
+            mensajeOferta.textContent = texto;
+            mensajeOferta.classList.toggle('error', esError);
+            mensajeOferta.classList.add('visible');
+            temporizadorMensaje = setTimeout(function () {
+                mensajeOferta.classList.remove('visible', 'error');
+                mensajeOferta.textContent = '';
+            }, 3000);
+        }
+
+        formularioOferta.addEventListener('submit', function (evento) {
+            evento.preventDefault();
+            const montoOferta = campoOferta.valueAsNumber;
+
+            if (!Number.isFinite(montoOferta) || montoOferta <= montoMasAlto) {
+                mostrarMensaje('La oferta debe ser mayor a $' + formatearNumero(montoMasAlto), true);
+                return;
+            }
+
+            historialOfertas.unshift({
+                usuario: sessionStorage.getItem('usuarioActivo') || 'Anónimo',
+                monto: montoOferta,
+                hora: formatearHora(new Date())
+            });
+            montoMasAlto = montoOferta;
+            actualizarOfertaMasAlta();
+            mostrarHistorial();
+            campoOferta.value = '';
+            mostrarMensaje('Oferta registrada (simulado)', false);
+        });
+
+        function actualizarTemporizador() {
+            const horas = Math.floor(segundosRestantes / 3600);
+            const minutos = Math.floor((segundosRestantes % 3600) / 60);
+            const segundos = segundosRestantes % 60;
+            temporizadorSubasta.textContent = [horas, minutos, segundos]
+                .map(function (valor) { return String(valor).padStart(2, '0'); })
+                .join(':');
+
+            if (segundosRestantes === 0) {
+                estadoSubasta.textContent = 'Subasta finalizada';
+                campoOferta.disabled = true;
+                formularioOferta.querySelector('button[type="submit"]').disabled = true;
+                clearInterval(intervaloSubasta);
+                return;
+            }
+
+            segundosRestantes -= 1;
+        }
+
+        actualizarOfertaMasAlta();
+        mostrarHistorial();
+        actualizarTemporizador();
+        const intervaloSubasta = setInterval(actualizarTemporizador, 1000);
+    </script>
+    <script src="js/carrito.js"></script>
+    <script src="js/sesion.js"></script>
+</body>
+
+</html>

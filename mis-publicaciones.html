@@ -98,6 +98,7 @@
     </dialog>
 
     <footer>
+        <p class="subasta-footer-link"><a href="subasta.html">Subasta</a></p>
         <p>© 2026 Ana Kaidien - Creaciones Artesanales</p>
     </footer>
 
@@ -393,7 +394,7 @@
             pintarPublicaciones();
             modalEditarPublicacion.close();
             indiceEnEdicion = null;
-            mostrarMensaje('Publicación actualizada (simulado)');
+            mostrarMensaje('Publicación actualizada');
         });
 
         document.getElementById('cancelarEdicionPublicacion').addEventListener('click', () => {
@@ -432,7 +433,7 @@
             pintarPublicaciones();
             modalEliminarPublicacion.close();
             indicePendienteEliminar = null;
-            mostrarMensaje('Publicación eliminada (simulado)');
+            mostrarMensaje('Publicación eliminada ');
         });
 
         modalEliminarPublicacion.addEventListener('click', (evento) => {
