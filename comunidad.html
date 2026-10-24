@@ -53,14 +53,16 @@
         <p>© 2026 Ana Kaidien - Creaciones Artesanales</p>
     </footer>
 
+    <script src="js/comentarios.js"></script>
     <script>
-        const comentarios = [
+        const comentariosEjemplo = [
             { nombre: 'Laura R.', fecha: '16 de octubre de 2026', texto: '¡Me encanta esta tienda! Los productos son auténticos.' },
             { nombre: 'Pedro M.', fecha: '15 de octubre de 2026', texto: 'Excelente calidad en las pulseras, volveré a comprar.' },
             { nombre: 'Sofía G.', fecha: '14 de octubre de 2026', texto: 'La atención fue muy amable y mi pedido quedó precioso.' },
             { nombre: 'Mariana T.', fecha: '13 de octubre de 2026', texto: 'Se nota el cariño y el detalle en cada creación.' },
             { nombre: 'Daniela C.', fecha: '12 de octubre de 2026', texto: 'Encontré justo el regalo artesanal que estaba buscando.' }
         ];
+        let comentariosUsuario = window.misComentariosStorage.leer();
 
         const formComunidad = document.getElementById('formComunidad');
         const campoComentario = document.getElementById('textoComentario');
@@ -71,7 +73,19 @@
         function mostrarComentarios() {
             listaComentarios.replaceChildren();
 
-            comentarios.forEach(function (comentario) {
+            const comentariosGuardados = comentariosUsuario.map(function (comentario) {
+                return {
+                    nombre: comentario.autor,
+                    fecha: new Date(comentario.fecha).toLocaleDateString('es-MX', {
+                        day: 'numeric',
+                        month: 'long',
+                        year: 'numeric'
+                    }),
+                    texto: comentario.texto
+                };
+            });
+
+            comentariosGuardados.concat(comentariosEjemplo).forEach(function (comentario) {
                 const tarjeta = document.createElement('article');
                 tarjeta.className = 'comunidad-comentario';
 
@@ -99,15 +113,18 @@
         formComunidad.addEventListener('submit', function (evento) {
             evento.preventDefault();
 
-            const nombreUsuario = sessionStorage.getItem('usuarioActivo') || 'Visitante';
-            comentarios.unshift({
-                nombre: nombreUsuario,
-                fecha: new Date().toLocaleDateString('es-MX', {
-                    day: 'numeric',
-                    month: 'long',
-                    year: 'numeric'
-                }),
-                texto: campoComentario.value.trim() || 'Comentario de ejemplo'
+            let nombreUsuario = 'Visitante';
+            try {
+                nombreUsuario = sessionStorage.getItem('usuarioActivo') || 'Visitante';
+            } catch (error) {
+                console.warn('No se pudo leer el usuario activo.', error);
+            }
+
+            comentariosUsuario = window.misComentariosStorage.guardar({
+                id: Date.now(),
+                texto: campoComentario.value.trim() || 'Comentario de ejemplo',
+                fecha: new Date().toISOString(),
+                autor: nombreUsuario
             });
 
             mostrarComentarios();

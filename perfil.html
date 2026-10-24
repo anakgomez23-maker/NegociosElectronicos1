@@ -73,6 +73,15 @@
                     </article>
                 </div>
 
+                <article class="perfil-tarjeta perfil-comentarios">
+                    <p class="tarjeta-etiqueta">ACTIVIDAD</p>
+                    <h2>Mis comentarios</h2>
+                    <p id="totalMisComentarios" class="comentarios-total" aria-live="polite"></p>
+                    <p id="estadoVacioComentarios" class="comentarios-vacio" hidden>Aún no has publicado comentarios</p>
+                    <ul id="listaMisComentarios" class="comentarios-historial" aria-label="Historial de comentarios"></ul>
+                    <a id="enlaceComunidadComentarios" href="comunidad.html" class="boton">Escribir mi primer comentario</a>
+                </article>
+
                 <div class="perfil-publicaciones">
                     <a href="publicar.html" class="boton">Publicar producto</a>
                     <a href="mis-publicaciones.html" class="boton">Mis publicaciones</a>
@@ -90,6 +99,55 @@
 
     <script src="js/carrito.js"></script>
     <script src="js/sesion.js"></script>
+    <script src="js/comentarios.js"></script>
+    <script>
+        (function () {
+            const comentarios = window.misComentariosStorage.leer();
+            const totalComentarios = document.getElementById('totalMisComentarios');
+            const estadoVacio = document.getElementById('estadoVacioComentarios');
+            const listaComentarios = document.getElementById('listaMisComentarios');
+            const enlaceComunidad = document.getElementById('enlaceComunidadComentarios');
+
+            totalComentarios.textContent = 'Has publicado ' + comentarios.length
+                + ' comentario' + (comentarios.length === 1 ? '' : 's');
+            estadoVacio.hidden = comentarios.length > 0;
+            listaComentarios.hidden = comentarios.length === 0;
+
+            if (comentarios.length > 0) {
+                enlaceComunidad.textContent = 'Ir a Comunidad';
+            }
+
+            comentarios.forEach(function (comentario) {
+                const elemento = document.createElement('li');
+                elemento.className = 'comentario-historial-item';
+
+                const encabezado = document.createElement('div');
+                encabezado.className = 'comentario-historial-encabezado';
+
+                const texto = document.createElement('p');
+                texto.className = 'comentario-historial-texto';
+                texto.textContent = comentario.texto;
+
+                const fecha = document.createElement('time');
+                fecha.className = 'comentario-historial-fecha';
+                fecha.dateTime = comentario.fecha;
+                fecha.textContent = new Date(comentario.fecha).toLocaleDateString('es-MX', {
+                    day: 'numeric',
+                    month: 'short',
+                    year: 'numeric',
+                    timeZone: 'UTC'
+                });
+
+                const etiqueta = document.createElement('span');
+                etiqueta.className = 'comentario-historial-etiqueta';
+                etiqueta.textContent = 'Publicado en Comunidad';
+
+                encabezado.append(texto, fecha);
+                elemento.append(encabezado, etiqueta);
+                listaComentarios.append(elemento);
+            });
+        })();
+    </script>
     <script>
         document.getElementById('btnCerrarSesion').addEventListener('click', (evento) => {
             evento.preventDefault();
