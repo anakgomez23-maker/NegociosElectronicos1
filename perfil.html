@@ -82,6 +82,24 @@
                     <a id="enlaceComunidadComentarios" href="comunidad.html" class="boton">Escribir mi primer comentario</a>
                 </article>
 
+                <article class="perfil-tarjeta perfil-resenas">
+                    <p class="tarjeta-etiqueta">OPINIONES</p>
+                    <h2>Mis reseñas</h2>
+                    <form id="formResena" class="resenas-formulario" novalidate>
+                        <fieldset>
+                            <legend>Tu calificación</legend>
+                            <div id="selectorResena" class="resenas-selector" aria-label="Selecciona una calificación"></div>
+                        </fieldset>
+                        <label for="textoResena">Tu experiencia</label>
+                        <textarea id="textoResena" name="texto" placeholder="Cuéntanos tu experiencia..." rows="4"></textarea>
+                        <button type="submit" class="boton">Publicar reseña</button>
+                    </form>
+                    <p id="mensajeResena" class="mensaje-confirmacion" role="status" aria-live="polite"></p>
+                    <h3>Tus reseñas</h3>
+                    <p id="estadoVacioResenas" class="resenas-vacio">Aún no has publicado reseñas</p>
+                    <ul id="listaResenas" class="resenas-historial" aria-label="Tus reseñas"></ul>
+                </article>
+
                 <div class="perfil-publicaciones">
                     <a href="publicar.html" class="boton">Publicar producto</a>
                     <a href="mis-publicaciones.html" class="boton">Mis publicaciones</a>
@@ -92,6 +110,37 @@
         </section>
     </main>
 
+    <dialog class="c2c-publicacion-dialog resenas-dialog" id="modalEditarResena" aria-labelledby="tituloEditarResena">
+        <form class="c2c-modal-formulario" id="formEditarResena" novalidate>
+            <h2 id="tituloEditarResena">Editar reseña</h2>
+            <div class="c2c-modal-campo">
+                <fieldset>
+                    <legend>Tu calificación</legend>
+                    <div id="selectorEditarResena" class="resenas-selector"></div>
+                </fieldset>
+            </div>
+            <div class="c2c-modal-campo">
+                <label for="textoEditarResena">Tu experiencia</label>
+                <textarea id="textoEditarResena" rows="4"></textarea>
+            </div>
+            <div class="c2c-modal-acciones">
+                <button type="button" id="cancelarEdicionResena" class="boton boton-outline-oscuro">Cancelar</button>
+                <button type="submit" class="boton">Guardar cambios</button>
+            </div>
+        </form>
+    </dialog>
+
+    <dialog class="c2c-publicacion-dialog resenas-dialog" id="modalEliminarResena" aria-labelledby="tituloEliminarResena">
+        <div class="c2c-modal-formulario">
+            <h2 id="tituloEliminarResena">Confirmar eliminación</h2>
+            <p>¿Seguro que quieres eliminar esta reseña?</p>
+            <div class="c2c-modal-acciones">
+                <button type="button" id="cancelarEliminacionResena" class="boton boton-outline-oscuro">Cancelar</button>
+                <button type="button" id="confirmarEliminacionResena" class="boton">Sí, eliminar</button>
+            </div>
+        </div>
+    </dialog>
+
     <footer>
         <p class="subasta-footer-link"><a href="subasta.html">Subasta</a></p>
         <p>© 2026 Ana Kaidien - Creaciones Artesanales</p>
@@ -100,6 +149,188 @@
     <script src="js/carrito.js"></script>
     <script src="js/sesion.js"></script>
     <script src="js/comentarios.js"></script>
+    <script src="js/resenas.js"></script>
+    <script>
+        (function () {
+            const formulario = document.getElementById('formResena');
+            const selector = document.getElementById('selectorResena');
+            const texto = document.getElementById('textoResena');
+            const lista = document.getElementById('listaResenas');
+            const estadoVacio = document.getElementById('estadoVacioResenas');
+            const mensaje = document.getElementById('mensajeResena');
+            const modalEditar = document.getElementById('modalEditarResena');
+            const formularioEditar = document.getElementById('formEditarResena');
+            const selectorEditar = document.getElementById('selectorEditarResena');
+            const textoEditar = document.getElementById('textoEditarResena');
+            const modalEliminar = document.getElementById('modalEliminarResena');
+            let resenas = window.resenasStorage.leer();
+            let idEnEdicion = null;
+            let idPendienteEliminar = null;
+            let temporizadorMensaje = null;
+
+            function mostrarMensaje(contenido) {
+                mensaje.textContent = contenido;
+                mensaje.classList.add('visible');
+                window.clearTimeout(temporizadorMensaje);
+                temporizadorMensaje = window.setTimeout(function () {
+                    mensaje.classList.remove('visible');
+                }, 3000);
+            }
+
+            function fechaLegible(fecha) {
+                return new Date(fecha).toLocaleDateString('es-MX', {
+                    day: 'numeric',
+                    month: 'short',
+                    year: 'numeric',
+                    timeZone: 'UTC'
+                });
+            }
+
+            function pintarResenas() {
+                lista.replaceChildren();
+                estadoVacio.hidden = resenas.length > 0;
+                lista.hidden = resenas.length === 0;
+
+                resenas.slice().sort(function (primera, segunda) {
+                    return Date.parse(segunda.fecha) - Date.parse(primera.fecha);
+                }).forEach(function (resena) {
+                    const elemento = document.createElement('li');
+                    elemento.className = 'resena-historial-item';
+                    elemento.appendChild(window.resenasUI.crearEstrellas(resena.estrellas, 'resenas-estrellas'));
+
+                    const contenido = document.createElement('p');
+                    contenido.className = 'resena-historial-texto';
+                    contenido.textContent = resena.texto;
+
+                    const fecha = document.createElement('time');
+                    fecha.className = 'resena-historial-fecha';
+                    fecha.dateTime = resena.fecha;
+                    fecha.textContent = fechaLegible(resena.fecha);
+
+                    const acciones = document.createElement('div');
+                    acciones.className = 'resena-historial-acciones';
+                    const fragmento = resena.texto.slice(0, 30);
+                    const editar = document.createElement('button');
+                    editar.type = 'button';
+                    editar.className = 'boton boton-outline-oscuro';
+                    editar.textContent = 'Editar';
+                    editar.setAttribute('aria-label', 'Editar reseña: ' + fragmento);
+                    editar.addEventListener('click', function () {
+                        idEnEdicion = resena.id;
+                        textoEditar.value = resena.texto;
+                        window.resenasUI.crearSelector(selectorEditar, 'editarEstrellas', resena.estrellas);
+                        modalEditar.showModal();
+                    });
+
+                    const eliminar = document.createElement('button');
+                    eliminar.type = 'button';
+                    eliminar.className = 'boton boton-outline-oscuro';
+                    eliminar.textContent = 'Eliminar';
+                    eliminar.setAttribute('aria-label', 'Eliminar reseña: ' + fragmento);
+                    eliminar.addEventListener('click', function () {
+                        idPendienteEliminar = resena.id;
+                        modalEliminar.showModal();
+                    });
+
+                    acciones.append(editar, eliminar);
+                    elemento.append(contenido, fecha, acciones);
+                    lista.appendChild(elemento);
+                });
+            }
+
+            function cerrarModal(modal) {
+                if (modal.open) {
+                    modal.close();
+                }
+            }
+
+            window.resenasUI.crearSelector(selector, 'nuevasEstrellas', 5);
+            pintarResenas();
+
+            formulario.addEventListener('submit', function (evento) {
+                evento.preventDefault();
+                const seleccion = selector.querySelector('input:checked');
+                const nueva = {
+                    id: Date.now(),
+                    estrellas: window.resenasStorage.limitarEstrellas(seleccion ? seleccion.value : 5),
+                    texto: texto.value.trim() || 'Reseña de ejemplo',
+                    fecha: new Date().toISOString(),
+                    autor: window.resenasStorage.leerAutor()
+                };
+                const actualizadas = resenas.concat(nueva);
+                if (!window.resenasStorage.guardar(actualizadas)) {
+                    mostrarMensaje('No se pudo guardar la reseña en esta sesión.');
+                    return;
+                }
+                resenas = actualizadas;
+                formulario.reset();
+                window.resenasUI.crearSelector(selector, 'nuevasEstrellas', 5);
+                pintarResenas();
+                mostrarMensaje('Reseña publicada (simulado)');
+            });
+
+            formularioEditar.addEventListener('submit', function (evento) {
+                evento.preventDefault();
+                const seleccion = selectorEditar.querySelector('input:checked');
+                const actualizadas = resenas.map(function (resena) {
+                    if (resena.id !== idEnEdicion) {
+                        return resena;
+                    }
+                    return {
+                        ...resena,
+                        estrellas: window.resenasStorage.limitarEstrellas(seleccion ? seleccion.value : 5),
+                        texto: textoEditar.value.trim() || 'Reseña de ejemplo'
+                    };
+                });
+                if (!window.resenasStorage.guardar(actualizadas)) {
+                    mostrarMensaje('No se pudo guardar la reseña en esta sesión.');
+                    return;
+                }
+                resenas = actualizadas;
+                idEnEdicion = null;
+                cerrarModal(modalEditar);
+                pintarResenas();
+                mostrarMensaje('Reseña actualizada (simulado)');
+            });
+
+            document.getElementById('cancelarEdicionResena').addEventListener('click', function () {
+                idEnEdicion = null;
+                cerrarModal(modalEditar);
+            });
+            document.getElementById('cancelarEliminacionResena').addEventListener('click', function () {
+                idPendienteEliminar = null;
+                cerrarModal(modalEliminar);
+            });
+            document.getElementById('confirmarEliminacionResena').addEventListener('click', function () {
+                const actualizadas = resenas.filter(function (resena) {
+                    return resena.id !== idPendienteEliminar;
+                });
+                if (!window.resenasStorage.guardar(actualizadas)) {
+                    mostrarMensaje('No se pudo guardar la reseña en esta sesión.');
+                    return;
+                }
+                resenas = actualizadas;
+                idPendienteEliminar = null;
+                cerrarModal(modalEliminar);
+                pintarResenas();
+                mostrarMensaje('Reseña eliminada (simulado)');
+            });
+
+            [modalEditar, modalEliminar].forEach(function (modal) {
+                modal.addEventListener('click', function (evento) {
+                    if (evento.target === modal) {
+                        cerrarModal(modal);
+                        idEnEdicion = null;
+                        idPendienteEliminar = null;
+                    }
+                });
+                modal.addEventListener('cancel', function () {
+                    idEnEdicion = null;
+                    idPendienteEliminar = null;
+                });
+            });
+        })();
+    </script>
     <script>
         (function () {
             const comentarios = window.misComentariosStorage.leer();

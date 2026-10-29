@@ -85,6 +85,7 @@
         <p>© 2026 Ana Kaidien - Creaciones Artesanales</p>
     </footer>
 
+    <script src="js/resenas.js"></script>
     <script>
         const resenas = [
             {
@@ -105,27 +106,34 @@
         ];
 
         const contenedorResenas = document.getElementById("campanaResenas");
+        let resenasUsuario = [];
+        try {
+            resenasUsuario = window.resenasStorage.leer().map((resena) => ({
+                comentario: resena.texto,
+                nombre: resena.autor,
+                estrellas: resena.estrellas,
+                esUsuario: true
+            }));
+        } catch (error) {
+            console.error("No se pudieron cargar las reseñas del usuario para la campaña.", error);
+        }
+        const conjunto = resenas.concat(resenasUsuario);
 
-        resenas.forEach((resena) => {
+        for (let indice = conjunto.length - 1; indice > 0; indice -= 1) {
+            const aleatorio = Math.floor(Math.random() * (indice + 1));
+            [conjunto[indice], conjunto[aleatorio]] = [conjunto[aleatorio], conjunto[indice]];
+        }
+
+        const seleccionadas = conjunto.length <= 3 ? conjunto : conjunto.slice(0, 3);
+        if (resenasUsuario.length > 0 && !seleccionadas.some((resena) => resena.esUsuario)) {
+            const resenaUsuario = resenasUsuario[Math.floor(Math.random() * resenasUsuario.length)];
+            seleccionadas[Math.floor(Math.random() * 3)] = resenaUsuario;
+        }
+
+        seleccionadas.forEach((resena) => {
             const tarjeta = document.createElement("article");
             tarjeta.className = "producto-card campana-resena";
-
-            const estrellas = document.createElement("div");
-            estrellas.className = "campana-estrellas";
-            estrellas.setAttribute("role", "img");
-            estrellas.setAttribute("aria-label", `${resena.estrellas} de 5 estrellas`);
-
-            for (let indice = 0; indice < 5; indice += 1) {
-                const estrella = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-                estrella.setAttribute("viewBox", "0 0 24 24");
-                estrella.setAttribute("aria-hidden", "true");
-                estrella.classList.add(indice < resena.estrellas ? "campana-estrella-activa" : "campana-estrella-inactiva");
-
-                const forma = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
-                forma.setAttribute("points", "12 2 15.1 8.3 22 9.3 17 14.2 18.2 21.1 12 17.8 5.8 21.1 7 14.2 2 9.3 8.9 8.3");
-                estrella.appendChild(forma);
-                estrellas.appendChild(estrella);
-            }
+            const estrellas = window.resenasUI.crearEstrellas(resena.estrellas);
 
             const comentario = document.createElement("p");
             comentario.className = "campana-comentario";
