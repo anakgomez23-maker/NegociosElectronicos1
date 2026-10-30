@@ -3269,6 +3269,31 @@ footer {
     color: var(--color-texto-secundario);
 }
 
+/* PERFIL - EDITAR Y ELIMINAR COMENTARIOS */
+.comentario-historial-acciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+}
+
+.comentario-historial-acciones .boton-pequeno {
+    cursor: pointer;
+}
+
+.comentarios-dialog {
+    width: min(92vw, 560px);
+}
+
+.comentarios-dialog .c2c-modal-formulario {
+    width: 100%;
+}
+
+.comentarios-dialog textarea {
+    min-height: 7rem;
+    resize: vertical;
+}
+
 @media (max-width: 480px) {
     .comentario-historial-encabezado {
         flex-direction: column;
@@ -3277,6 +3302,14 @@ footer {
 
     .comentario-historial-texto {
         margin-bottom: 0.25rem;
+    }
+
+    .comentario-historial-acciones {
+        width: 100%;
+    }
+
+    .comentario-historial-acciones .boton-pequeno {
+        flex: 1 1 8rem;
     }
 }
 

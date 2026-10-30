@@ -141,6 +141,31 @@
         </div>
     </dialog>
 
+    <dialog class="c2c-publicacion-dialog resenas-dialog comentarios-dialog" id="modalEditarComentario" aria-labelledby="tituloEditarComentario">
+        <form class="c2c-modal-formulario" id="formEditarComentario" novalidate>
+            <h2 id="tituloEditarComentario">Editar comentario</h2>
+            <div class="c2c-modal-campo">
+                <label for="textoEditarComentario">Tu comentario</label>
+                <textarea id="textoEditarComentario" rows="4"></textarea>
+            </div>
+            <div class="c2c-modal-acciones">
+                <button type="button" id="cancelarEdicionComentario" class="boton boton-outline-oscuro">Cancelar</button>
+                <button type="submit" class="boton">Guardar cambios</button>
+            </div>
+        </form>
+    </dialog>
+
+    <dialog class="c2c-publicacion-dialog resenas-dialog comentarios-dialog" id="modalEliminarComentario" aria-labelledby="tituloEliminarComentario">
+        <div class="c2c-modal-formulario">
+            <h2 id="tituloEliminarComentario">Confirmar eliminación</h2>
+            <p>¿Seguro que quieres eliminar este comentario?</p>
+            <div class="c2c-modal-acciones">
+                <button type="button" id="cancelarEliminacionComentario" class="boton boton-outline-oscuro">Cancelar</button>
+                <button type="button" id="confirmarEliminacionComentario" class="boton">Sí, eliminar</button>
+            </div>
+        </div>
+    </dialog>
+
     <footer>
         <p class="subasta-footer-link"><a href="subasta.html">Subasta</a></p>
         <p>© 2026 Ana Kaidien - Creaciones Artesanales</p>
@@ -333,50 +358,157 @@
     </script>
     <script>
         (function () {
-            const comentarios = window.misComentariosStorage.leer();
             const totalComentarios = document.getElementById('totalMisComentarios');
             const estadoVacio = document.getElementById('estadoVacioComentarios');
             const listaComentarios = document.getElementById('listaMisComentarios');
             const enlaceComunidad = document.getElementById('enlaceComunidadComentarios');
+            const mensaje = document.getElementById('mensajeResena');
+            const modalEditar = document.getElementById('modalEditarComentario');
+            const formularioEditar = document.getElementById('formEditarComentario');
+            const textoEditar = document.getElementById('textoEditarComentario');
+            const modalEliminar = document.getElementById('modalEliminarComentario');
+            let comentarios = window.misComentariosStorage.leer();
+            let idEnEdicion = null;
+            let idPendienteEliminar = null;
+            let temporizadorMensaje = null;
 
-            totalComentarios.textContent = 'Has publicado ' + comentarios.length
-                + ' comentario' + (comentarios.length === 1 ? '' : 's');
-            estadoVacio.hidden = comentarios.length > 0;
-            listaComentarios.hidden = comentarios.length === 0;
-
-            if (comentarios.length > 0) {
-                enlaceComunidad.textContent = 'Ir a Comunidad';
+            function mostrarMensaje(contenido) {
+                mensaje.textContent = contenido;
+                mensaje.classList.add('visible');
+                window.clearTimeout(temporizadorMensaje);
+                temporizadorMensaje = window.setTimeout(function () {
+                    mensaje.classList.remove('visible');
+                }, 3000);
             }
 
-            comentarios.forEach(function (comentario) {
-                const elemento = document.createElement('li');
-                elemento.className = 'comentario-historial-item';
+            function cerrarModal(modal) {
+                if (modal.open) {
+                    modal.close();
+                }
+            }
 
-                const encabezado = document.createElement('div');
-                encabezado.className = 'comentario-historial-encabezado';
+            function pintarComentarios() {
+                totalComentarios.textContent = 'Has publicado ' + comentarios.length
+                    + ' comentario' + (comentarios.length === 1 ? '' : 's');
+                estadoVacio.hidden = comentarios.length > 0;
+                listaComentarios.hidden = comentarios.length === 0;
+                enlaceComunidad.textContent = comentarios.length > 0
+                    ? 'Ir a Comunidad'
+                    : 'Escribir mi primer comentario';
+                listaComentarios.replaceChildren();
 
-                const texto = document.createElement('p');
-                texto.className = 'comentario-historial-texto';
-                texto.textContent = comentario.texto;
+                comentarios.forEach(function (comentario) {
+                    const elemento = document.createElement('li');
+                    elemento.className = 'comentario-historial-item';
 
-                const fecha = document.createElement('time');
-                fecha.className = 'comentario-historial-fecha';
-                fecha.dateTime = comentario.fecha;
-                fecha.textContent = new Date(comentario.fecha).toLocaleDateString('es-MX', {
-                    day: 'numeric',
-                    month: 'short',
-                    year: 'numeric',
-                    timeZone: 'UTC'
+                    const encabezado = document.createElement('div');
+                    encabezado.className = 'comentario-historial-encabezado';
+
+                    const texto = document.createElement('p');
+                    texto.className = 'comentario-historial-texto';
+                    texto.textContent = comentario.texto;
+
+                    const fecha = document.createElement('time');
+                    fecha.className = 'comentario-historial-fecha';
+                    fecha.dateTime = comentario.fecha;
+                    fecha.textContent = new Date(comentario.fecha).toLocaleDateString('es-MX', {
+                        day: 'numeric',
+                        month: 'short',
+                        year: 'numeric',
+                        timeZone: 'UTC'
+                    });
+
+                    const etiqueta = document.createElement('span');
+                    etiqueta.className = 'comentario-historial-etiqueta';
+                    etiqueta.textContent = 'Publicado en Comunidad';
+
+                    const acciones = document.createElement('div');
+                    acciones.className = 'comentario-historial-acciones';
+                    const fragmento = comentario.texto.slice(0, 30);
+
+                    const editar = document.createElement('button');
+                    editar.type = 'button';
+                    editar.className = 'boton-pequeno boton-outline-oscuro';
+                    editar.textContent = 'Editar';
+                    editar.setAttribute('aria-label', 'Editar comentario: ' + fragmento);
+                    editar.addEventListener('click', function () {
+                        idEnEdicion = comentario.id;
+                        textoEditar.value = comentario.texto;
+                        modalEditar.showModal();
+                    });
+
+                    const eliminar = document.createElement('button');
+                    eliminar.type = 'button';
+                    eliminar.className = 'boton-pequeno boton-outline-oscuro';
+                    eliminar.textContent = 'Eliminar';
+                    eliminar.setAttribute('aria-label', 'Eliminar comentario: ' + fragmento);
+                    eliminar.addEventListener('click', function () {
+                        idPendienteEliminar = comentario.id;
+                        modalEliminar.showModal();
+                    });
+
+                    acciones.append(editar, eliminar);
+                    encabezado.append(texto, fecha);
+                    elemento.append(encabezado, etiqueta, acciones);
+                    listaComentarios.append(elemento);
                 });
+            }
 
-                const etiqueta = document.createElement('span');
-                etiqueta.className = 'comentario-historial-etiqueta';
-                etiqueta.textContent = 'Publicado en Comunidad';
-
-                encabezado.append(texto, fecha);
-                elemento.append(encabezado, etiqueta);
-                listaComentarios.append(elemento);
+            formularioEditar.addEventListener('submit', function (evento) {
+                evento.preventDefault();
+                const actualizados = window.misComentariosStorage.actualizar(
+                    idEnEdicion,
+                    textoEditar.value.trim() || 'Comentario de ejemplo'
+                );
+                if (actualizados === null) {
+                    mostrarMensaje('No se pudo guardar el comentario en esta sesión.');
+                    return;
+                }
+                comentarios = actualizados;
+                idEnEdicion = null;
+                cerrarModal(modalEditar);
+                pintarComentarios();
+                mostrarMensaje('Comentario actualizado (simulado)');
             });
+
+            document.getElementById('cancelarEdicionComentario').addEventListener('click', function () {
+                idEnEdicion = null;
+                cerrarModal(modalEditar);
+            });
+
+            document.getElementById('cancelarEliminacionComentario').addEventListener('click', function () {
+                idPendienteEliminar = null;
+                cerrarModal(modalEliminar);
+            });
+
+            document.getElementById('confirmarEliminacionComentario').addEventListener('click', function () {
+                const actualizados = window.misComentariosStorage.eliminar(idPendienteEliminar);
+                if (actualizados === null) {
+                    mostrarMensaje('No se pudo guardar el comentario en esta sesión.');
+                    return;
+                }
+                comentarios = actualizados;
+                idPendienteEliminar = null;
+                cerrarModal(modalEliminar);
+                pintarComentarios();
+                mostrarMensaje('Comentario eliminado (simulado)');
+            });
+
+            [modalEditar, modalEliminar].forEach(function (modal) {
+                modal.addEventListener('click', function (evento) {
+                    if (evento.target === modal) {
+                        cerrarModal(modal);
+                        idEnEdicion = null;
+                        idPendienteEliminar = null;
+                    }
+                });
+                modal.addEventListener('cancel', function () {
+                    idEnEdicion = null;
+                    idPendienteEliminar = null;
+                });
+            });
+
+            pintarComentarios();
         })();
     </script>
     <script>

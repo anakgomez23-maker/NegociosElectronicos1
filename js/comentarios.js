@@ -7,6 +7,16 @@
         });
     }
 
+    function escribir(comentarios) {
+        try {
+            sessionStorage.setItem(clave, JSON.stringify(comentarios));
+            return true;
+        } catch (error) {
+            console.warn('No se pudieron guardar los comentarios.', error);
+            return false;
+        }
+    }
+
     function leer() {
         try {
             const guardados = sessionStorage.getItem(clave);
@@ -39,18 +49,45 @@
 
     function guardar(comentario) {
         const comentarios = ordenar(leer().concat(comentario));
+        escribir(comentarios);
+        return comentarios;
+    }
 
-        try {
-            sessionStorage.setItem(clave, JSON.stringify(comentarios));
-        } catch (error) {
-            console.warn('No se pudieron guardar los comentarios.', error);
+    function actualizar(id, texto) {
+        const comentarios = leer();
+        const actualizados = comentarios.map(function (comentario) {
+            if (comentario.id !== id) {
+                return comentario;
+            }
+            return {
+                ...comentario,
+                texto: texto
+            };
+        });
+
+        if (!escribir(actualizados)) {
+            return null;
         }
 
-        return comentarios;
+        return actualizados;
+    }
+
+    function eliminar(id) {
+        const actualizados = leer().filter(function (comentario) {
+            return comentario.id !== id;
+        });
+
+        if (!escribir(actualizados)) {
+            return null;
+        }
+
+        return actualizados;
     }
 
     window.misComentariosStorage = Object.freeze({
         leer: leer,
-        guardar: guardar
+        guardar: guardar,
+        actualizar: actualizar,
+        eliminar: eliminar
     });
 })();
