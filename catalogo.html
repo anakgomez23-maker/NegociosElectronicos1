@@ -86,7 +86,7 @@
         </section>
 
         <!-- LISTA DE PRODUCTOS -->
-        <section class="productos-grid">
+        <section class="productos-grid catalogo-productos-grid">
 
             <div class="producto-card" data-categoria="pulseras" data-precio="50">
                 <div class="producto-imagen"><img src="img/PulseraAmarillo.jpg" alt="Pulsera Hilo Trenzado"></div>
@@ -146,6 +146,18 @@
 
         </section>
 
+        <section class="marketplace" aria-labelledby="tituloMarketplace">
+            <div class="marketplace-encabezado">
+                <p class="subtitulo">MARKETPLACE</p>
+                <h2 id="tituloMarketplace">Creaciones de nuestra comunidad</h2>
+                <p>Artículos publicados por otras personas de la comunidad Ana Kaidien.</p>
+            </div>
+
+            <div id="gridMarketplace" class="productos-grid" aria-label="Artículos de la comunidad"></div>
+
+            <a href="publicar.html" class="boton marketplace-boton">Publica tu producto</a>
+        </section>
+
     </main>
 
 
@@ -164,7 +176,7 @@
         const busquedaProductos = document.getElementById('busqueda-productos');
         const filtroCategoria = document.getElementById('filtro-categoria');
         const filtroPrecio = document.getElementById('filtro-precio');
-        const tarjetasProducto = document.querySelectorAll('.producto-card');
+        const tarjetasProducto = document.querySelectorAll('.catalogo-productos-grid .producto-card');
 
         function actualizarCatalogo() {
             const textoBusqueda = busquedaProductos.value.toLowerCase().trim();
@@ -191,6 +203,7 @@
         filtroPrecio.addEventListener('change', actualizarCatalogo);
     </script>
 
+    <script src="js/marketplace.js"></script>
     <script src="js/carrito.js"></script>
     <script src="js/sesion.js"></script>
 </body>

@@ -797,6 +797,72 @@ ul {
     padding: 0.6rem 1.4rem;
     font-size: 0.85rem;
 }
+
+/* MARKETPLACE */
+
+.marketplace {
+    padding: 4rem 0 5rem;
+    background-color: var(--color-fondo-claro);
+}
+
+.marketplace-encabezado {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    text-align: center;
+}
+
+.marketplace-encabezado h2 {
+    margin-bottom: 0.75rem;
+    color: var(--color-texto-principal);
+    font-family: var(--fuente-titulo);
+}
+
+.marketplace-encabezado > p:last-child {
+    color: var(--color-texto-secundario);
+}
+
+.marketplace .productos-grid {
+    padding-bottom: 2rem;
+}
+
+.marketplace-card {
+    min-width: 0;
+}
+
+.marketplace-descripcion {
+    min-height: 3rem;
+    margin-bottom: 0.75rem;
+    color: var(--color-texto-secundario);
+    font-size: 0.9rem;
+}
+
+.marketplace-publicado-por {
+    margin-top: auto;
+    color: var(--color-texto-secundario);
+    font-size: 0.78rem;
+}
+
+.marketplace-boton {
+    display: block;
+    width: fit-content;
+    margin: 0 auto;
+}
+
+@media (max-width: 480px) {
+    .marketplace {
+        padding: 3rem 0;
+    }
+
+    .marketplace-encabezado {
+        padding: 0 1.5rem;
+    }
+
+    .marketplace .productos-grid {
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+    }
+}
 /* ============================================
    DETALLE DE PRODUCTO
    ============================================ */
