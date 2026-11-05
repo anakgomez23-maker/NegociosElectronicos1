@@ -30,6 +30,10 @@ const articulosEjemplo = [
 ];
 
 const gridMarketplace = document.getElementById('gridMarketplace');
+const modalCompraMarketplace = document.getElementById('modalCompraMarketplace');
+const mensajeModalCompra = document.getElementById('mensajeModalCompra');
+const entendidoCompra = document.getElementById('entendidoCompra');
+let botonCompraActivo = null;
 
 function leerPublicacionesUsuario() {
     try {
@@ -112,6 +116,21 @@ function crearTarjetaMarketplace(articulo, esPublicacionUsuario) {
     publicadoPor.append('Publicado por ', vendedor, ' · ', fecha);
     tarjeta.appendChild(publicadoPor);
 
+    const botonCompra = document.createElement('button');
+    botonCompra.type = 'button';
+    botonCompra.className = 'boton boton-pequeno marketplace-comprar';
+    const nombreArticulo = articulo.nombre || 'producto sin nombre';
+    const nombreVendedor = articulo.vendedor || 'El vendedor';
+    botonCompra.textContent = 'Comprar';
+    botonCompra.setAttribute('aria-label', 'Comprar ' + nombreArticulo);
+    botonCompra.addEventListener('click', function () {
+        botonCompraActivo = botonCompra;
+        mensajeModalCompra.textContent = nombreVendedor + ' se pondrá en contacto contigo pronto para coordinar la compra de ' + nombreArticulo + '.';
+        modalCompraMarketplace.showModal();
+        entendidoCompra.focus();
+    });
+    tarjeta.appendChild(botonCompra);
+
     return tarjeta;
 }
 
@@ -129,3 +148,22 @@ function pintarMarketplace() {
 }
 
 pintarMarketplace();
+
+function cerrarModalCompra() {
+    modalCompraMarketplace.close();
+    if (botonCompraActivo) {
+        botonCompraActivo.focus();
+    }
+}
+
+entendidoCompra.addEventListener('click', cerrarModalCompra);
+modalCompraMarketplace.addEventListener('click', function (evento) {
+    if (evento.target === modalCompraMarketplace) {
+        cerrarModalCompra();
+    }
+});
+modalCompraMarketplace.addEventListener('close', function () {
+    if (botonCompraActivo) {
+        botonCompraActivo.focus();
+    }
+});

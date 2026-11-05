@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subasta | Panel de administrador | Ana Kaidien</title>
+    <link rel="stylesheet" href="css/estilos.css">
+    <script src="js/admin-sesion.js"></script>
+</head>
+
+<body class="admin-body">
+    <header class="admin-encabezado">
+        <a href="index.html" class="logo">Ana Kaidien<span>Creaciones Artesanales</span></a>
+        <div class="admin-encabezado-info">
+            <span id="adminSaludo">Panel de administrador</span>
+            <a href="admin-login.html" id="adminCerrar" class="admin-cerrar">Cerrar sesión</a>
+        </div>
+    </header>
+
+    <aside class="admin-sidebar" aria-label="Navegación administrativa">
+        <p class="admin-sidebar-titulo">Gestión</p>
+        <nav>
+            <a class="admin-nav-enlace" href="admin-productos.html">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5h16v13H4zM8 3v5M16 3v5M4 10h16" /></svg>
+                <span>Productos</span>
+            </a>
+            <a class="admin-nav-enlace" href="admin-pedidos.html">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h14v16H5zM8 8h8M8 12h8M8 16h5" /></svg>
+                <span>Pedidos</span>
+            </a>
+            <a class="admin-nav-enlace" href="admin-promociones.html">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6 2.9 1.1-6.2L3 9.6l6.2-.9z" /></svg>
+                <span>Promociones</span>
+            </a>
+            <a class="admin-nav-enlace admin-nav-activo" href="admin-subasta.html" aria-current="page">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h10M9 4v5l-3 5h12l-3-5V4M5 19h14M12 14v5" /></svg>
+                <span>Subasta</span>
+            </a>
+        </nav>
+    </aside>
+
+    <main class="admin-contenido">
+        <div class="admin-titulo">
+            <p class="subtitulo">GESTIÓN</p>
+            <h1>Subasta</h1>
+            <p>Administra la subasta activa de la tienda.</p>
+        </div>
+
+        <p id="mensajeSubasta" class="mensaje-confirmacion" role="status" aria-live="polite"></p>
+
+        <section class="admin-subasta-tarjeta" aria-labelledby="tituloSubasta">
+            <div class="admin-subasta-encabezado">
+                <div>
+                    <p class="subtitulo">SUBASTA ACTUAL</p>
+                    <h2 id="tituloSubasta"></h2>
+                    <p id="descripcionSubasta" class="admin-subasta-descripcion"></p>
+                </div>
+                <span id="estadoSubasta" class="admin-subasta-badge"></span>
+            </div>
+
+            <dl class="admin-subasta-datos">
+                <div>
+                    <dt>Oferta inicial</dt>
+                    <dd id="ofertaInicialSubasta"></dd>
+                </div>
+                <div>
+                    <dt>Oferta más alta</dt>
+                    <dd id="ofertaAltaSubasta"></dd>
+                </div>
+                <div>
+                    <dt>Incremento mínimo</dt>
+                    <dd id="incrementoSubasta"></dd>
+                </div>
+                <div>
+                    <dt>Duración</dt>
+                    <dd id="duracionSubasta"></dd>
+                </div>
+                <div>
+                    <dt>Número de ofertas</dt>
+                    <dd id="numeroOfertasSubasta"></dd>
+                </div>
+            </dl>
+
+            <div class="admin-subasta-acciones">
+                <button type="button" id="editarSubasta" class="boton">Editar subasta</button>
+                <button type="button" id="alternarSubasta" class="boton admin-subasta-secundario"></button>
+            </div>
+        </section>
+
+        <section class="admin-subasta-historial" aria-labelledby="tituloHistorialAdmin">
+            <h2 id="tituloHistorialAdmin">Historial de ofertas</h2>
+            <div class="admin-tabla-contenedor">
+                <table class="admin-tabla-productos admin-tabla-subasta">
+                    <thead>
+                        <tr>
+                            <th scope="col">Usuario</th>
+                            <th scope="col">Oferta</th>
+                            <th scope="col">Hora</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historialAdminSubasta"></tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <dialog class="admin-productos-dialog" id="modalSubasta" aria-labelledby="tituloModalSubasta">
+        <form class="admin-productos-formulario" id="formularioSubasta" novalidate>
+            <h2 id="tituloModalSubasta">Editar subasta</h2>
+
+            <div class="admin-productos-campo">
+                <label for="nombreSubasta">Nombre del producto</label>
+                <input id="nombreSubasta" name="nombre" type="text">
+            </div>
+            <div class="admin-productos-campo">
+                <label for="descripcionSubastaModal">Descripción</label>
+                <textarea id="descripcionSubastaModal" name="descripcion" rows="3"></textarea>
+            </div>
+            <div class="admin-productos-campo">
+                <label for="ofertaInicialSubastaModal">Oferta inicial</label>
+                <input id="ofertaInicialSubastaModal" name="ofertaInicial" type="number" min="0" step="1">
+            </div>
+            <div class="admin-productos-campo">
+                <label for="incrementoSubastaModal">Incremento mínimo</label>
+                <input id="incrementoSubastaModal" name="incrementoMinimo" type="number" min="0" step="1">
+            </div>
+            <div class="admin-productos-campo">
+                <label for="duracionSubastaModal">Duración (en horas)</label>
+                <input id="duracionSubastaModal" name="duracion" type="number" min="0" step="1">
+            </div>
+
+            <div class="admin-productos-modal-acciones">
+                <button type="button" id="cancelarSubasta" class="boton admin-productos-cancelar">Cancelar</button>
+                <button type="submit" class="boton admin-productos-guardar">Guardar cambios</button>
+            </div>
+        </form>
+    </dialog>
+
+    <script>
+        const historialAdminSubasta = [
+            { usuario: 'Diego V.', monto: 800, hora: '10:45 a. m.' },
+            { usuario: 'Camila N.', monto: 700, hora: '10:30 a. m.' },
+            { usuario: 'Mariana S.', monto: 650, hora: '10:10 a. m.' }
+        ];
+
+        const subasta = {
+            nombre: 'Pintura Árbol',
+            descripcion: 'Una pintura original hecha a mano, creada con dedicación y cuidado en cada detalle.',
+            ofertaInicial: 600,
+            incrementoMinimo: 50,
+            duracion: 1,
+            activa: true
+        };
+
+        const tituloSubasta = document.getElementById('tituloSubasta');
+        const descripcionSubasta = document.getElementById('descripcionSubasta');
+        const estadoSubasta = document.getElementById('estadoSubasta');
+        const ofertaInicialSubasta = document.getElementById('ofertaInicialSubasta');
+        const ofertaAltaSubasta = document.getElementById('ofertaAltaSubasta');
+        const incrementoSubasta = document.getElementById('incrementoSubasta');
+        const duracionSubasta = document.getElementById('duracionSubasta');
+        const numeroOfertasSubasta = document.getElementById('numeroOfertasSubasta');
+        const alternarSubasta = document.getElementById('alternarSubasta');
+        const mensajeSubasta = document.getElementById('mensajeSubasta');
+        const modalSubasta = document.getElementById('modalSubasta');
+        const formularioSubasta = document.getElementById('formularioSubasta');
+        let temporizadorMensaje = null;
+
+        function formatearMonto(monto) {
+            return new Intl.NumberFormat('es-MX', {
+                style: 'currency',
+                currency: 'MXN',
+                maximumFractionDigits: 0
+            }).format(monto);
+        }
+
+        function mostrarMensaje(texto) {
+            window.clearTimeout(temporizadorMensaje);
+            mensajeSubasta.textContent = texto;
+            mensajeSubasta.classList.add('visible');
+            temporizadorMensaje = window.setTimeout(function () {
+                mensajeSubasta.classList.remove('visible');
+                mensajeSubasta.textContent = '';
+            }, 3000);
+        }
+
+        function pintarSubasta() {
+            const ofertaMasAlta = Math.max.apply(null, historialAdminSubasta.map(function (oferta) {
+                return oferta.monto;
+            }));
+
+            tituloSubasta.textContent = subasta.nombre;
+            descripcionSubasta.textContent = subasta.descripcion;
+            estadoSubasta.textContent = subasta.activa ? 'Activa' : 'Finalizada';
+            estadoSubasta.classList.toggle('admin-subasta-badge-activa', subasta.activa);
+            estadoSubasta.classList.toggle('admin-subasta-badge-finalizada', !subasta.activa);
+            ofertaInicialSubasta.textContent = formatearMonto(subasta.ofertaInicial);
+            ofertaAltaSubasta.textContent = formatearMonto(ofertaMasAlta);
+            incrementoSubasta.textContent = formatearMonto(subasta.incrementoMinimo);
+            duracionSubasta.textContent = subasta.duracion + (subasta.duracion === 1 ? ' hora' : ' horas');
+            numeroOfertasSubasta.textContent = String(historialAdminSubasta.length);
+            alternarSubasta.textContent = subasta.activa ? 'Finalizar subasta' : 'Reactivar subasta';
+        }
+
+        function pintarHistorial() {
+            const cuerpoHistorial = document.getElementById('historialAdminSubasta');
+            cuerpoHistorial.replaceChildren();
+
+            historialAdminSubasta.forEach(function (oferta) {
+                const fila = document.createElement('tr');
+                const usuario = document.createElement('td');
+                const monto = document.createElement('td');
+                const hora = document.createElement('td');
+                usuario.textContent = oferta.usuario;
+                monto.textContent = formatearMonto(oferta.monto);
+                hora.textContent = oferta.hora;
+                fila.append(usuario, monto, hora);
+                cuerpoHistorial.appendChild(fila);
+            });
+        }
+
+        function abrirModalSubasta() {
+            formularioSubasta.elements.nombre.value = subasta.nombre;
+            formularioSubasta.elements.descripcion.value = subasta.descripcion;
+            formularioSubasta.elements.ofertaInicial.value = subasta.ofertaInicial;
+            formularioSubasta.elements.incrementoMinimo.value = subasta.incrementoMinimo;
+            formularioSubasta.elements.duracion.value = subasta.duracion;
+            modalSubasta.showModal();
+            formularioSubasta.elements.nombre.focus();
+        }
+
+        document.getElementById('editarSubasta').addEventListener('click', abrirModalSubasta);
+        document.getElementById('cancelarSubasta').addEventListener('click', function () {
+            modalSubasta.close();
+        });
+
+        modalSubasta.addEventListener('click', function (evento) {
+            if (evento.target === modalSubasta) {
+                modalSubasta.close();
+            }
+        });
+
+        alternarSubasta.addEventListener('click', function () {
+            subasta.activa = !subasta.activa;
+            pintarSubasta();
+            mostrarMensaje('Estado actualizado (simulado)');
+        });
+
+        formularioSubasta.addEventListener('submit', function (evento) {
+            evento.preventDefault();
+            const datos = new FormData(formularioSubasta);
+            const valorNumerico = function (nombre, actual) {
+                const valor = Number(datos.get(nombre));
+                return Number.isFinite(valor) && valor >= 0 ? valor : actual;
+            };
+
+            subasta.nombre = String(datos.get('nombre')).trim() || subasta.nombre || '—';
+            subasta.descripcion = String(datos.get('descripcion')).trim() || subasta.descripcion || '—';
+            subasta.ofertaInicial = valorNumerico('ofertaInicial', subasta.ofertaInicial);
+            subasta.incrementoMinimo = valorNumerico('incrementoMinimo', subasta.incrementoMinimo);
+            subasta.duracion = valorNumerico('duracion', subasta.duracion);
+            pintarSubasta();
+            modalSubasta.close();
+            mostrarMensaje('Subasta actualizada (simulado)');
+        });
+
+        pintarSubasta();
+        pintarHistorial();
+    </script>
+</body>
+
+</html>
