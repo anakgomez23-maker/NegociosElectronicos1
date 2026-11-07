@@ -15,6 +15,14 @@
     --color-verde: #65A84B;
     --color-cafe: #9A633F;
     --color-borde: #F0D9E2;
+    --color-eliminar: #8B1C1C;
+    --boton-rosa-oscuro: #B51F62;
+    --boton-frambuesa: #C52A6C;
+    --boton-degradado: linear-gradient(135deg, var(--boton-rosa-oscuro), var(--boton-frambuesa));
+    --boton-degradado-hover: linear-gradient(135deg, var(--boton-frambuesa), var(--boton-rosa-oscuro));
+    --boton-sombra: 0 0.45rem 1rem rgba(181, 31, 98, 0.24);
+    --boton-sombra-hover: 0 0.75rem 1.35rem rgba(197, 42, 108, 0.32);
+    --boton-radio: 999px;
 
     --fuente-titulo: 'Poppins', 'Segoe UI', sans-serif;
     --fuente-texto: 'Inter', 'Segoe UI', sans-serif;
@@ -276,15 +284,18 @@ ul {
 
 .menu #menuLogin a {
     padding: 0.5rem 1.25rem;
-    border: 1.5px solid var(--color-acento);
-    border-radius: 999px;
-    color: var(--color-acento);
+    border: 2px solid var(--color-acento);
+    border-radius: var(--boton-radio);
+    background: transparent;
+    color: var(--boton-rosa-oscuro);
     font-weight: 600;
+    transition: none;
 }
 
-.menu #menuLogin a:hover {
-    background-color: var(--color-acento);
+.menu #menuLogin a:hover:not([aria-disabled="true"]) {
+    background: var(--boton-degradado);
     color: #FFFFFF;
+    box-shadow: var(--boton-sombra);
 }
 
 .menu #menuLogin a.sesion-activa {
@@ -379,17 +390,69 @@ ul {
 
 .boton {
     display: inline-block;
-    background-color: var(--color-acento-suave);
+    border: 0;
+    background: var(--boton-degradado);
     color: #FFFFFF;
-    font-weight: 600;
+    font-weight: 700;
+    letter-spacing: 0.02em;
     padding: 0.9rem 2rem;
-    border-radius: 999px;
-    transition: background-color 0.2s ease, transform 0.2s ease;
+    border-radius: var(--boton-radio);
+    box-shadow: var(--boton-sombra);
+    cursor: pointer;
+    overflow-wrap: anywhere;
+    transition: none;
 }
 
-.boton:hover {
-    background-color: var(--color-acento);
-    transform: translateY(-2px);
+.boton:hover:not(:disabled):not([aria-disabled="true"]) {
+    background: var(--boton-degradado-hover);
+    box-shadow: var(--boton-sombra-hover);
+}
+
+/* BOTONES - REDISEÑO */
+
+.boton:focus-visible,
+.menu #menuLogin a:focus-visible,
+.admin-cerrar:focus-visible,
+.admin-producto-accion:focus-visible,
+.carrito-control-cantidad button:focus-visible,
+.promocion-codigo-chip:focus-visible {
+    outline: 3px solid var(--color-acento);
+    outline-offset: 3px;
+}
+
+button:disabled,
+button[aria-disabled="true"],
+[role="button"][aria-disabled="true"],
+.boton[aria-disabled="true"],
+.admin-cerrar[aria-disabled="true"] {
+    cursor: not-allowed;
+    opacity: 0.5;
+    box-shadow: none;
+    pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .boton,
+    .menu #menuLogin a,
+    .admin-cerrar {
+        transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+    }
+
+    .boton:hover:not(:disabled):not([aria-disabled="true"]),
+    .menu #menuLogin a:hover:not([aria-disabled="true"]),
+    .admin-cerrar:hover:not([aria-disabled="true"]),
+    .admin-producto-accion:hover:not(:disabled):not([aria-disabled="true"]) {
+        transform: translateY(-2px);
+    }
+
+    .boton:active:not(:disabled):not([aria-disabled="true"]),
+    .menu #menuLogin a:active:not([aria-disabled="true"]),
+    .admin-cerrar:active:not([aria-disabled="true"]),
+    .admin-producto-accion:active:not(:disabled):not([aria-disabled="true"]),
+    .carrito-control-cantidad button:active:not(:disabled):not([aria-disabled="true"]) {
+        transform: translateY(1px);
+        box-shadow: 0 0.2rem 0.5rem rgba(181, 31, 98, 0.2);
+    }
 }
 
 .hero-logo {
@@ -796,6 +859,11 @@ ul {
 .boton-pequeno {
     padding: 0.6rem 1.4rem;
     font-size: 0.85rem;
+    box-shadow: 0 0.3rem 0.75rem rgba(245, 158, 11, 0.18);
+}
+
+.boton-pequeno:hover:not(:disabled):not([aria-disabled="true"]) {
+    box-shadow: 0 0.45rem 0.9rem rgba(245, 158, 11, 0.24);
 }
 
 /* MARKETPLACE */
@@ -987,18 +1055,22 @@ ul {
     gap: 1rem;
 }
 
+.boton-outline,
 .boton-outline-oscuro {
     display: inline-block;
-    background: transparent;
-    color: var(--color-texto-principal);
-    border: 1.5px solid var(--color-borde);
-    font-weight: 600;
+    background: var(--color-fondo);
+    color: var(--boton-rosa-oscuro);
+    border: 2px solid var(--boton-rosa-oscuro);
+    font-weight: 700;
+    box-shadow: none;
 }
 
-.boton-outline-oscuro:hover {
-    background-color: var(--color-texto-principal);
+.boton-outline:hover:not(:disabled):not([aria-disabled="true"]),
+.boton-outline-oscuro:hover:not(:disabled):not([aria-disabled="true"]) {
+    background: var(--boton-degradado);
     color: #FFFFFF;
-    border-color: var(--color-texto-principal);
+    border-color: var(--boton-frambuesa);
+    box-shadow: var(--boton-sombra);
 }
 
 .productos-relacionados {
@@ -1105,19 +1177,21 @@ ul {
 .boton-eliminar-carrito {
     margin-top: 0.5rem;
     padding: 0.4rem 0.65rem;
-    border: 1px solid var(--color-borde);
-    border-radius: 8px;
-    background-color: var(--color-fondo);
-    color: var(--color-texto-secundario);
+    border: 2px solid var(--color-eliminar);
+    border-radius: var(--boton-radio);
+    background-color: var(--color-eliminar);
+    color: #FFFFFF;
     font: inherit;
     font-size: 0.8rem;
     font-weight: 600;
     cursor: pointer;
 }
 
-.boton-eliminar-carrito:hover {
-    border-color: var(--color-acento);
-    color: var(--color-acento);
+.boton-eliminar-carrito:hover:not(:disabled):not([aria-disabled="true"]) {
+    border-color: var(--color-eliminar);
+    background-color: var(--color-eliminar);
+    color: #FFFFFF;
+    box-shadow: 0 0.45rem 0.9rem rgba(139, 28, 28, 0.25);
 }
 
 /* CARRITO - CANTIDAD */
@@ -1145,10 +1219,10 @@ ul {
     justify-content: center;
     width: 2rem;
     height: 2rem;
-    border: 1px solid var(--color-borde);
+    border: 2px solid var(--color-borde);
     border-radius: 50%;
     background-color: var(--color-fondo-claro);
-    color: var(--color-acento);
+    color: var(--boton-rosa-oscuro);
     font: inherit;
     font-size: 1.1rem;
     font-weight: 600;
@@ -1157,12 +1231,14 @@ ul {
 }
 
 .carrito-control-cantidad button:hover:not(:disabled) {
-    border-color: var(--color-acento);
+    border-color: var(--boton-frambuesa);
+    background: var(--boton-degradado);
+    color: #FFFFFF;
 }
 
 .carrito-control-cantidad button:focus-visible {
-    outline: 2px solid var(--color-acento);
-    outline-offset: 2px;
+    outline: 3px solid var(--color-acento);
+    outline-offset: 3px;
 }
 
 .carrito-control-cantidad button:disabled {
@@ -1327,7 +1403,7 @@ ul {
 }
 
 .carrito-politicas-acciones .boton-outline-oscuro {
-    border: 1.5px solid var(--color-borde);
+    border: 2px solid var(--color-acento);
 }
 
 @media (max-width: 480px) {
@@ -1570,6 +1646,12 @@ footer {
         gap: 1rem;
     }
 
+    .menu #menuLogin a {
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
+    }
+
     .hero {
         flex-direction: column;
         text-align: center;
@@ -1691,19 +1773,19 @@ footer {
 }
 
 .autenticacion-form .boton-registro {
-    background-color: var(--color-acento);
+    background: var(--boton-degradado);
 }
 
 .autenticacion-form .boton-registro:hover {
-    background-color: var(--color-turquesa);
+    background: var(--boton-degradado-hover);
 }
 
 .autenticacion-form .boton-entrar {
-    background-color: var(--color-naranja);
+    background: var(--boton-degradado);
 }
 
 .autenticacion-form .boton-entrar:hover {
-    background-color: var(--color-acento);
+    background: var(--boton-degradado-hover);
 }
 
 .mensaje-autenticacion {
@@ -1894,11 +1976,11 @@ footer {
     display: block;
     width: fit-content;
     margin: 2rem auto 0;
-    background-color: var(--color-acento);
+    background: var(--boton-degradado);
 }
 
-.boton-cerrar-sesion:hover {
-    background-color: var(--color-cafe);
+.boton-cerrar-sesion:hover:not(:disabled):not([aria-disabled="true"]) {
+    background: var(--boton-degradado-hover);
 }
 
 @media (max-width: 640px) {
@@ -1987,16 +2069,18 @@ footer {
 
 .admin-cerrar {
     padding: 0.55rem 1rem;
-    border: 1px solid var(--color-borde);
-    border-radius: 999px;
-    color: var(--color-acento);
+    border: 2px solid var(--color-acento);
+    border-radius: var(--boton-radio);
+    background: transparent;
+    color: var(--boton-rosa-oscuro);
     font-weight: 600;
-    transition: background-color 0.2s ease, color 0.2s ease;
+    transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
-.admin-cerrar:hover {
-    background-color: var(--color-acento);
+.admin-cerrar:hover:not([aria-disabled="true"]) {
+    background: var(--boton-degradado);
     color: #FFFFFF;
+    box-shadow: var(--boton-sombra);
 }
 
 .admin-sidebar {
@@ -2151,6 +2235,12 @@ footer {
         padding: 1rem;
     }
 
+    .admin-cerrar {
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
+    }
+
     .admin-encabezado-info {
         align-items: flex-end;
         flex-direction: column;
@@ -2300,9 +2390,9 @@ footer {
 
 .admin-producto-accion {
     padding: 0.45rem 0.7rem;
-    border: 1px solid var(--color-borde);
-    border-radius: 6px;
-    background-color: var(--color-fondo);
+    border: 2px solid var(--color-borde);
+    border-radius: var(--boton-radio);
+    background-color: var(--color-fondo-claro);
     color: var(--color-texto-principal);
     font: inherit;
     font-size: 0.8rem;
@@ -2310,14 +2400,28 @@ footer {
     cursor: pointer;
 }
 
-.admin-producto-accion:hover {
-    border-color: var(--color-acento);
-    color: var(--color-acento);
+.admin-producto-accion:hover:not(:disabled):not([aria-disabled="true"]) {
+    border-color: var(--boton-frambuesa);
+    background: var(--boton-degradado);
+    color: #FFFFFF;
 }
 
-.admin-producto-accion-eliminar:hover {
-    border-color: #c94f3e;
-    color: #c94f3e;
+.admin-producto-accion-eliminar,
+.admin-productos-eliminar-confirmar,
+[data-action="eliminar"] {
+    border-color: var(--color-eliminar);
+    background: var(--color-eliminar);
+    color: #FFFFFF;
+    box-shadow: 0 0.45rem 1rem rgba(139, 28, 28, 0.22);
+}
+
+.admin-producto-accion-eliminar:hover:not(:disabled):not([aria-disabled="true"]),
+.admin-productos-eliminar-confirmar:hover:not(:disabled):not([aria-disabled="true"]),
+[data-action="eliminar"]:hover:not(:disabled):not([aria-disabled="true"]) {
+    border-color: var(--color-eliminar);
+    background: var(--color-eliminar);
+    color: #FFFFFF;
+    box-shadow: 0 0.45rem 0.9rem rgba(139, 28, 28, 0.25);
 }
 
 .admin-productos-dialog {
@@ -2394,10 +2498,11 @@ footer {
 }
 
 .admin-productos-cancelar {
-    border: 1px solid var(--color-borde);
-    background-color: var(--color-fondo);
+    border: 2px solid var(--color-borde);
+    background-color: var(--color-fondo-claro);
     color: var(--color-texto-principal);
     cursor: pointer;
+    box-shadow: none;
 }
 
 .admin-productos-guardar {
@@ -2421,14 +2526,10 @@ footer {
 }
 
 .admin-productos-eliminar-confirmar {
-    border: 0;
-    background-color: var(--color-acento);
+    border: 2px solid var(--color-eliminar);
+    background-color: var(--color-eliminar);
     color: #FFFFFF;
     cursor: pointer;
-}
-
-.admin-productos-eliminar-confirmar:hover {
-    background-color: var(--color-texto-principal);
 }
 
 /* ============================================
@@ -2662,10 +2763,10 @@ footer {
 
 .promocion-codigo-chip {
     padding: 0.45rem 0.8rem;
-    border: 1px dashed var(--color-acento);
+    border: 1px dashed var(--boton-rosa-oscuro);
     border-radius: 999px;
     background-color: var(--color-fondo);
-    color: var(--color-acento);
+    color: var(--boton-rosa-oscuro);
     font: inherit;
     font-size: 0.8rem;
     font-weight: 700;
@@ -2676,7 +2777,7 @@ footer {
 .promocion-codigo-chip:hover,
 .promocion-codigo-chip:focus-visible {
     outline: none;
-    background-color: var(--color-acento);
+    background: var(--boton-degradado);
     color: #FFFFFF;
 }
 
@@ -3584,9 +3685,9 @@ footer {
 }
 
 .admin-subasta-secundario {
-    background-color: var(--color-fondo-claro);
-    border: 1px solid var(--color-borde) !important;
-    color: var(--color-texto-principal);
+    background: var(--color-fondo);
+    border: 2px solid var(--boton-rosa-oscuro);
+    color: var(--boton-rosa-oscuro);
 }
 
 .admin-subasta-historial {
