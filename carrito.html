@@ -110,7 +110,15 @@
 
 		botonAceptarYContinuar.addEventListener('click', function () {
 			modalPoliticasPago.hidden = true;
-			window.location.href = 'login.html';
+			let destino = 'login.html';
+			try {
+				if (sessionStorage.getItem('usuarioActivo')) {
+					destino = 'checkout.html';
+				}
+			} catch {
+				destino = 'login.html';
+			}
+			window.location.href = destino;
 		});
 
 		botonCancelarPoliticasPago.addEventListener('click', cerrarModalPoliticasPago);

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Checkout | Ana Kaidien</title>
+	<link rel="stylesheet" href="css/estilos.css">
+</head>
+
+<body>
+	<header>
+		<nav class="navbar">
+			<a href="index.html" class="logo">
+				Ana Kaidien
+				<span>Creaciones Artesanales</span>
+			</a>
+
+			<ul class="menu">
+				<li><a href="index.html">Inicio</a></li>
+				<li><a href="catalogo.html">Catálogo</a></li>
+				<li><a href="campana.html">Campaña</a></li>
+				<li><a href="nosotros.html">Nosotros</a></li>
+				<li><a href="contacto.html">Contacto</a></li>
+				<li><a href="promociones.html">Promociones</a></li>
+				<li><a href="comunidad.html">Comunidad</a></li>
+				<li id="menuLogin"><a href="login.html">Iniciar sesión</a></li>
+				<li><a href="carrito.html" class="carrito-icono" aria-label="Carrito de compras"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.9a2 2 0 0 0 1.9-1.4L21 8H6M10 20h.01M18 20h.01" /></svg><span class="carrito-contador">0</span></a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<main>
+		<section class="checkout-seccion">
+			<div class="checkout-intro">
+				<p class="subtitulo">COMPRA SIMULADA</p>
+				<h1>Finalizar compra</h1>
+				<p class="texto-nosotros">Completa los pasos para confirmar tu pedido.</p>
+			</div>
+
+			<div id="checkoutEstado" class="checkout-estado" role="status" aria-live="polite" hidden>
+				<p id="checkoutEstadoTexto"></p>
+				<a id="checkoutEstadoEnlace" class="boton" href="catalogo.html" hidden></a>
+			</div>
+
+			<ol id="checkoutPasos" class="checkout-pasos" aria-label="Pasos de compra" hidden>
+				<li class="checkout-paso" data-step="1">
+					<span class="checkout-paso-numero">1</span>
+					<span class="checkout-paso-etiqueta">Dirección</span>
+					<svg class="checkout-paso-check" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6" /></svg>
+				</li>
+				<li class="checkout-paso" data-step="2">
+					<span class="checkout-paso-numero">2</span>
+					<span class="checkout-paso-etiqueta">Pago</span>
+					<svg class="checkout-paso-check" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6" /></svg>
+				</li>
+				<li class="checkout-paso" data-step="3">
+					<span class="checkout-paso-numero">3</span>
+					<span class="checkout-paso-etiqueta">Confirmación</span>
+					<svg class="checkout-paso-check" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6" /></svg>
+				</li>
+			</ol>
+
+			<p id="checkoutAnuncio" class="checkout-lectura-oculta" aria-live="polite"></p>
+
+			<div id="checkoutLayout" class="checkout-layout" hidden>
+				<section class="perfil-tarjeta checkout-tarjeta" aria-label="Datos del checkout">
+					<div id="checkoutPasoDireccion" class="checkout-panel" hidden>
+						<p class="tarjeta-etiqueta">PASO 1</p>
+						<h2 id="tituloPasoDireccion" tabindex="-1">Dirección</h2>
+						<form id="formDireccion" class="checkout-formulario" novalidate>
+							<div class="checkout-campos">
+								<div class="checkout-campo">
+									<label for="direccionNombre">Nombre completo</label>
+									<input id="direccionNombre" name="nombre" type="text" autocomplete="name">
+								</div>
+								<div class="checkout-campo">
+									<label for="direccionTelefono">Teléfono</label>
+									<input id="direccionTelefono" name="telefono" type="tel" autocomplete="tel">
+								</div>
+								<div class="checkout-campo">
+									<label for="direccionCalle">Calle y número</label>
+									<input id="direccionCalle" name="calle" type="text" autocomplete="address-line1">
+								</div>
+								<div class="checkout-campo">
+									<label for="direccionColonia">Colonia</label>
+									<input id="direccionColonia" name="colonia" type="text" autocomplete="address-level3">
+								</div>
+								<div class="checkout-campo">
+									<label for="direccionCiudad">Ciudad</label>
+									<input id="direccionCiudad" name="ciudad" type="text" autocomplete="address-level2">
+								</div>
+								<div class="checkout-campo">
+									<label for="direccionEstado">Estado</label>
+									<input id="direccionEstado" name="estado" type="text" autocomplete="address-level1">
+								</div>
+								<div class="checkout-campo">
+									<label for="direccionCodigoPostal">Código postal</label>
+									<input id="direccionCodigoPostal" name="codigoPostal" type="text" autocomplete="postal-code">
+								</div>
+								<div class="checkout-campo checkout-campo-referencias">
+									<label for="direccionReferencias">Referencias (opcional)</label>
+									<textarea id="direccionReferencias" name="referencias" rows="3" autocomplete="off"></textarea>
+								</div>
+							</div>
+							<div class="checkout-acciones">
+								<a class="boton boton-outline-oscuro" href="carrito.html">Volver al carrito</a>
+								<button type="submit" class="boton">Continuar</button>
+							</div>
+						</form>
+					</div>
+
+					<div id="checkoutPasoPago" class="checkout-panel" hidden>
+						<p class="tarjeta-etiqueta">PASO 2</p>
+						<h2 id="tituloPasoPago" tabindex="-1">Método de pago</h2>
+						<form id="formPago" novalidate>
+							<fieldset class="checkout-metodos">
+								<legend>Elige cómo te gustaría pagar</legend>
+								<label class="checkout-pago-opcion">
+									<input type="radio" name="metodoPago" value="Tarjeta de crédito o débito" checked>
+									<span class="checkout-pago-contenido">
+										<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="5" width="19" height="14" rx="2"></rect><path d="M3 10h18M7 15h3"></path></svg>
+										<strong>Tarjeta de crédito o débito</strong>
+										<small>Visa, Mastercard y otras tarjetas.</small>
+									</span>
+								</label>
+								<label class="checkout-pago-opcion">
+									<input type="radio" name="metodoPago" value="Transferencia bancaria">
+									<span class="checkout-pago-contenido">
+										<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 9 9-6 9 6M5 10v8m5-8v8m4-8v8m5-8v8M3 21h18M2 18h20"></path></svg>
+										<strong>Transferencia bancaria</strong>
+										<small>Transferencia simulada desde tu banco.</small>
+									</span>
+								</label>
+								<label class="checkout-pago-opcion">
+									<input type="radio" name="metodoPago" value="Pago en efectivo">
+									<span class="checkout-pago-contenido">
+										<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="5" width="19" height="14" rx="2"></rect><circle cx="12" cy="12" r="3"></circle><path d="M5.5 8H6m12 8h.5"></path></svg>
+										<strong>Pago en efectivo</strong>
+										<small>Pago simulado en un establecimiento.</small>
+									</span>
+								</label>
+							</fieldset>
+							<p class="checkout-nota">Simulación: no se realizará ningún cobro</p>
+							<div class="checkout-acciones">
+								<button type="button" id="regresarDireccion" class="boton boton-outline-oscuro">Regresar</button>
+								<button type="submit" class="boton">Continuar</button>
+							</div>
+						</form>
+					</div>
+
+					<div id="checkoutPasoConfirmacion" class="checkout-panel" hidden>
+						<p class="tarjeta-etiqueta">PASO 3</p>
+						<h2 id="tituloPasoConfirmacion" tabindex="-1">Confirma tu pedido</h2>
+						<section class="checkout-revision" aria-labelledby="checkoutTituloDireccion">
+							<h3 id="checkoutTituloDireccion">Dirección de entrega</h3>
+							<dl id="checkoutRevisionDireccion" class="checkout-datos"></dl>
+						</section>
+						<section class="checkout-revision" aria-labelledby="checkoutTituloMetodo">
+							<h3 id="checkoutTituloMetodo">Método de pago</h3>
+							<p id="checkoutRevisionMetodo"></p>
+						</section>
+						<section class="checkout-revision" aria-labelledby="checkoutTituloProductos">
+							<h3 id="checkoutTituloProductos">Productos</h3>
+							<ul id="checkoutRevisionProductos" class="checkout-revision-productos"></ul>
+							<p class="checkout-revision-total">Total <strong id="checkoutRevisionTotal"></strong></p>
+						</section>
+						<div class="checkout-acciones">
+							<button type="button" id="regresarPago" class="boton boton-outline-oscuro">Regresar</button>
+							<button type="button" id="confirmarPedido" class="boton">Confirmar pedido</button>
+						</div>
+						<p id="checkoutErrorConfirmacion" class="checkout-error" role="status" aria-live="polite"></p>
+					</div>
+				</section>
+
+				<aside class="perfil-tarjeta checkout-resumen" aria-labelledby="checkoutTituloResumen">
+					<p class="tarjeta-etiqueta">TU COMPRA</p>
+					<h2 id="checkoutTituloResumen">Resumen del pedido</h2>
+					<ul id="checkoutProductos" class="checkout-productos"></ul>
+					<div class="checkout-totales">
+						<p><span>Subtotal</span><strong id="checkoutSubtotal"></strong></p>
+						<div id="checkoutDescuento"></div>
+						<p class="checkout-total"><span>Total</span><strong id="checkoutTotal"></strong></p>
+					</div>
+				</aside>
+			</div>
+
+			<section id="checkoutExito" class="checkout-exito" aria-labelledby="checkoutTituloExito" hidden>
+				<svg class="checkout-exito-icono" viewBox="0 0 64 64" aria-hidden="true">
+					<circle cx="32" cy="32" r="28"></circle>
+					<path d="m18 32 9 9 19-20"></path>
+				</svg>
+				<h2 id="checkoutTituloExito" tabindex="-1">¡Pedido confirmado! (simulado)</h2>
+				<p>Número de pedido: <strong id="checkoutNumeroPedido"></strong></p>
+				<p>Te enviaremos los detalles cuando el pedido esté en camino.</p>
+				<div class="checkout-acciones checkout-exito-acciones">
+					<a href="catalogo.html" class="boton">Seguir comprando</a>
+					<a href="perfil.html" class="boton boton-outline-oscuro">Ir a mi perfil</a>
+				</div>
+			</section>
+		</section>
+	</main>
+
+	<footer>
+		<p class="subasta-footer-link"><a href="subasta.html">Subasta</a></p>
+		<p>© 2026 Ana Kaidien - Creaciones Artesanales</p>
+	</footer>
+
+	<script src="js/checkout.js"></script>
+</body>
+
+</html>
