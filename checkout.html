@@ -116,31 +116,77 @@
 						<form id="formPago" novalidate>
 							<fieldset class="checkout-metodos">
 								<legend>Elige cómo te gustaría pagar</legend>
-								<label class="checkout-pago-opcion">
-									<input type="radio" name="metodoPago" value="Tarjeta de crédito o débito" checked>
+								<label class="checkout-pago-opcion" for="metodoTarjeta">
+									<input id="metodoTarjeta" type="radio" name="metodoPago" value="Tarjeta de crédito o débito" aria-controls="panelTarjeta" aria-expanded="true" checked>
 									<span class="checkout-pago-contenido">
 										<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="5" width="19" height="14" rx="2"></rect><path d="M3 10h18M7 15h3"></path></svg>
-										<strong>Tarjeta de crédito o débito</strong>
+										<strong id="metodoTarjetaNombre">Tarjeta de crédito o débito</strong>
 										<small>Visa, Mastercard y otras tarjetas.</small>
 									</span>
 								</label>
-								<label class="checkout-pago-opcion">
-									<input type="radio" name="metodoPago" value="Transferencia bancaria">
+								<label class="checkout-pago-opcion" for="metodoTransferencia">
+									<input id="metodoTransferencia" type="radio" name="metodoPago" value="Transferencia bancaria" aria-controls="panelTransferencia" aria-expanded="false">
 									<span class="checkout-pago-contenido">
 										<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 9 9-6 9 6M5 10v8m5-8v8m4-8v8m5-8v8M3 21h18M2 18h20"></path></svg>
-										<strong>Transferencia bancaria</strong>
-										<small>Transferencia simulada desde tu banco.</small>
+										<strong id="metodoTransferenciaNombre">Transferencia bancaria</strong>
+										<small>Consulta los datos para una transferencia simulada.</small>
 									</span>
 								</label>
-								<label class="checkout-pago-opcion">
-									<input type="radio" name="metodoPago" value="Pago en efectivo">
+								<label class="checkout-pago-opcion" for="metodoMonedero">
+									<input id="metodoMonedero" type="radio" name="metodoPago" value="Monedero electrónico" aria-controls="panelMonedero" aria-expanded="false">
 									<span class="checkout-pago-contenido">
-										<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="5" width="19" height="14" rx="2"></rect><circle cx="12" cy="12" r="3"></circle><path d="M5.5 8H6m12 8h.5"></path></svg>
-										<strong>Pago en efectivo</strong>
-										<small>Pago simulado en un establecimiento.</small>
+										<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M3 9h18m-5 5h2"></path><circle cx="8" cy="14" r="1"></circle></svg>
+										<strong id="metodoMonederoNombre">Monedero electrónico</strong>
+										<small>Paga usando tu saldo simulado.</small>
 									</span>
 								</label>
 							</fieldset>
+
+							<section id="panelTarjeta" class="checkout-pago-panel" aria-labelledby="metodoTarjetaNombre">
+								<div class="checkout-campos checkout-tarjeta-campos">
+									<div class="checkout-campo">
+										<label for="nombreTarjeta">Nombre en la tarjeta</label>
+										<input id="nombreTarjeta" name="nombreTarjeta" type="text" autocomplete="off">
+									</div>
+									<div class="checkout-campo">
+										<label for="numeroTarjeta">Número de tarjeta</label>
+										<input id="numeroTarjeta" name="numeroTarjeta" type="text" inputmode="numeric" autocomplete="off" maxlength="19">
+									</div>
+									<div class="checkout-campo">
+										<label for="vencimientoTarjeta">Fecha de vencimiento (MM/AA)</label>
+										<input id="vencimientoTarjeta" name="vencimientoTarjeta" type="text" inputmode="numeric" autocomplete="off" maxlength="5">
+									</div>
+									<div class="checkout-campo">
+										<label for="cvvTarjeta">CVV</label>
+										<input id="cvvTarjeta" name="cvvTarjeta" type="password" inputmode="numeric" autocomplete="off" maxlength="4">
+									</div>
+								</div>
+								<p class="checkout-aviso-tarjeta">Simulación: no ingreses datos reales de tu tarjeta.</p>
+							</section>
+
+							<section id="panelTransferencia" class="checkout-pago-panel" aria-labelledby="metodoTransferenciaNombre" hidden>
+								<div class="checkout-transferencia-tarjeta">
+									<dl class="checkout-transferencia-datos">
+										<div class="checkout-transferencia-dato"><dt>Banco</dt><dd id="transferenciaBanco"></dd><button type="button" class="checkout-copiar" data-copiar="transferenciaBanco">Copiar</button></div>
+										<div class="checkout-transferencia-dato"><dt>Beneficiario</dt><dd id="transferenciaBeneficiario"></dd><button type="button" class="checkout-copiar" data-copiar="transferenciaBeneficiario">Copiar</button></div>
+										<div class="checkout-transferencia-dato"><dt>CLABE</dt><dd id="transferenciaClabe"></dd><button type="button" class="checkout-copiar" data-copiar="transferenciaClabe">Copiar</button></div>
+										<div class="checkout-transferencia-dato"><dt>Referencia</dt><dd id="transferenciaReferencia"></dd><button type="button" class="checkout-copiar" data-copiar="transferenciaReferencia">Copiar</button></div>
+										<div class="checkout-transferencia-dato"><dt>Concepto</dt><dd id="transferenciaConcepto"></dd><button type="button" class="checkout-copiar" data-copiar="transferenciaConcepto">Copiar</button></div>
+										<div class="checkout-transferencia-dato"><dt>Monto</dt><dd id="transferenciaMonto"></dd><button type="button" class="checkout-copiar" data-copiar="transferenciaMonto">Copiar</button></div>
+									</dl>
+								</div>
+								<p class="checkout-aviso-transferencia">Tu pedido se confirmará cuando se reciba la transferencia (simulado).</p>
+							</section>
+
+							<section id="panelMonedero" class="checkout-pago-panel" aria-labelledby="metodoMonederoNombre" hidden>
+								<dl class="checkout-monedero-datos">
+									<div><dt>Saldo disponible</dt><dd id="monederoSaldoDisponible"></dd></div>
+									<div><dt>Total a pagar</dt><dd id="monederoTotal"></dd></div>
+									<div><dt>Saldo restante</dt><dd id="monederoSaldoRestante"></dd></div>
+								</dl>
+								<p id="monederoMensaje" class="checkout-monedero-mensaje" role="status" aria-live="polite" hidden></p>
+							</section>
+
 							<p class="checkout-nota">Simulación: no se realizará ningún cobro</p>
 							<div class="checkout-acciones">
 								<button type="button" id="regresarDireccion" class="boton boton-outline-oscuro">Regresar</button>
@@ -167,8 +213,9 @@
 						</section>
 						<div class="checkout-acciones">
 							<button type="button" id="regresarPago" class="boton boton-outline-oscuro">Regresar</button>
-							<button type="button" id="confirmarPedido" class="boton">Confirmar pedido</button>
+							<button type="button" id="confirmarPedido" class="boton">Pagar</button>
 						</div>
+						<p id="checkoutProcesando" class="checkout-procesando" role="status" aria-live="polite" hidden><span class="checkout-cargando-indicador" aria-hidden="true"></span>Procesando pago...</p>
 						<p id="checkoutErrorConfirmacion" class="checkout-error" role="status" aria-live="polite"></p>
 					</div>
 				</section>
@@ -190,7 +237,7 @@
 					<circle cx="32" cy="32" r="28"></circle>
 					<path d="m18 32 9 9 19-20"></path>
 				</svg>
-				<h2 id="checkoutTituloExito" tabindex="-1">¡Pedido confirmado! (simulado)</h2>
+				<h2 id="checkoutTituloExito" tabindex="-1">¡Pago realizado! Pedido confirmado (simulado)</h2>
 				<p>Número de pedido: <strong id="checkoutNumeroPedido"></strong></p>
 				<p>Te enviaremos los detalles cuando el pedido esté en camino.</p>
 				<div class="checkout-acciones checkout-exito-acciones">

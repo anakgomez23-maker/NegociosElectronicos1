@@ -1,4 +1,6 @@
 (() => {
+    const numeroPedido = 'AK-' + String(Math.floor(100000 + Math.random() * 900000));
+    const saldoDisponibleMonedero = 3000;
     const checkoutEstado = document.getElementById('checkoutEstado');
     const checkoutEstadoTexto = document.getElementById('checkoutEstadoTexto');
     const checkoutEstadoEnlace = document.getElementById('checkoutEstadoEnlace');
@@ -7,8 +9,14 @@
     const checkoutExito = document.getElementById('checkoutExito');
     const checkoutAnuncio = document.getElementById('checkoutAnuncio');
     const checkoutErrorConfirmacion = document.getElementById('checkoutErrorConfirmacion');
+    const checkoutProcesando = document.getElementById('checkoutProcesando');
     const formDireccion = document.getElementById('formDireccion');
     const formPago = document.getElementById('formPago');
+    const campoNumeroTarjeta = document.getElementById('numeroTarjeta');
+    const campoVencimientoTarjeta = document.getElementById('vencimientoTarjeta');
+    const campoCvvTarjeta = document.getElementById('cvvTarjeta');
+    const botonConfirmarPedido = document.getElementById('confirmarPedido');
+    const radiosMetodoPago = Array.from(formPago.querySelectorAll('input[name="metodoPago"]'));
     const camposDireccion = Array.from(formDireccion.elements).filter((campo) => campo.name);
     const pasos = [
         {
@@ -33,6 +41,7 @@
         currency: 'MXN',
         maximumFractionDigits: 2
     });
+    const formatoMonto = (monto) => formatoPrecio.format(monto) + ' MXN';
     const porcentajesDescuento = {
         PULSERA2X1: 50,
         LLAVERO10: 10
@@ -53,6 +62,8 @@
     let pasoActual = 1;
     let direccion = {};
     let metodoPago = 'Tarjeta de crédito o débito';
+    let numeroTarjeta = '';
+    let pagoEnProceso = false;
 
     const leerSesion = (clave) => {
         try {
@@ -298,12 +309,59 @@
 
     const pintarRevision = () => {
         pintarRevisionDireccion();
-        document.getElementById('checkoutRevisionMetodo').textContent = metodoPago;
         const lista = document.getElementById('checkoutRevisionProductos');
         lista.replaceChildren();
         carritoActual.forEach((producto) => lista.appendChild(crearLineaProducto(producto)));
         const calculo = pintarResumen(carritoActual, descuentoActual);
+        const detalleMetodo = metodoPago === 'Tarjeta de crédito o débito'
+            ? (numeroTarjeta ? 'Tarjeta terminación ' + numeroTarjeta.slice(-4) : 'Tarjeta')
+            : metodoPago === 'Transferencia bancaria'
+                ? 'Transferencia bancaria · Referencia ' + numeroPedido
+                : 'Monedero electrónico · saldo restante '
+                    + formatoMonto(Math.max(0, saldoDisponibleMonedero - calculo.total));
+        document.getElementById('checkoutRevisionMetodo').textContent = detalleMetodo;
         document.getElementById('checkoutRevisionTotal').textContent = formatoPrecio.format(calculo.total);
+        botonConfirmarPedido.textContent = 'Pagar ' + formatoMonto(calculo.total);
+        botonConfirmarPedido.disabled = metodoPago === 'Monedero electrónico'
+            && calculo.total > saldoDisponibleMonedero;
+    };
+
+    const pintarDatosPago = () => {
+        const calculo = calcularPedido(carritoActual, descuentoActual);
+        const datosTransferencia = {
+            transferenciaBanco: 'Banco Ejemplo',
+            transferenciaBeneficiario: 'Ana Kaidien - Creaciones Artesanales',
+            transferenciaClabe: '000000000000000000',
+            transferenciaReferencia: numeroPedido,
+            transferenciaConcepto: 'Pedido ' + numeroPedido,
+            transferenciaMonto: formatoMonto(calculo.total)
+        };
+        Object.entries(datosTransferencia).forEach(([id, valor]) => {
+            document.getElementById(id).textContent = valor;
+        });
+
+        document.getElementById('monederoSaldoDisponible').textContent =
+            formatoMonto(saldoDisponibleMonedero);
+        document.getElementById('monederoTotal').textContent = formatoMonto(calculo.total);
+        document.getElementById('monederoSaldoRestante').textContent =
+            formatoMonto(Math.max(0, saldoDisponibleMonedero - calculo.total));
+        const mensajeMonedero = document.getElementById('monederoMensaje');
+        const saldoInsuficiente = calculo.total > saldoDisponibleMonedero;
+        mensajeMonedero.textContent = saldoInsuficiente ? 'Saldo insuficiente (simulado)' : '';
+        mensajeMonedero.hidden = !saldoInsuficiente;
+    };
+
+    const actualizarMetodoPago = () => {
+        const metodoSeleccionado = radiosMetodoPago.find((radio) => radio.checked);
+        if (!metodoSeleccionado) {
+            return;
+        }
+        metodoPago = metodoSeleccionado.value;
+        radiosMetodoPago.forEach((radio) => {
+            radio.setAttribute('aria-expanded', String(radio.checked));
+            document.getElementById(radio.getAttribute('aria-controls')).hidden = !radio.checked;
+        });
+        pintarDatosPago();
     };
 
     const mostrarCheckout = (productos, descuento, usuario) => {
@@ -324,7 +382,89 @@
         actualizarContador([]);
     };
 
+    const limpiarDatosTarjeta = () => {
+        document.getElementById('nombreTarjeta').value = '';
+        campoNumeroTarjeta.value = '';
+        campoVencimientoTarjeta.value = '';
+        campoCvvTarjeta.value = '';
+        numeroTarjeta = '';
+    };
+
+    const completarPedido = (productos, descuento) => {
+        const calculo = calcularPedido(productos, descuento);
+        if (metodoPago === 'Monedero electrónico' && calculo.total > saldoDisponibleMonedero) {
+            checkoutErrorConfirmacion.textContent = 'Saldo insuficiente (simulado). Elige otro método de pago.';
+            checkoutProcesando.hidden = true;
+            botonConfirmarPedido.disabled = false;
+            document.getElementById('regresarPago').disabled = false;
+            radiosMetodoPago.forEach((radio) => {
+                radio.disabled = false;
+            });
+            pagoEnProceso = false;
+            return;
+        }
+
+        const detallePago = metodoPago === 'Tarjeta de crédito o débito'
+            ? { ultimos4: numeroTarjeta.slice(-4) }
+            : metodoPago === 'Transferencia bancaria'
+                ? { referencia: numeroPedido }
+                : {
+                    saldoAntes: saldoDisponibleMonedero,
+                    saldoDespues: saldoDisponibleMonedero - calculo.total
+                };
+        checkoutErrorConfirmacion.textContent = '';
+        const pedido = {
+            numeroPedido,
+            fecha: new Date().toISOString(),
+            direccion: { ...direccion },
+            metodoPago,
+            estadoPago: metodoPago === 'Transferencia bancaria'
+                ? 'Pendiente de confirmación'
+                : 'Pagado',
+            detallePago,
+            productos,
+            descuento: calculo.descuentoAplicado,
+            subtotal: calculo.subtotal,
+            total: calculo.total
+        };
+
+        try {
+            sessionStorage.setItem('ultimoPedido', JSON.stringify(pedido));
+            sessionStorage.setItem('carrito', '[]');
+            sessionStorage.removeItem('descuentoActivo');
+        } catch {
+            checkoutErrorConfirmacion.textContent = 'No se pudo guardar el pedido en esta sesión. Inténtalo de nuevo.';
+            checkoutProcesando.hidden = true;
+            botonConfirmarPedido.disabled = false;
+            document.getElementById('regresarPago').disabled = false;
+            radiosMetodoPago.forEach((radio) => {
+                radio.disabled = false;
+            });
+            pagoEnProceso = false;
+            return;
+        }
+
+        limpiarDatosTarjeta();
+        checkoutProcesando.hidden = true;
+        actualizarContador([]);
+        checkoutEstado.hidden = true;
+        checkoutLayout.hidden = true;
+        checkoutPasos.hidden = false;
+        checkoutExito.hidden = false;
+        checkoutExito.querySelector('#checkoutNumeroPedido').textContent = numeroPedido;
+        const mensajeExito = metodoPago === 'Transferencia bancaria'
+            ? 'Pedido registrado: pago pendiente de confirmación (simulado)'
+            : '¡Pago realizado! Pedido confirmado (simulado)';
+        document.getElementById('checkoutTituloExito').textContent = mensajeExito;
+        checkoutAnuncio.textContent = mensajeExito + '. Número de pedido: ' + numeroPedido;
+        actualizarIndicador();
+        document.getElementById('checkoutTituloExito').focus();
+    };
+
     const confirmar = () => {
+        if (pagoEnProceso) {
+            return;
+        }
         checkoutErrorConfirmacion.textContent = '';
         const carritoLeido = leerCarrito();
         if (!carritoLeido.correcto) {
@@ -343,36 +483,21 @@
         }
 
         const calculo = calcularPedido(carritoLeido.productos, descuentoLeido.descuento);
-        const numeroPedido = 'AK-' + String(Date.now()).slice(-6);
-        const pedido = {
-            numeroPedido,
-            fecha: new Date().toISOString(),
-            direccion: { ...direccion },
-            metodoPago,
-            productos: carritoLeido.productos,
-            descuento: calculo.descuentoAplicado,
-            subtotal: calculo.subtotal,
-            total: calculo.total
-        };
-
-        try {
-            sessionStorage.setItem('ultimoPedido', JSON.stringify(pedido));
-            sessionStorage.setItem('carrito', '[]');
-            sessionStorage.removeItem('descuentoActivo');
-        } catch {
-            checkoutErrorConfirmacion.textContent = 'No se pudo guardar el pedido en esta sesión. Inténtalo de nuevo.';
+        if (metodoPago === 'Monedero electrónico' && calculo.total > saldoDisponibleMonedero) {
+            checkoutErrorConfirmacion.textContent = 'Saldo insuficiente (simulado). Elige otro método de pago.';
             return;
         }
 
-        actualizarContador([]);
-        checkoutEstado.hidden = true;
-        checkoutLayout.hidden = true;
-        checkoutPasos.hidden = false;
-        checkoutExito.hidden = false;
-        checkoutExito.querySelector('#checkoutNumeroPedido').textContent = numeroPedido;
-        checkoutAnuncio.textContent = 'Pedido confirmado. Número de pedido: ' + numeroPedido;
-        actualizarIndicador();
-        document.getElementById('checkoutTituloExito').focus();
+        pagoEnProceso = true;
+        botonConfirmarPedido.disabled = true;
+        document.getElementById('regresarPago').disabled = true;
+        radiosMetodoPago.forEach((radio) => {
+            radio.disabled = true;
+        });
+        checkoutProcesando.hidden = false;
+        window.setTimeout(() => {
+            completarPedido(carritoLeido.productos, descuentoLeido.descuento);
+        }, 1500);
     };
 
     const usuarioLeido = leerSesion('usuarioActivo');
@@ -413,7 +538,7 @@
 
     formPago.addEventListener('change', (evento) => {
         if (evento.target.matches('input[name="metodoPago"]')) {
-            metodoPago = evento.target.value;
+            actualizarMetodoPago();
         }
     });
 
@@ -423,11 +548,64 @@
         if (metodoSeleccionado) {
             metodoPago = metodoSeleccionado.value;
         }
+        const calculo = calcularPedido(carritoActual, descuentoActual);
+        if (metodoPago === 'Monedero electrónico' && calculo.total > saldoDisponibleMonedero) {
+            document.getElementById('monederoMensaje').textContent = 'Saldo insuficiente (simulado)';
+            document.getElementById('monederoMensaje').hidden = false;
+            return;
+        }
         pintarRevision();
         cambiarPaso(3);
     });
 
+    const formatearSoloDigitos = (campo, maximo, separador = '') => {
+        const digitos = campo.value.replace(/\D/g, '').slice(0, maximo);
+        if (separador === ' ') {
+            campo.value = digitos.replace(/(\d{4})(?=\d)/g, '$1 ');
+        } else if (separador === '/') {
+            campo.value = digitos.length > 2
+                ? digitos.slice(0, 2) + '/' + digitos.slice(2)
+                : digitos;
+        } else {
+            campo.value = digitos;
+        }
+        return digitos;
+    };
+
+    campoNumeroTarjeta.addEventListener('input', () => {
+        numeroTarjeta = formatearSoloDigitos(campoNumeroTarjeta, 16, ' ');
+    });
+    campoVencimientoTarjeta.addEventListener('input', () => {
+        formatearSoloDigitos(campoVencimientoTarjeta, 4, '/');
+    });
+    campoCvvTarjeta.addEventListener('input', () => {
+        formatearSoloDigitos(campoCvvTarjeta, 4);
+    });
+
+    formPago.addEventListener('click', async (evento) => {
+        const botonCopiar = evento.target.closest('[data-copiar]');
+        if (!botonCopiar) {
+            return;
+        }
+        const elemento = document.getElementById(botonCopiar.dataset.copiar);
+        if (!elemento) {
+            return;
+        }
+        try {
+            if (!navigator.clipboard || typeof navigator.clipboard.writeText !== 'function') {
+                return;
+            }
+            await navigator.clipboard.writeText(elemento.textContent);
+            botonCopiar.textContent = 'Copiado';
+            window.setTimeout(() => {
+                botonCopiar.textContent = 'Copiar';
+            }, 1800);
+        } catch {
+            return;
+        }
+    });
+
     document.getElementById('regresarDireccion').addEventListener('click', () => cambiarPaso(1));
     document.getElementById('regresarPago').addEventListener('click', () => cambiarPaso(2));
-    document.getElementById('confirmarPedido').addEventListener('click', confirmar);
+    botonConfirmarPedido.addEventListener('click', confirmar);
 })();

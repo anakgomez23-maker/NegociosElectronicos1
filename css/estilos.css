@@ -4320,3 +4320,157 @@ footer {
         transition-duration: 0.01ms !important;
     }
 }
+
+/* CHECKOUT - PAGO */
+
+.checkout-pago-panel {
+    display: grid;
+    gap: 1rem;
+    margin-top: 1.25rem;
+}
+
+.checkout-pago-panel[hidden] {
+    display: none;
+}
+
+.checkout-tarjeta-campos {
+    gap: 1rem;
+}
+
+.checkout-aviso-tarjeta,
+.checkout-aviso-transferencia {
+    margin: 0;
+    color: var(--color-texto-secundario);
+    font-size: 0.85rem;
+}
+
+.checkout-transferencia-tarjeta {
+    padding: 1rem;
+    border: 1px solid var(--color-borde);
+    border-radius: 12px;
+    background-color: var(--color-fondo-claro);
+}
+
+.checkout-transferencia-datos {
+    display: grid;
+    gap: 0.75rem;
+    margin: 0;
+}
+
+.checkout-transferencia-dato {
+    display: grid;
+    grid-template-columns: minmax(90px, 0.7fr) minmax(0, 1.3fr) auto;
+    align-items: center;
+    gap: 0.75rem;
+    padding-bottom: 0.65rem;
+    border-bottom: 1px solid var(--color-borde);
+}
+
+.checkout-transferencia-dato:last-child {
+    padding-bottom: 0;
+    border-bottom: 0;
+}
+
+.checkout-transferencia-dato dt,
+.checkout-monedero-datos dt {
+    color: var(--color-texto-secundario);
+}
+
+.checkout-transferencia-dato dd,
+.checkout-monedero-datos dd {
+    margin: 0;
+    color: var(--color-texto-principal);
+    font-weight: 600;
+    overflow-wrap: anywhere;
+}
+
+.checkout-copiar {
+    padding: 0.4rem 0.65rem;
+    border: 1px solid var(--color-borde);
+    border-radius: 8px;
+    background-color: var(--color-fondo);
+    color: var(--color-texto-principal);
+    font: inherit;
+    font-size: 0.8rem;
+    cursor: pointer;
+}
+
+.checkout-copiar:hover,
+.checkout-copiar:focus-visible {
+    border-color: var(--color-acento);
+}
+
+.checkout-copiar:focus-visible {
+    outline: 2px solid var(--color-acento);
+    outline-offset: 2px;
+}
+
+.checkout-monedero-datos {
+    display: grid;
+    gap: 0.75rem;
+    margin: 0;
+    padding: 1rem;
+    border: 1px solid var(--color-borde);
+    border-radius: 12px;
+    background-color: var(--color-fondo-claro);
+}
+
+.checkout-monedero-datos div {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.checkout-monedero-mensaje {
+    margin: 0;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    background-color: var(--color-fondo-claro);
+    color: var(--color-eliminar);
+    font-weight: 600;
+}
+
+.checkout-procesando {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    margin: 1rem 0 0;
+    color: var(--color-texto-secundario);
+}
+
+.checkout-procesando[hidden] {
+    display: none;
+}
+
+.checkout-cargando-indicador {
+    width: 1rem;
+    height: 1rem;
+    border: 2px solid var(--color-borde);
+    border-top-color: var(--color-acento);
+    border-radius: 50%;
+    animation: checkout-giro 0.8s linear infinite;
+}
+
+@keyframes checkout-giro {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media (max-width: 600px) {
+    .checkout-transferencia-dato {
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 0.35rem 0.75rem;
+    }
+
+    .checkout-transferencia-dato dt {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .checkout-cargando-indicador {
+        animation: none;
+    }
+}
