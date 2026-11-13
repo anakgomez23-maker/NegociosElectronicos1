@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Confirmación de compra | Ana Kaidien</title>
+	<link rel="stylesheet" href="css/estilos.css">
+</head>
+
+<body>
+	<header>
+		<nav class="navbar">
+			<a href="index.html" class="logo">
+				Ana Kaidien
+				<span>Creaciones Artesanales</span>
+			</a>
+
+			<ul class="menu">
+				<li><a href="index.html">Inicio</a></li>
+				<li><a href="catalogo.html">Catálogo</a></li>
+				<li><a href="campana.html">Campaña</a></li>
+				<li><a href="nosotros.html">Nosotros</a></li>
+				<li><a href="contacto.html">Contacto</a></li>
+				<li><a href="promociones.html">Promociones</a></li>
+				<li><a href="comunidad.html">Comunidad</a></li>
+				<li id="menuLogin"><a href="login.html">Iniciar sesión</a></li>
+				<li><a href="carrito.html" class="carrito-icono" aria-label="Carrito de compras"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.9a2 2 0 0 0 1.9-1.4L21 8H6M10 20h.01M18 20h.01" /></svg><span class="carrito-contador">0</span></a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<main>
+		<section class="checkout-seccion">
+			<div class="checkout-intro">
+				<p class="subtitulo">COMPRA SIMULADA</p>
+				<h1>Confirmación de compra</h1>
+				<p class="texto-nosotros">Gracias por elegir Ana Kaidien.</p>
+			</div>
+
+			<div id="confirmacionVacia" class="checkout-estado" role="status" aria-live="polite" hidden>
+				<p>No hay un pedido reciente</p>
+				<a href="catalogo.html" class="boton">Ir al catálogo</a>
+			</div>
+
+			<ol id="confirmacionPasos" class="checkout-pasos confirmacion-pasos" aria-label="Pasos de compra" hidden>
+				<li class="checkout-paso completado" data-step="1">
+					<span class="checkout-paso-numero">1</span>
+					<span class="checkout-paso-etiqueta">Dirección</span>
+					<svg class="checkout-paso-check" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6" /></svg>
+				</li>
+				<li class="checkout-paso completado" data-step="2">
+					<span class="checkout-paso-numero">2</span>
+					<span class="checkout-paso-etiqueta">Pago</span>
+					<svg class="checkout-paso-check" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6" /></svg>
+				</li>
+				<li class="checkout-paso completado" data-step="3">
+					<span class="checkout-paso-numero">3</span>
+					<span class="checkout-paso-etiqueta">Confirmación</span>
+					<svg class="checkout-paso-check" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6" /></svg>
+				</li>
+			</ol>
+
+			<section id="confirmacionContenido" class="confirmacion-contenido" hidden>
+				<header class="confirmacion-exito">
+					<svg class="confirmacion-icono" viewBox="0 0 64 64" aria-hidden="true">
+						<circle cx="32" cy="32" r="28"></circle>
+						<path d="m18 32 9 9 19-20"></path>
+					</svg>
+					<h2 id="confirmacionTitulo"></h2>
+					<p id="confirmacionSubtitulo"></p>
+				</header>
+
+				<article class="perfil-tarjeta confirmacion-numero" aria-labelledby="confirmacionNumeroTitulo">
+					<div>
+						<p class="tarjeta-etiqueta">TU PEDIDO</p>
+						<h2 id="confirmacionNumeroTitulo">Número de pedido</h2>
+						<p id="confirmacionNumero" class="confirmacion-id"></p>
+						<p id="confirmacionFecha" class="confirmacion-fecha"></p>
+					</div>
+					<div class="confirmacion-copiar">
+						<button id="copiarNumeroPedido" type="button" class="checkout-copiar">Copiar número</button>
+						<p id="estadoCopiado" role="status" aria-live="polite"></p>
+					</div>
+				</article>
+
+				<article class="perfil-tarjeta confirmacion-resumen" aria-labelledby="confirmacionResumenTitulo">
+					<p class="tarjeta-etiqueta">TU COMPRA</p>
+					<h2 id="confirmacionResumenTitulo">Resumen de compra</h2>
+					<ul id="confirmacionProductos" class="confirmacion-productos"></ul>
+					<div class="confirmacion-totales">
+						<p><span>Subtotal</span><strong id="confirmacionSubtotal"></strong></p>
+						<div id="confirmacionDescuento"></div>
+						<p class="confirmacion-total"><span>Total pagado</span><strong id="confirmacionTotal"></strong></p>
+					</div>
+
+					<section class="confirmacion-detalle" aria-labelledby="confirmacionPagoTitulo">
+						<h3 id="confirmacionPagoTitulo">Método de pago</h3>
+						<div class="confirmacion-pago">
+							<p id="confirmacionMetodo"></p>
+							<span id="confirmacionEstadoPago" class="confirmacion-etiqueta"></span>
+						</div>
+					</section>
+
+					<section class="confirmacion-detalle" aria-labelledby="confirmacionDireccionTitulo">
+						<h3 id="confirmacionDireccionTitulo">Dirección de envío</h3>
+						<dl id="confirmacionDireccion" class="checkout-datos confirmacion-direccion"></dl>
+					</section>
+
+					<p class="confirmacion-entrega">Entrega estimada: 3 a 5 días hábiles (simulado)</p>
+					<p class="confirmacion-nota">Simulación: no se realizó ningún cobro.</p>
+				</article>
+
+				<div class="checkout-acciones confirmacion-acciones">
+					<a href="catalogo.html" class="boton">Seguir comprando</a>
+					<a href="perfil.html" class="boton boton-outline-oscuro">Ir a mi perfil</a>
+				</div>
+			</section>
+		</section>
+	</main>
+
+	<footer>
+		<p class="subasta-footer-link"><a href="subasta.html">Subasta</a></p>
+		<p>© 2026 Ana Kaidien - Creaciones Artesanales</p>
+	</footer>
+
+	<script src="js/confirmacion.js"></script>
+</body>
+
+</html>

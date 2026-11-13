@@ -6,7 +6,6 @@
     const checkoutEstadoEnlace = document.getElementById('checkoutEstadoEnlace');
     const checkoutPasos = document.getElementById('checkoutPasos');
     const checkoutLayout = document.getElementById('checkoutLayout');
-    const checkoutExito = document.getElementById('checkoutExito');
     const checkoutAnuncio = document.getElementById('checkoutAnuncio');
     const checkoutErrorConfirmacion = document.getElementById('checkoutErrorConfirmacion');
     const checkoutProcesando = document.getElementById('checkoutProcesando');
@@ -163,7 +162,6 @@
         checkoutEstado.hidden = false;
         checkoutPasos.hidden = true;
         checkoutLayout.hidden = true;
-        checkoutExito.hidden = true;
     };
 
     const actualizarContador = (productos) => {
@@ -261,14 +259,13 @@
     };
 
     const actualizarIndicador = () => {
-        const pedidoConfirmado = !checkoutExito.hidden;
         document.querySelectorAll('.checkout-paso').forEach((elemento) => {
             const numeroPaso = Number(elemento.dataset.step);
-            const completado = pedidoConfirmado || numeroPaso < pasoActual;
+            const completado = numeroPaso < pasoActual;
             elemento.classList.toggle('completado', completado);
-            elemento.classList.toggle('actual', !pedidoConfirmado && numeroPaso === pasoActual);
+            elemento.classList.toggle('actual', numeroPaso === pasoActual);
             elemento.removeAttribute('aria-current');
-            if (!pedidoConfirmado && numeroPaso === pasoActual) {
+            if (numeroPaso === pasoActual) {
                 elemento.setAttribute('aria-current', 'step');
             }
         });
@@ -371,7 +368,6 @@
         checkoutEstado.hidden = true;
         checkoutPasos.hidden = false;
         checkoutLayout.hidden = false;
-        checkoutExito.hidden = true;
         mostrarSesionEnNavbar(usuario);
         pintarResumen(productos, descuento);
         cambiarPaso(1, false);
@@ -447,18 +443,8 @@
         limpiarDatosTarjeta();
         checkoutProcesando.hidden = true;
         actualizarContador([]);
-        checkoutEstado.hidden = true;
-        checkoutLayout.hidden = true;
-        checkoutPasos.hidden = false;
-        checkoutExito.hidden = false;
-        checkoutExito.querySelector('#checkoutNumeroPedido').textContent = numeroPedido;
-        const mensajeExito = metodoPago === 'Transferencia bancaria'
-            ? 'Pedido registrado: pago pendiente de confirmación (simulado)'
-            : '¡Pago realizado! Pedido confirmado (simulado)';
-        document.getElementById('checkoutTituloExito').textContent = mensajeExito;
-        checkoutAnuncio.textContent = mensajeExito + '. Número de pedido: ' + numeroPedido;
-        actualizarIndicador();
-        document.getElementById('checkoutTituloExito').focus();
+        mostrarCarritoVacio();
+        window.location.href = 'confirmacion.html';
     };
 
     const confirmar = () => {
